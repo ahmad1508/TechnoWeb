@@ -19,17 +19,9 @@
     "url": "https://github.com/ahmad1508/LAB-1-Node.JS/issues"
   },
   "homepage": "https://github.com/ahmad1508/LAB-1-Node.JS#readme",
-
-  
   "private": true,
-  "dependencies": {  
-    "foo": "1.0.0", 
-    "bar": ">1.0.0", 
-    "baz": "1.2.x", 
-    "boo": "owner/repo", 
-    "asd": "git+https://github.com/ahmad1508/LAB-1-Node.JS.git", 
-    "local": "file:/path/to/file",
-    "tar": "http://web.site/my.tar.gz"
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.13"
   }
-
 }
