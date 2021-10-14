@@ -9,30 +9,32 @@ describe('users', () => {
     await db.admin.clear()
   })
   
-  it.skip('list empty', async () => {
+  it('list empty', async () => {
     // Return an empty user list by default
     const {body: users} = await supertest(app)
     .get('/users')
     .expect(200)
     users.should.eql([])
+
   })
   
-  it.skip('list one element', async () => {
+  it('list one element', async () => {
     // Create a user
     await supertest(app)
     .post('/users')
     .send({username: 'user_1'})
     // Ensure we list the users correctly
-    const {body: users} = await supertest(app)
+    const {body:users} = await supertest(app)//
     .get('/users')
     .expect(200)
+
     users.should.match([{
       id: /^\w+-\w+-\w+-\w+-\w+$/,
       username: 'user_1'
     }])
   })
   
-  it.skip('add one element', async () => {
+  it('add one element', async () => {
     // Create a user
     const {body: user} = await supertest(app)
     .post('/users')
