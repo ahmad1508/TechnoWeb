@@ -25,16 +25,20 @@ describe('messages', () => {
   it('list one message', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
-    .post('/channels')
-    .send({name: 'channel 1'})
+      .post('/channels')
+      .send({name: 'channel 1'})
+    // TODO create a user
+    // ...
+    const author = '12343543'
     // and a message inside it
+    const message = 'Hello ECE'
     await supertest(app)
     .post(`/channels/${channel.id}/messages`)
     .send({author: 'whoami', content: 'Hello ECE'})
     // Get messages
     const {body: messages} = await supertest(app)
-    .get(`/channels/${channel.id}/messages`)
-    .expect(200)
+      .get(`/channels/${channel.id}/messages`)
+      .expect(200)
     messages.should.match([{
       author: 'whoami',
       creation: (it) => it.should.be.approximately(microtime.now(), 1000000),
