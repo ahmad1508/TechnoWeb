@@ -22,6 +22,7 @@
     "remark-rehype": "^10.0.0",
     "typeface-roboto": "^1.1.13",
     "unified": "^10.1.0",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
