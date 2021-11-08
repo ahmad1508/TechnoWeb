@@ -1,0 +1,5 @@
+2021/10/18-15:37:36.257 56ec Recovering log #6
+2021/10/18-15:37:36.257 56ec Level-0 table #8: started
+2021/10/18-15:37:36.273 56ec Level-0 table #8: 2244 bytes OK
+2021/10/18-15:37:36.305 56ec Delete type=0 #6
+2021/10/18-15:37:36.305 56ec Delete type=3 #4
