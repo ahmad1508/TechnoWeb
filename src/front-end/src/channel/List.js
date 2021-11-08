@@ -6,6 +6,7 @@ import {
   useRef,
 } from "react";
 // Layout
+import { Box, Divider } from "@mui/material";
 import { useTheme } from "@mui/styles";
 // Markdown
 import { unified } from "unified";
@@ -16,7 +17,6 @@ import html from "rehype-stringify";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import updateLocale from "dayjs/plugin/updateLocale";
-import { Divider } from "@mui/material";
 dayjs.extend(calendar);
 dayjs.extend(updateLocale);
 dayjs.updateLocale("en", {
@@ -93,8 +93,8 @@ export default forwardRef(({ channel, messages, onScrollDown, user }, ref) => {
     return () => rootNode.removeEventListener("scroll", handleScroll);
   });
   return (
-    <div css={styles.root} ref={rootEl}>
-      <h1>Messages for {channel.name}</h1>
+    <Box css={styles.root} ref={rootEl}>
+      <h1>{channel.name}</h1>
       <Divider></Divider>
       <ul>
         {messages.map((message, i) => {
@@ -103,41 +103,40 @@ export default forwardRef(({ channel, messages, onScrollDown, user }, ref) => {
             .use(remark2rehype)
             .use(html)
             .processSync(message.content);
-          console.log(
-            messages[i--]?.author,
-            messages[i]?.author,
-            messages[i--]?.author === message[i]?.author
-          );
-          let consec;
-          if (i > 1) {
-            consec = messages[i--]?.author === message[i]?.author;
-          }
+
+          console.log(messages[i - 1]?.author, message?.author)
+          const isMessagesLate =
+            i > 1 && message.creation - messages[i - 1]?.creation > 1000 * 60;
+          const isMessagesConsecutive =
+            i > 1 && messages[i - 1]?.author === message?.author;
           return (
-            <li key={i
-            }>
-              {consec && (
-                <div>
-                  <div css={styles.date}>
+            <li>
+              {(i < 1 || !isMessagesConsecutive || isMessagesLate) && (
+                <Box>
+                  <Box css={styles.date}>
                     {dayjs(message.creation).calendar()}
-                  </div>
-                  <div css={user.name === message.author && styles.user}>
-                    {user.name === message.author ? "You" : message.author}
-                  </div>
-                </div>
+                  </Box>
+
+                  {!isMessagesLate && (
+                    <Box css={user.name === message.author && styles.user}>
+                      {user.name === message.author ? "You" : message.author}
+                    </Box>
+                  )}
+                </Box>
               )}
-              <div
+              <Box
                 css={
                   user.name === message.author
                     ? styles.user_message
                     : styles.message
                 }
                 dangerouslySetInnerHTML={{ __html: value }}
-              ></div>
+              ></Box>
             </li>
-          );
+          )
         })}
       </ul>
-      <div ref={scrollEl} />
-    </div>
+      <Box ref={scrollEl} />
+    </Box>
   );
 });

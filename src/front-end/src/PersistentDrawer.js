@@ -18,7 +18,8 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import LogoutIcon from '@mui/icons-material/Logout';
+import AddIcon from '@mui/icons-material/Add';
 
 import Channels from "./Channels";
 
@@ -135,10 +136,13 @@ export default function MiniDrawer({ children, onChannel, onUser }) {
         </DrawerHeader>
         <Channels onChannel={onChannel} />
         <Divider />
+        <div style={{flexGrow: "1"}}>
+        </div>
+        <Divider />
         <List>
           <ListItem button key="Create Channels">
             <ListItemIcon>
-              <InboxIcon />
+              <AddIcon />
             </ListItemIcon>
             <ListItemText primary="Create Channels" />
           </ListItem>
@@ -150,7 +154,7 @@ export default function MiniDrawer({ children, onChannel, onUser }) {
             }}
           >
             <ListItemIcon>
-              <InboxIcon />
+              <LogoutIcon />
             </ListItemIcon>
             <ListItemText primary="Log out" />
           </ListItem>
