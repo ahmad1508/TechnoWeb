@@ -4,7 +4,7 @@ import { useState } from 'react'
 import axios from 'axios';
 // Layout
 import SendIcon from "@mui/icons-material/Send";
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Box } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
 const useStyles = (theme) => {
@@ -56,7 +56,7 @@ export default function Form({
         variant="outlined"
         css={styles.content}
       />
-      <div>
+      <Box>
         <Button
           variant="contained"
           color="primary"
@@ -66,7 +66,7 @@ export default function Form({
         >
           Send
         </Button>
-      </div>
+      </Box>
     </form>
   )
 }

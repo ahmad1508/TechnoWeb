@@ -104,7 +104,7 @@ export default forwardRef(({ channel, messages, onScrollDown, user }, ref) => {
             .use(html)
             .processSync(message.content);
 
-          console.log(messages[i - 1]?.author, message?.author)
+          console.log(messages[i - 1]?.author, message?.author);
           const isMessagesLate =
             i > 1 && message.creation - messages[i - 1]?.creation > 1000 * 60;
           const isMessagesConsecutive =
@@ -133,7 +133,7 @@ export default forwardRef(({ channel, messages, onScrollDown, user }, ref) => {
                 dangerouslySetInnerHTML={{ __html: value }}
               ></Box>
             </li>
-          )
+          );
         })}
       </ul>
       <Box ref={scrollEl} />

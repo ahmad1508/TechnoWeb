@@ -11,6 +11,7 @@ export default function Login({ onUser }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        heigth: "100%"
       }}
     >
       <Box

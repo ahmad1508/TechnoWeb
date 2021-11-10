@@ -13,6 +13,6 @@ code {
     monospace;
 }
 
-#root {
-  height: 100vh;
+html, body, #root {
+  height: 100%;
 }
