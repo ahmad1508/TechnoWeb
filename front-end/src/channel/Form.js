@@ -7,6 +7,12 @@ import SendIcon from "@mui/icons-material/Send";
 import { Button, TextField } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
+
+const drawerWidth = 240;
+
+
+
+
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
   const borderColor = theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
@@ -15,6 +21,12 @@ const useStyles = (theme) => {
       borderTop: `2px solid ${borderColor}`,
       padding: '.5rem',
       display: 'flex',
+      position:'fixed',
+      bottom:0,
+      right:0,
+      left:80,
+      
+      background:"white"
     },
     content: {
       flex: '1 1 auto',

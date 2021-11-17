@@ -18,6 +18,8 @@ const useStyles = (theme) => ({
     flexDirection: 'column',
     position: 'relative',
     overflowX: 'auto',
+    color:'#000000',
+    
   },
   fab: {
     position: 'absolute !important',
@@ -26,11 +28,12 @@ const useStyles = (theme) => ({
   },
   fabDisabled: {
     display: 'none !important',
-  }
+  },
+  
 })
 
 export default function Channel({
-  channel
+  channel,user,open
 }) {
   const styles = useStyles(useTheme())
   const listRef = useRef();
@@ -66,8 +69,9 @@ export default function Channel({
         messages={messages}
         onScrollDown={onScrollDown}
         ref={listRef}
+        user={user}
       />
-      <Form addMessage={addMessage} channel={channel} />
+      <Form addMessage={addMessage} channel={channel} open={open}/>
       <Fab
         color="primary"
         aria-label="Latest messages"

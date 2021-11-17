@@ -24,7 +24,8 @@ export default function Main() {
   return (
     <main css={styles.main}>
       <Channels onChannel={fetchChannel} />
-      {channel ? <Channel channel={channel} messages={[]} /> : <Welcome />}
+      
+      {channel ? <Channel channel={channel}  messages={[]} /> : <Welcome />}
     </main>
   );
 }

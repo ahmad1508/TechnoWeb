@@ -1,9 +1,10 @@
 
 /** @jsxImportSource @emotion/react */
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 // Layout
-import { Link } from '@mui/material';
+import { Link,ListItem,ListItemIcon } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 
 const styles = {
   root: {
@@ -11,7 +12,7 @@ const styles = {
   },
   channel: {
     padding: '.2rem .5rem',
-    whiteSpace: 'nowrap', 
+    whiteSpace: 'nowrap',
   }
 }
 
@@ -19,27 +20,41 @@ export default function Channels({
   onChannel
 }) {
   const [channels, setChannels] = useState([])
-  useEffect( () => {
+  useEffect(() => {
     const fetch = async () => {
-      const {data: channels} = await axios.get('http://localhost:3001/channels')
+      const { data: channels } = await axios.get('http://localhost:3001/channels')
       setChannels(channels)
+
     }
     fetch()
   }, [])
+
+
+
   return (
     <ul style={styles.root}>
-      { channels.map( (channel, i) => (
-        <li key={i} css={styles.channel}>
+      {channels.map((channel, i) => (
+        <div key={i} css={styles.channel}>
+
           <Link
             href="#"
-            onClick={ (e) => {
+            onClick={(e) => {
               e.preventDefault()
               onChannel(channel)
             }}
-            >
-            {channel.name}
+            underline="none"
+          >
+            <ListItem >
+              <ListItemIcon>
+                <Avatar sx={{width:"30px",height:"30px",fontSize:"1rem"}}>{channel.name[0].toUpperCase()}{channel.name[channel.name.length-1].toUpperCase()}</Avatar>
+              </ListItemIcon>
+              {channel.name}
+
+            </ListItem>
+
+
           </Link>
-        </li>
+        </div>
       ))}
     </ul>
   );
