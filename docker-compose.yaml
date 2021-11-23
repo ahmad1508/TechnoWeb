@@ -7,3 +7,26 @@ services:
     volumes:
       - ./dex:/etc/dex
     command: dex serve /etc/dex/config.yaml
+    networks:
+      - dex
+      - front-end
+  front-end:
+    depends_on:
+      - dex
+    build: ./front-end
+    ports:
+      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+    networks:
+      - front-end
+  back-end:
+    build: ./back-end
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    networks:
+      - back-end
+      - front-end
+
+networks:
+  back-end:
+  front-end:
+  dex:
