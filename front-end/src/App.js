@@ -1,37 +1,36 @@
-
 /** @jsxImportSource @emotion/react */
-import { createContext } from 'react';
-import { useState } from 'react';
-import './App.css';
+import { createContext, useContext } from "react";
+import "./App.css";
 // Local
-import Main from './Main'
-import Login from './Login'
-import Layout from './components/Layout';
-import LayoutLogin from './components/LayoutLogin';
+import Main from "./Main";
+import Login from "./Login";
+import Layout from "./components/Layout";
+import LayoutLogin from "./components/LayoutLogin";
+
+import Context from "./Context";
 //Context
 const styles = {
   root: {
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#fefefe',
+    boxSizing: "border-box",
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "#fefefe",
   },
-}
+};
 
-export const Context = createContext('Default Value');
 export default function App() {
-  const [user, setUser] = useState(null)
+  const { oauth } = useContext(Context);
   return (
     <div className="App" css={styles.root}>
-      {
-        user ? <Context.Provider value={user}>
-          <Layout>
-            <Main />
-          </Layout></Context.Provider>
-          : <LayoutLogin><Login onUser={setUser} /></LayoutLogin>
-      }
-
+      {oauth ? (
+        <Layout>
+          <Main />
+        </Layout>
+      ) : (
+        <LayoutLogin>
+          <Login />
+        </LayoutLogin>
+      )}
     </div>
   );
 }
-

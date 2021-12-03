@@ -4,6 +4,8 @@ const app = require('../lib/app')
 const config = {
   port: 3001
 }
+// 1313 on Docker-compose
+// 3001 on dev
 
 app.listen(config.port, () => {
   console.log(`Chat is waiting for you at http://localhost:${config.port}`)
