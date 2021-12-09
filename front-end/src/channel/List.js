@@ -9,6 +9,7 @@ import {
 import { useContext } from "react";
 import Context from "../Context";
 import { useTheme } from "@mui/styles";
+import { Box } from "@mui/material";
 // Markdown
 import { unified } from "unified";
 import markdown from "remark-parse";
@@ -43,28 +44,60 @@ const useStyles = (theme) => ({
     flexDirection: "Column",
   },
   message: {
-    width: "60%",
+    maxWidth: "70%",
     flexDirection: "column",
     alignItems: "flex-start",
-    margin: "1rem 0rem 1rem 1rem",
-    backgroundColor: "#2196f3",
-    boxShadow: 3,
-    borderRadius: "10px",
-    padding: "10px",
+    backgroundColor: "#222",
+    borderRadius: "15px 15px 15px 5px",
+    padding: "0 10px",
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
   },
-  message2: {
+  message_author: {
     width: "",
     alignItems: "flex-end",
     margin: "1rem 1rem 1rem 30%",
-    backgroundColor: "#fefefe",
-    boxShadow: 3,
+    backgroundColor: theme.palette.primary.main,
     borderRadius: "10px",
     padding: "10px",
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
     ":hover": {
       backgroundColor: "",
     },
+  },
+  container: {
+    display: "flex",
+    alignItems: "flex-end",
+    margin: "0 0rem 0.5rem 1rem",
+  },
+  empty_avatar: {
+    width: "3rem",
+    height: "0.25rem",
+    marginRight: "0.5rem",
+  },
+  avatar: {
+    width: "3rem",
+    height: "3rem",
+    borderRadius: "50%",
+    backgroundColor: "#fff",
+    color: "#000",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: "0.5rem",
+  },
+  user: {
+    color: theme.palette.primary.main,
+    fontWeight: "bold",
+    marginTop: "0.25rem",
+  },
+  date: {
+    fontSize: "0.75rem",
+    color: "#888",
+    textAlign: "right",
+    marginBottom: "0.25rem",
+  },
+  message_content: {
+    "& p": { margin: "0.5rem 0" },
   },
 });
 
@@ -98,37 +131,59 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
     rootNode.addEventListener("scroll", handleScroll);
     return () => rootNode.removeEventListener("scroll", handleScroll);
   });
+  console.log(messages[0]);
 
   return (
-    <div css={styles.root} ref={rootEl}>
-      <h1>Messages for {channel.name}</h1>
-      <div css={styles.layout}>
+    <Box css={styles.root} ref={rootEl}>
+      <Box css={styles.layout}>
         {messages.map((message, i) => {
           const { value } = unified()
             .use(markdown)
             .use(remark2rehype)
             .use(html)
             .processSync(message.content);
+          const isTheAuthor = message?.author === val.username?.toLowerCase();
+          const isMessagesLate =
+            i > 1 &&
+            parseInt(message?.creation) - parseInt(messages[i - 1]?.creation) >
+              1000 * 60 * 60;
+          const isLastMessageUser =
+            i < messages.length && messages[i + 1]?.author === message?.author;
+          const isMessagesConsecutive =
+            i > 1 && messages[i - 1]?.author === message?.author;
           return (
-            <div
-              key={i}
-              css={
-                message.author === val.username.toLowerCase()
-                  ? styles.message2
-                  : styles.message
-              }
+            <Box
+              key={message.creation}
+              css={isTheAuthor ? styles.container_author : styles.container}
             >
-              <p>
-                <span>{message.author}</span>
-                {" - "}
-                <span>{dayjs().calendar(message.creation)}</span>
-              </p>
-              <div dangerouslySetInnerHTML={{ __html: value }}></div>
-            </div>
+              {!isLastMessageUser ? (
+                <Box css={styles.avatar}>{message?.author.split("")[0]}</Box>
+              ) : (
+                <Box css={styles.empty_avatar}></Box>
+              )}
+              <Box css={isTheAuthor ? styles.message_author : styles.message}>
+                {(i < 1 || !isMessagesConsecutive || isMessagesLate) && (
+                  <Box>
+                    {!isMessagesLate && (
+                      <Box css={styles.user}>
+                        {isTheAuthor ? "You" : message.author}
+                      </Box>
+                    )}
+                  </Box>
+                )}
+                <Box
+                  dangerouslySetInnerHTML={{ __html: value }}
+                  css={styles.message_content}
+                ></Box>
+                <Box css={styles.date}>
+                  {dayjs(new Date(Math.floor(parseInt(message.creation)/1000))).calendar()}
+                </Box>
+              </Box>
+            </Box>
           );
         })}
-      </div>
-      <div ref={scrollEl} />
-    </div>
+      </Box>
+      <Box ref={scrollEl} />
+    </Box>
   );
 });
