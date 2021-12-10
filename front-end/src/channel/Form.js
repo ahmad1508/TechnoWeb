@@ -1,63 +1,65 @@
-
 /** @jsxImportSource @emotion/react */
-import { useState } from 'react'
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 // Layout
+import { IconButton, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { Button, TextField } from '@mui/material';
-import { useTheme } from '@mui/styles';
-
-
-const drawerWidth = 240;
-
-
-
+import { useTheme } from "@mui/styles";
 
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
-  const borderColor = theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
+  const borderColor =
+    theme.palette.mode === "light"
+      ? "rgba(0, 0, 0, 0.23)"
+      : "rgba(255, 255, 255, 0.23)";
   return {
     form: {
       borderTop: `2px solid ${borderColor}`,
-      padding: '.5rem',
-      display: 'flex',
-      position:'fixed',
-      bottom:0,
-      right:0,
-      left:80,
-      
-      background:"white"
+      padding: ".5rem",
+      display: "flex",
     },
     content: {
-      flex: '1 1 auto',
-      '&.MuiTextField-root': {
+      flex: "1 1 auto",
+      "&.MuiTextField-root": {
         marginRight: theme.spacing(1),
       },
     },
     send: {
+      height: "3rem",
+      width: "3rem",
+      borderRadius: "50%",
+      backgroundColor: "#222",
+      "&:hover": {
+        backgroundColor: "#111",
+      },
+      "& MuiSvgIcon-endIcon": {
+        margin: "0",
+      },
     },
-  }
-}
+    sendIcon: {
+      fill: theme.palette.primary.main,
+    },
+  };
+};
 
-export default function Form({
-  addMessage,
-  channel,
-}) {
-  const [content, setContent] = useState('')
-  const styles = useStyles(useTheme())
-  const onSubmit = async () => {
-    const {data: message} = await axios.post(
-      `http://localhost:3001/channels/${channel.id}/messages`
-    , {
-      content: content,
-      author: 'david',
-    })
-    addMessage(message)
-    setContent('')
-  }
+export default function Form({ addMessage, channel }) {
+  const [content, setContent] = useState("");
+  const styles = useStyles(useTheme());
+  const onSubmit = async (e) => {
+    e?.preventDefault();
+    const { data: message } = await axios.post(
+      `http://localhost:3001/channels/${channel.id}/messages`,
+      {
+        content: content,
+        author: "david",
+      }
+    );
+    addMessage(message);
+    setContent("");
+  };
   const handleChange = (e) => {
-    setContent(e.target.value)
-  }
+    setContent(e.target.value);
+  };
   return (
     <form css={styles.form} onSubmit={onSubmit} noValidate>
       <TextField
@@ -69,18 +71,18 @@ export default function Form({
         onChange={handleChange}
         variant="outlined"
         css={styles.content}
+        onKeyPress={(ev) => {
+          if (ev.key === "Enter") {
+            onSubmit();
+            ev.preventDefault();
+          }
+        }}
       />
       <div>
-        <Button
-          variant="contained"
-          color="primary"
-          css={styles.send}
-          endIcon={<SendIcon />}
-          onClick={onSubmit}
-        >
-          Send
-        </Button>
+        <IconButton type="submit" css={styles.send}>
+          <SendIcon css={styles.sendIcon} />
+        </IconButton>
       </div>
     </form>
-  )
+  );
 }
