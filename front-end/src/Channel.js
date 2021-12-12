@@ -72,12 +72,15 @@ export default function Channel() {
     };
     fetch();
   }, [id, oauth, navigate]);
+
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown);
   };
+
   const onClickScroll = () => {
     listRef.current.scroll();
   };
+
   // On refresh, context.channel is not yet initialized
   if (!channel) {
     return <div>loading</div>;

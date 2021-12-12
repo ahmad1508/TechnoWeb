@@ -131,7 +131,6 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
     rootNode.addEventListener("scroll", handleScroll);
     return () => rootNode.removeEventListener("scroll", handleScroll);
   });
-  console.log(messages[0]);
 
   return (
     <Box css={styles.root} ref={rootEl}>
@@ -143,6 +142,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
             .use(html)
             .processSync(message.content);
           const isTheAuthor = message?.author === val.username?.toLowerCase();
+          
           const isMessagesLate =
             i > 1 &&
             parseInt(message?.creation) - parseInt(messages[i - 1]?.creation) >
