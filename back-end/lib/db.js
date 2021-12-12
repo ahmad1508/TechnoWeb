@@ -11,7 +11,7 @@ module.exports = {
    * ********************************/
   channels: {
     /****************  CREATE  ****************** */
-    create: async (channel) => {
+    create: async (channel,email) => {
       if (!channel.name) throw Error('Invalid channel')
       const id = uuid()
       await db.put(`channels:${id}`, JSON.stringify(channel))

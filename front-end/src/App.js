@@ -54,7 +54,7 @@ export default function App() {
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)}/>
         <Route path="/Oups" element={<Oups />} />
       </Routes>
-      <Footer />
+      {/* <Footer/> */}
     </div>
   );
 }
