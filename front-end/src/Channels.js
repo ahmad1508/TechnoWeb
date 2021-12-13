@@ -13,11 +13,11 @@ import {
   Box,
   Modal,
   Button,
-  TextField
+  TextField,
 } from "@mui/material";
 
-import { useTheme } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
+import { useTheme } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { Link as RouterLink } from "react-router-dom";
 // Local
 import Context from "./Context";
@@ -28,7 +28,7 @@ const useStyles = (theme) => ({
     padding: "0.25rem 0",
   },
   addChannel: {
-    position: 'fixed',
+    position: "fixed",
     bottom: 0,
   },
   line: {
@@ -41,37 +41,42 @@ const useStyles = (theme) => ({
     backgroundColor: "#fff",
   },
   modal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    color: 'white',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    color: "white",
+    transform: "translate(-50%, -50%)",
     width: 500,
     background: theme.palette.primary.dark,
 
     borderRadius: "10px",
-    padding: '20px',
-
+    padding: "20px",
   },
   title: {
     background: theme.palette.primary.main,
-    padding: '5px 0px',
-    textAlign: 'center',
-    borderRadius: "5px"
+    padding: "5px 0px",
+    textAlign: "center",
+    borderRadius: "5px",
   },
   formField: {
-    width: '95%',
-    margin: '15px auto',
-    display: 'flex',
-    justifyContent: 'center'
-
+    width: "95%",
+    margin: "15px auto",
+    display: "flex",
+    justifyContent: "center",
   },
   button: {
     background: theme.palette.primary.main,
-
-  }
-
-
+  },
+  addButtonChannel: {
+    borderRadius: "5px",
+    margin: "0 10px",
+    maxWidth: "180px",
+    cursor: "pointer",
+    border: `1px solid ${theme.palette.primary.light}`,
+    ":hover": {
+      border: `1px solid ${theme.palette.primary.contrastText}`,
+    },
+  },
 });
 
 export default function Channels() {
@@ -105,7 +110,9 @@ export default function Channels() {
     fetch();
   }, [oauth, setChannels]);
 
-  const myChannels = channels.filter(channel =>channel.email === oauth.email)
+  const myChannels = channels.filter(
+    (channel) => channel.email === oauth.email
+  );
 
   const clickWelcome = () => {
     setCurrentChannel(null);
@@ -139,7 +146,7 @@ export default function Channels() {
         email: oauth.email,// a changer selon l'utilisateur
       }
     );
-    console.log("all good")
+    console.log("all good");
   };
   console.log(myChannels)
 
@@ -225,12 +232,8 @@ export default function Channels() {
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
-          <ListItemText css={styles.line}>
-            Add channel
-          </ListItemText>
+          <ListItemText css={styles.line}>Add channel</ListItemText>
         </ListItem>
-
-
       </List>
 
       {/*****************************************
@@ -245,7 +248,12 @@ export default function Channels() {
           aria-describedby="keep-mounted-modal-description"
         >
           <Box css={styles.modal}>
-            <Typography id="keep-mounted-modal-title" variant="h3" component="h2" css={styles.title}>
+            <Typography
+              id="keep-mounted-modal-title"
+              variant="h3"
+              component="h2"
+              css={styles.title}
+            >
               Create Channel
             </Typography>
 
@@ -269,10 +277,13 @@ export default function Channels() {
                 css={styles.formField}
               />
 
-              <Button variant="contained" type='submit' css={styles.button && styles.formField}>
+              <Button
+                variant="contained"
+                type="submit"
+                css={styles.button && styles.formField}
+              >
                 Create
               </Button>
-
             </form>
           </Box>
         </Modal>
