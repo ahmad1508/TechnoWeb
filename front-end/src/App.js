@@ -3,7 +3,7 @@
 import { useContext, useState } from 'react'
 // Local
 import Oups from './Oups'
-import Footer from './Footer'
+//import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
 import Login from './Login'
@@ -28,7 +28,6 @@ const styles = {
 export default function App() {
   const location = useLocation()
   const {oauth} = useContext(Context)
-  console.log(useContext(Context))
   const [drawerMobileVisible, setDrawerMobileVisible] = useState(false)
   const drawerToggleListener = () => {
     setDrawerMobileVisible(!drawerMobileVisible)

@@ -10,6 +10,7 @@ import Form from "./channel/Form";
 import List from "./channel/List";
 import Context from "./Context";
 import { useNavigate, useParams } from "react-router-dom";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const useStyles = (theme) => ({
   root: {
@@ -36,6 +37,9 @@ const useStyles = (theme) => ({
   icon: {
     fill: theme.palette.primary.main,
   },
+  delete:{
+    cursor:'pointer'
+  }
 });
 
 export default function Channel() {
@@ -85,9 +89,31 @@ export default function Channel() {
   if (!channel) {
     return <div>loading</div>;
   }
+  /***********************
+   * Delete channel
+   *********************/
+  /*const handleDelete = async ()=>{
+    console.log('run')
+    try {
+      await axios.delete(
+        `http://localhost:3001/channels/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${oauth.access_token}`,
+          },
+        }
+      );
+      
+    } catch (err) {
+      navigate("/oups");
+    }
+    console.log('end')
+  }*/
   return (
     <div css={styles.root}>
-      <h1 css={{marginLeft: "1rem"}}>Messages for {channel.name}</h1>
+      <h1 css={{marginLeft: "1rem"}}>Messages for {channel.name} 
+      <DeleteIcon css={styles.delete} />
+      </h1>
       <List
         channel={channel}
         messages={messages}

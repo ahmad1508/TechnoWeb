@@ -50,9 +50,13 @@ module.exports = {
     },
     /****************  DELETE  ****************** */
     delete: (id, channel) => {
-      const original = store.channels[id]
+      db.get(`channels:${id}`)
+      const original = db.get(`channels:${id}`)
       if (!original) throw Error('Unregistered channel id')
-      delete store.channels[id]
+      db.del(`channels:${id}`)
+      /* const original = store.channels[id]
+      if (!original) throw Error('Unregistered channel id')
+      delete store.channels[id] */
     }
   },
   /**********************************

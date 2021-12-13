@@ -76,6 +76,7 @@ const useStyles = (theme) => ({
 
 export default function Channels() {
   const [content, setContent] = useState("");
+  const [participants, setParticipants] = useState("")
   const styles = useStyles(useTheme());
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -83,6 +84,8 @@ export default function Channels() {
   const naviate = useNavigate();
   const { oauth, channels, setChannels, currentChannel, setCurrentChannel } =
     useContext(Context);
+  const [participant, setParticipant] = useState([oauth.email])
+
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -102,27 +105,44 @@ export default function Channels() {
     fetch();
   }, [oauth, setChannels]);
 
-  const myChannels = channels.filter(channel => channel.email === oauth.email )
-  
+  const myChannels = channels.filter(channel =>channel.email === oauth.email)
+
   const clickWelcome = () => {
     setCurrentChannel(null);
   };
 
-  const handleChange = (e) => {
+  /************************
+   * Handle creation submit
+   *************************/
+  const handleChannelName = (e) => {
     setContent(e.target.value);
+
+  };
+  const handleParticipants = (e) => {
+    setParticipants(e.target.value);
   };
 
+  const formatParticipants = () => {
+    setParticipant([...participant, participants.split(",")])
+
+  }
+
   const onSubmit = async (e) => {
+    e?.preventDefault();
+    handleClose()
+    formatParticipants()
     const { data: channel } = await axios.post(
       `http://localhost:3001/channels`,
       {
-        name:content,
+        name: content,
+        participants: participant,
         email: oauth.email,// a changer selon l'utilisateur
       }
     );
     console.log("all good")
   };
-  console.log(channels)
+  console.log(myChannels)
+
   return (
     <List css={styles.root} css={{}}>
       <li css={styles.channel}>
@@ -197,6 +217,9 @@ export default function Channels() {
             borderRadius: "5px",
             margin: "0 10px",
             maxWidth: "180px",
+            background:"#000000",
+            opacity:1,
+            cursor:'pointer'
           }}
         >
           <ListItemIcon>
@@ -232,7 +255,7 @@ export default function Channels() {
                 label="Channel Name"
                 multiline
                 maxRows={4}
-                onChange={handleChange}
+                onChange={handleChannelName}
                 css={styles.formField}
                 required
               />
@@ -242,11 +265,12 @@ export default function Channels() {
                 placeholder="Separate by , "
                 multiline
                 maxRows={4}
+                onChange={handleParticipants}
                 css={styles.formField}
               />
 
               <Button variant="contained" type='submit' css={styles.button && styles.formField}>
-              Create
+                Create
               </Button>
 
             </form>
