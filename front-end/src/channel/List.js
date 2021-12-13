@@ -116,7 +116,6 @@ const useStyles = (theme) => ({
 export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
   const styles = useStyles(useTheme());
   const val = useContext(Context);
-  console.log(messages);
 
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({

@@ -13,6 +13,7 @@
     "level": "^7.0.1",
     "microtime": "^3.0.0",
     "mixme": "^0.5.4",
+    "nodemon": "^2.0.15",
     "should": "^13.2.3",
     "supertest": "^6.1.6",
     "uuid": "^8.3.2"
@@ -40,7 +41,7 @@
   "scripts": {
     "reset": "bin/reset",
     "develop": "bin/init && bin/start",
-    "start": "bin/start",
+    "start": "nodemon bin/start",
     "test": "TEST_PAYLOAD_EMAIL=admin@example.com mocha 'test/**/*.js'"
   }
 }

@@ -23,6 +23,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Context from "./Context";
 import { useNavigate, useParams } from "react-router-dom";
 
+
 const useStyles = (theme) => ({
   channel: {
     padding: "0.25rem 0",
@@ -89,7 +90,6 @@ export default function Channels() {
   const naviate = useNavigate();
   const { oauth, channels, setChannels, currentChannel, setCurrentChannel } =
     useContext(Context);
-  const [participant, setParticipant] = useState([oauth.email])
 
   useEffect(() => {
     const fetch = async () => {
@@ -100,19 +100,16 @@ export default function Channels() {
             headers: {
               Authorization: `Bearer ${oauth.access_token}`,
             },
-          }
+          },
         );
         setChannels(channels);
+        
       } catch (err) {
         console.error(err);
       }
     };
     fetch();
   }, [oauth, setChannels]);
-
-  const myChannels = channels.filter(
-    (channel) => channel.email === oauth.email
-  );
 
   const clickWelcome = () => {
     setCurrentChannel(null);
@@ -129,29 +126,30 @@ export default function Channels() {
     setParticipants(e.target.value);
   };
 
-  const formatParticipants = () => {
+  /* const formatParticipants = () => {
+    console.log(participants)
     setParticipant([...participant, participants.split(",")])
+    console.log(participant)
 
-  }
+  } */
 
   const onSubmit = async (e) => {
-    e?.preventDefault();
+    e?.preventDefault()
+    //formatParticipants()
     handleClose()
-    formatParticipants()
     const { data: channel } = await axios.post(
       `http://localhost:3001/channels`,
       {
         name: content,
-        participants: participant,
+        participants: participants,
         email: oauth.email,// a changer selon l'utilisateur
       }
     );
     console.log("all good");
   };
-  console.log(myChannels)
 
   return (
-    <List css={styles.root} css={{}}>
+    <List css={styles.root} >
       <li css={styles.channel}>
         <Link
           to="/channels"
@@ -186,7 +184,7 @@ export default function Channels() {
           </ListItem>
         </Link>
       </li>
-      {myChannels.map((channel, i) => (
+      {channels && channels.map((channel, i) => (
         <List key={i} css={styles.channel}>
           <Link
             underline="none"
@@ -224,9 +222,9 @@ export default function Channels() {
             borderRadius: "5px",
             margin: "0 10px",
             maxWidth: "180px",
-            background:"#000000",
-            opacity:1,
-            cursor:'pointer'
+            background: "#000000",
+            opacity: 1,
+            cursor: 'pointer'
           }}
         >
           <ListItemIcon>

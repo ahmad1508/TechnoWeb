@@ -19,12 +19,36 @@ app.get("/", (req, res) => {
 // Channels
 
 app.get("/channels", authenticate, async (req, res) => {
-  const channels = await db.channels.list();
+  const allChannels = await db.channels.list();
+  const channels = [];
+  allChannels.map((channel) => {
+    for (let i = 0; i < channel.participants.length; i++) {
+      if (channel.participants[i] === req.user.email) {
+                console.log(1)
+
+        channels.push(channel)
+        break;
+      } else if (channel.email === req.user.email) {
+        console.log(2)
+        channels.push(channel)
+        break;
+      } else {
+        console.log(3)
+      }
+    }
+
+
+
+  })
+  console.log(27, allChannels)
+  console.log(28, channels)
   res.json(channels);
 });
 
 app.post("/channels", async (req, res) => {
-  const channel = await db.channels.create(req.body);
+  const createChannel = req.body
+  createChannel.participants = createChannel.participants.split(",")
+  const channel = await db.channels.create(createChannel);
   res.status(201).json(channel);
 });
 
@@ -38,8 +62,8 @@ app.put("/channels/:id", async (req, res) => {
   res.json(channel);
 });
 
-app.delete("/channels/:id",async (req,res)=>{
-  const channel = await db.channels.delete(req.params.id,req.body)
+app.delete("/channels/:id", async (req, res) => {
+  const channel = await db.channels.delete(req.params.id, req.body)
   res.json(channel);
 })
 

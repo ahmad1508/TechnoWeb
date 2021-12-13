@@ -3,7 +3,7 @@ import { useContext, useRef, useState, useEffect } from "react";
 import axios from "axios";
 // Layout
 import { useTheme } from "@mui/styles";
-import { Fab } from "@mui/material";
+import { Fab, Grid } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 // Local
 import Form from "./channel/Form";
@@ -11,6 +11,10 @@ import List from "./channel/List";
 import Context from "./Context";
 import { useNavigate, useParams } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Dropdown from './components/Dropdown'
 
 const useStyles = (theme) => ({
   root: {
@@ -23,7 +27,7 @@ const useStyles = (theme) => ({
   },
   fab: {
     ":hover": {
-    backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.dark,
 
     },
     backgroundColor: theme.palette.primary.light,
@@ -37,8 +41,17 @@ const useStyles = (theme) => ({
   icon: {
     fill: theme.palette.primary.main,
   },
-  delete:{
-    cursor:'pointer'
+  delete: {
+    cursor: 'pointer'
+  },
+  dots: {
+    cursor: 'pointer'
+  },
+  header: {
+    width: '100%'
+  },
+  drop:{
+    justifyContent:'flex-end'
   }
 });
 
@@ -55,6 +68,17 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
+  /***********dropdown menu variables */
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -111,9 +135,19 @@ export default function Channel() {
   }*/
   return (
     <div css={styles.root}>
-      <h1 css={{marginLeft: "1rem"}}>Messages for {channel.name} 
-      <DeleteIcon css={styles.delete} />
-      </h1>
+      <Grid container css={styles.header}>
+        <Grid md={10}>
+          <h1 css={{ marginLeft: "1rem" }}>Messages for {channel.name}
+            <DeleteIcon css={styles.delete} />
+          </h1>
+        </Grid>
+        <Grid md={2} css={styles.drop}>
+
+          <Dropdown />
+
+        </Grid>
+      </Grid>
+
       <List
         channel={channel}
         messages={messages}

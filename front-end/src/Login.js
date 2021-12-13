@@ -66,6 +66,7 @@ const Redirect = ({config,codeVerifier,}) => {
       `code_challenge=${code_challenge}&`,
       `code_challenge_method=S256`,
     ].join('')
+    
     window.location = url
   }
   return (
@@ -115,6 +116,7 @@ const LoadToken = ({
           redirect_uri: `${config.redirect_uri}`,
           code: `${code}`,
         }))
+        console.log(data)
         removeCookie('code_verifier')
         setOauth(data)
         navigate('/')
