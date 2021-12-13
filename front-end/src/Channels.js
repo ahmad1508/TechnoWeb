@@ -209,6 +209,10 @@ export default function Channels() {
 
 
       </List>
+
+      {/*****************************************
+              Modal for channel creation
+      ***************************************** */}
       <div>
         <Modal
           keepMounted
