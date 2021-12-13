@@ -52,7 +52,7 @@ app.get("/channels/:id/messages", async (req, res) => {
 
 app.post("/channels/:id/messages", async (req, res) => {
   const message = await db.messages.create(req.params.id, req.body);
-  res.status(201).json(message);
+  res.status(201).json(message);// send the message to the the axios request
 });
 
 // Users

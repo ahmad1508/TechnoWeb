@@ -2,11 +2,12 @@
 import { useContext } from "react";
 // Layout
 import { useTheme } from "@mui/styles";
-import { IconButton, Link } from "@mui/material";
+import { IconButton, Link, Avatar, Grid } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Context from "./Context";
 import { ReactComponent as LogoIcon } from "./icons/logo-cropped.svg";
+
 
 const useStyles = (theme) => ({
   header: {
@@ -21,12 +22,19 @@ const useStyles = (theme) => ({
       display: "none !important",
     },
   },
+  avatar: {
+    width: "2rem",
+    height: "2rem",
+    fontSize: "1rem",
+    backgroundColor: "#fff",
+  },
 });
 
 export default function Header({ drawerToggleListener }) {
   const styles = useStyles(useTheme());
   const { oauth, setOauth, drawerVisible, setDrawerVisible } =
     useContext(Context);
+  
   const drawerToggle = (e) => {
     setDrawerVisible(!drawerVisible);
   };
@@ -52,11 +60,30 @@ export default function Header({ drawerToggleListener }) {
         }}
       />
       {oauth && (
-        <LogoutIcon
-          onClick={onClickLogout}
-          css={{ marginLeft: "0.5rem", cursor: "pointer" }}
-        />
+        <div css={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+          <div css={{ marginTop: "5px" }}>
+            <LogoutIcon
+              onClick={onClickLogout}
+              css={{ marginLeft: "0.5rem", cursor: "pointer" }}
+            />
+          </div>
+          <div>
+            <Grid container css={{ display: 'flex' }}>
+              <Grid >
+                <Avatar css={styles.avatar}>
+                  {oauth.email[0].toUpperCase()}
+                </Avatar>
+              </Grid>
+              <Grid css={{ margin: "5px 10px 0px 10px" }}>
+                {oauth.email}
+              </Grid>
+
+            </Grid>
+          </div>
+        </div>
       )}
+
+
     </header>
   );
 }

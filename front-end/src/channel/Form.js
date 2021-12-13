@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 // Layout
 import { IconButton, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/styles";
+import Context from "../Context";
 
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -44,6 +45,7 @@ const useStyles = (theme) => {
 
 export default function Form({ addMessage, channel }) {
   const [content, setContent] = useState("");
+  const {oauth} = useContext(Context)
   const styles = useStyles(useTheme());
   const onSubmit = async (e) => {
     e?.preventDefault();
@@ -51,7 +53,7 @@ export default function Form({ addMessage, channel }) {
       `http://localhost:3001/channels/${channel.id}/messages`,
       {
         content: content,
-        author: "david",
+        author: oauth.email,// a changer selon l'utilisateur
       }
     );
     addMessage(message);

@@ -25,6 +25,13 @@ services:
     networks:
       - back-end
       - front-end
+    volumes:
+      - ./back-end:/back-end
+    working_dir: /back-end
+    command: >
+      bash -c "rm -Rf ./node_modules &&
+      npm i &&
+      npm start"
 
 networks:
   back-end:

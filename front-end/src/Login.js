@@ -50,11 +50,10 @@ const useStyles = (theme) => ({
   },
 })
 
-const Redirect = ({
-  config,
-  codeVerifier,
-}) => {
+const Redirect = ({config,codeVerifier,}) => {
   const styles = useStyles(useTheme())
+  console.log(config)
+  console.log(codeVerifier)
   const redirect = (e) => {
     e.stopPropagation()
     const code_challenge = base64URLEncode(sha256(codeVerifier))
@@ -148,7 +147,7 @@ export default function Login({
   const code = params.get('code')
   // is there a code query parameters in the url 
   if(!code){ // no: we are not being redirected from an oauth server
-    if(!oauth){
+    if(!oauth){//if we are not logged in 
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
       console.log('set code_verifier', codeVerifier)
       setCookie('code_verifier', codeVerifier)

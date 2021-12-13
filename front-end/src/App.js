@@ -28,10 +28,12 @@ const styles = {
 export default function App() {
   const location = useLocation()
   const {oauth} = useContext(Context)
+  console.log(useContext(Context))
   const [drawerMobileVisible, setDrawerMobileVisible] = useState(false)
   const drawerToggleListener = () => {
     setDrawerMobileVisible(!drawerMobileVisible)
   }
+
   const gochannels = (<Navigate
     to={{
       pathname: "/channels",
@@ -52,7 +54,7 @@ export default function App() {
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)}/>
         <Route path="/Oups" element={<Oups />} />
       </Routes>
-      <Footer />
+      {/* <Footer/> */}
     </div>
   );
 }
