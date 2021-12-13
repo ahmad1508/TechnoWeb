@@ -74,7 +74,7 @@ export default function Form({ addMessage, channel }) {
         variant="outlined"
         css={styles.content}
         onKeyPress={(ev) => {
-          if (ev.key === "Enter") {
+          if ((ev.key === "Enter") && !ev.shiftKey) {
             onSubmit();
             ev.preventDefault();
           }
