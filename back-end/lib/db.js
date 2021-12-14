@@ -51,13 +51,8 @@ module.exports = {
     },
     /****************  DELETE  ****************** */
     delete: async (id, channel) => {
-     const data = await db.get(`channels:${id}`)
-     console.log(data)
       if (!data) throw Error('Unregistered channel id')
       db.del(`channels:${id}`)
-      /* const original = store.channels[id]
-      if (!original) throw Error('Unregistered channel id')
-      delete store.channels[id]*/
     } 
   },
   /**********************************
