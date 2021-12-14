@@ -12,7 +12,7 @@ import Form from "./channel/Form";
 import List from "./channel/List";
 import Context from "./Context";
 import { useNavigate, useParams } from "react-router-dom";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Divider from '@mui/material/Divider';
 
 import Dropdown from './Dropdown'
 
@@ -116,18 +116,18 @@ export default function Channel() {
 
   return (
     <div css={styles.root}>
+
       <Grid container css={styles.header}>
         <Grid md={10}>
           <h1 css={{ marginLeft: "1rem" }}>Messages for {channel.name}
           </h1>
         </Grid>
-
-
         <Grid md={2} css={styles.drop}>
           <Dropdown/>
         </Grid>
       </Grid>
       
+      <Divider sx={{ my: 0.5 , color: "#ffffff" }} />
 
       <List
         channel={channel}
