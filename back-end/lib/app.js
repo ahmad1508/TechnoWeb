@@ -36,12 +36,7 @@ app.get("/channels", authenticate, async (req, res) => {
         console.log(3)
       }
     }
-
-
-
   })
-  console.log(27, allChannels)
-  console.log(28, channels)
   res.json(channels);
 });
 

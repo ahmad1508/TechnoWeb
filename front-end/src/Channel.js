@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useRef, useState, useEffect } from "react";
 import axios from "axios";
+import React from 'react';
+import { styled } from '@mui/material/styles';
 // Layout
 import { useTheme } from "@mui/styles";
 import { Fab, Grid } from "@mui/material";
@@ -10,11 +12,10 @@ import Form from "./channel/Form";
 import List from "./channel/List";
 import Context from "./Context";
 import { useNavigate, useParams } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Dropdown from './components/Dropdown'
+
+import Dropdown from './Dropdown'
+
 
 const useStyles = (theme) => ({
   root: {
@@ -50,10 +51,14 @@ const useStyles = (theme) => ({
   header: {
     width: '100%'
   },
-  drop:{
-    justifyContent:'flex-end'
-  }
+  drop: {
+    justifyContent: 'flex-end',
+  },
+
+  
 });
+
+
 
 export default function Channel() {
   const navigate = useNavigate();
@@ -65,18 +70,13 @@ export default function Channel() {
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
+
+ 
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  /***********dropdown menu variables */
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  
+
 
 
   useEffect(() => {
@@ -113,40 +113,21 @@ export default function Channel() {
   if (!channel) {
     return <div>loading</div>;
   }
-  /***********************
-   * Delete channel
-   *********************/
-  /*const handleDelete = async ()=>{
-    console.log('run')
-    try {
-      await axios.delete(
-        `http://localhost:3001/channels/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${oauth.access_token}`,
-          },
-        }
-      );
-      
-    } catch (err) {
-      navigate("/oups");
-    }
-    console.log('end')
-  }*/
+
   return (
     <div css={styles.root}>
       <Grid container css={styles.header}>
         <Grid md={10}>
           <h1 css={{ marginLeft: "1rem" }}>Messages for {channel.name}
-            <DeleteIcon css={styles.delete} />
           </h1>
         </Grid>
+
+
         <Grid md={2} css={styles.drop}>
-
-          <Dropdown />
-
+          <Dropdown/>
         </Grid>
       </Grid>
+      
 
       <List
         channel={channel}
@@ -165,3 +146,23 @@ export default function Channel() {
     </div>
   );
 }
+/***********************
+   * Delete channel
+   *********************/
+/*const handleDelete = async ()=>{
+  console.log('run')
+  try {
+    await axios.delete(
+      `http://localhost:3001/channels/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${oauth.access_token}`,
+        },
+      }
+    );
+    
+  } catch (err) {
+    navigate("/oups");
+  }
+  console.log('end')
+}*/

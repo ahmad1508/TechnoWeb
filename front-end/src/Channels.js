@@ -222,7 +222,7 @@ export default function Channels() {
             borderRadius: "5px",
             margin: "0 10px",
             maxWidth: "180px",
-            background: "#000000",
+            background: "#8774e1",
             opacity: 1,
             cursor: 'pointer'
           }}
