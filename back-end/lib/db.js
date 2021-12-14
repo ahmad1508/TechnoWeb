@@ -44,20 +44,21 @@ module.exports = {
     },
     /****************  UPDATE  ****************** */
     update: (id, channel) => {
+
       const original = store.channels[id]
       if (!original) throw Error('Unregistered channel id')
-      store.channels[id] = merge(original, channel)
+      store.channels[id] = merge(original, channel) 
     },
     /****************  DELETE  ****************** */
-    delete: (id, channel) => {
-      db.get(`channels:${id}`)
-      const original = db.get(`channels:${id}`)
-      if (!original) throw Error('Unregistered channel id')
+    delete: async (id, channel) => {
+     const data = await db.get(`channels:${id}`)
+     console.log(data)
+      if (!data) throw Error('Unregistered channel id')
       db.del(`channels:${id}`)
       /* const original = store.channels[id]
       if (!original) throw Error('Unregistered channel id')
-      delete store.channels[id] */
-    }
+      delete store.channels[id]*/
+    } 
   },
   /**********************************
    *    Messages CRUD operation  

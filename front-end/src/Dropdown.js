@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import { useTheme } from "@mui/material";
+import React, { useState, useContext } from 'react';
+import { styled } from '@mui/material/styles';
+import { Grid, useTheme } from "@mui/material";
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useParams } from "react-router-dom";
 import axios from 'axios';
-
+import { useNavigate, useParams } from "react-router-dom";
+import Context from "./Context"
 import {
     List,
     Typography,
@@ -54,6 +54,11 @@ const useStyles = (theme) => ({
         ":hover": {
             border: `1px solid ${theme.palette.primary.contrastText}`,
         },
+    },
+    titlediff: {
+        padding: "5px 0px",
+        textAlign: "center",
+        borderRadius: "5px",
     },
 
 });
@@ -101,15 +106,20 @@ const StyledMenu = styled((props) => (
 
 
 export default function Dropdown() {
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [Open, setOpen] = useState(false)
+    const [OpenDelete, setOpenDelete] = useState(false)
     const styles = useStyles(useTheme());
     const [invitation, setInvitation] = useState("")
     const open = Boolean(anchorEl);
     const { id } = useParams()
+    const { oauth, currentChannel } = useContext(Context)
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
-    console.log(id)
+    const handleOpenDelete = () => setOpenDelete(true)
+    const handleCloseDelete = () => setOpenDelete(false)
+    const [button, setButton] = useState('')
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -121,17 +131,49 @@ export default function Dropdown() {
         setInvitation(e.target.value)
         console.log(invitation)
     }
-
+    const handleYes = () => {
+        setButton('yes')
+    }
+    const handleNo = () => {
+        setButton('no')
+    }
     const onSubmit = (e) => {
         e?.preventDefault()
         handleCloseAdd()
-        const { data: invitation } = axios.post(
+
+        const { data: channel } = axios.post(
             `http://localhost:3001/channels/${id}`,
             {
                 invitation: invitation,// a changer selon l'utilisateur
             }
         )
         setInvitation("")
+    }
+
+    /****************************
+    *        Delete channel
+    ***************************/
+    const handleDelete = async (e) => {
+        e.preventDefault()
+        handleCloseDelete()
+        console.log(button)
+        if (button === 'yes') {
+            const { data: channel } = await axios.delete(
+                `http://localhost:3001/channels/${id}`,
+                {
+                    channel: currentChannel,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${oauth.access_token}`,
+                    },
+                }
+            );
+            navigate("/");
+            console.log(channel)
+        }
+
+        console.log('end')
     }
 
 
@@ -147,7 +189,7 @@ export default function Dropdown() {
                 disableElevation
                 onClick={handleClick}
             >
-                <img src='/dot.svg' />
+                <img src='/dot.svg' alt="click me" />
             </Button>
             <StyledMenu
                 id="demo-customized-menu"
@@ -166,8 +208,10 @@ export default function Dropdown() {
                 </MenuItem>
                 <Divider sx={{ my: 0.5, color: "#ffffff" }} />
                 <MenuItem onClick={handleClose} disableRipple>
-                    <DeleteIcon />
-                    Delete Channel
+                    <Button onClick={handleOpenDelete}>
+                        <DeleteIcon />
+                        Delete Channel
+                    </Button>
                 </MenuItem>
             </StyledMenu>
 
@@ -206,55 +250,65 @@ export default function Dropdown() {
                         <Button
                             variant="contained"
                             type="submit"
-                            sx={styles.button && styles.formField}
+                            sx={styles.addButton && styles.formField}
                         >
                             Create
                         </Button>
                     </form>
                 </Box>
             </Modal>
+
+            {/**** delete Div modal *****/}
+            <Modal
+                keepMounted
+                open={OpenDelete}
+                onClose={handleCloseDelete}
+                aria-labelledby="keep-mounted-modal-title"
+                aria-describedby="keep-mounted-modal-description"
+            >
+                <Box sx={styles.modal}>
+                    <Typography
+                        id="keep-mounted-modal-title"
+                        variant="h5"
+                        component="h5"
+                        sx={styles.titlediff}
+                    >
+                        Are you sure you want to delete this channel
+                    </Typography>
+
+                    <form sx={styles.form} onSubmit={handleDelete} noValidate>
+
+                        <Grid container>
+                            <Grid md={6}>
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    value='yes'
+                                    id='yes'
+                                    onClick={handleYes}
+                                    sx={styles.addButton && styles.formField}
+                                >
+                                    Yes
+                                </Button>
+                            </Grid>
+                            <Grid md={6}>
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    value="no"
+                                    id='no'
+                                    onClick={handleNo}
+                                    sx={styles.addButton && styles.formField}
+                                >
+                                    No
+                                </Button>
+                            </Grid>
+                        </Grid>
+
+
+                    </form>
+                </Box>
+            </Modal>
         </List>
     );
 }
-
-{/* <div>
-<Modal
-    keepMounted
-    open={openModal}
-    onClose={closeAdd}
-    aria-labelledby="keep-mounted-modal-title"
-    aria-describedby="keep-mounted-modal-description"
->
-    <Box css={styles.modal}>
-        <Typography
-            id="keep-mounted-modal-title"
-            variant="h3"
-            component="h2"
-            css={styles.title}
-        >
-            Invite people to this channel
-        </Typography>
-
-        <form css={styles.form} onSubmit={onSubmit} noValidate>
-
-            <TextField
-                id="outlined-multiline-flexible"
-                label="Partcipants"
-                placeholder="Separate by , "
-                multiline
-                maxRows={4}
-                onChange={handleInvitation}
-                css={styles.formField}
-            />
-
-            <Button
-                variant="contained"
-                type="submit"
-                css={styles.button && styles.formField}
-            >
-                Create
-            </Button>
-        </form>
-    </Box>
-</Modal>
-</div> */}

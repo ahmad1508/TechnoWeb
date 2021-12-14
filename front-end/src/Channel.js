@@ -1,8 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useRef, useState, useEffect } from "react";
 import axios from "axios";
-import React from 'react';
-import { styled } from '@mui/material/styles';
 // Layout
 import { useTheme } from "@mui/styles";
 import { Fab, Grid } from "@mui/material";
@@ -49,7 +47,7 @@ const useStyles = (theme) => ({
     cursor: 'pointer'
   },
   header: {
-    width: '100%'
+    width: '100%',
   },
   drop: {
     justifyContent: 'flex-end',
@@ -119,7 +117,7 @@ export default function Channel() {
 
       <Grid container css={styles.header}>
         <Grid md={10}>
-          <h1 css={{ marginLeft: "1rem" }}>Messages for {channel.name}
+          <h1 css={{ marginLeft: "1rem" }}>{channel.name}
           </h1>
         </Grid>
         <Grid md={2} css={styles.drop}>
@@ -146,23 +144,3 @@ export default function Channel() {
     </div>
   );
 }
-/***********************
-   * Delete channel
-   *********************/
-/*const handleDelete = async ()=>{
-  console.log('run')
-  try {
-    await axios.delete(
-      `http://localhost:3001/channels/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${oauth.access_token}`,
-        },
-      }
-    );
-    
-  } catch (err) {
-    navigate("/oups");
-  }
-  console.log('end')
-}*/

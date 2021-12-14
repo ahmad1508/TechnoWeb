@@ -9,7 +9,7 @@ import {
 import { useContext } from "react";
 import Context from "../Context";
 import { useTheme } from "@mui/styles";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 // Markdown
 import { unified } from "unified";
 import markdown from "remark-parse";
@@ -30,7 +30,6 @@ dayjs.updateLocale("en", {
 const useStyles = (theme) => ({
   root: {
     flex: "1 1 auto",
-
     overflow: "auto",
     "& ul": {
       margin: 0,

@@ -24,16 +24,12 @@ app.get("/channels", authenticate, async (req, res) => {
   allChannels.map((channel) => {
     for (let i = 0; i < channel.participants.length; i++) {
       if (channel.participants[i] === req.user.email) {
-                console.log(1)
-
         channels.push(channel)
         break;
       } else if (channel.email === req.user.email) {
-        console.log(2)
         channels.push(channel)
         break;
       } else {
-        console.log(3)
       }
     }
   })
@@ -58,6 +54,7 @@ app.put("/channels/:id", async (req, res) => {
 });
 
 app.delete("/channels/:id", async (req, res) => {
+  console.log(req)
   const channel = await db.channels.delete(req.params.id, req.body)
   res.json(channel);
 })

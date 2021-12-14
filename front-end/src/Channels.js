@@ -21,7 +21,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link as RouterLink } from "react-router-dom";
 // Local
 import Context from "./Context";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const useStyles = (theme) => ({
@@ -134,7 +134,7 @@ export default function Channels() {
   } */
 
   const onSubmit = async (e) => {
-    e?.preventDefault()
+    
     //formatParticipants()
     handleClose()
     const { data: channel } = await axios.post(
@@ -145,7 +145,7 @@ export default function Channels() {
         email: oauth.email,// a changer selon l'utilisateur
       }
     );
-    console.log("all good");
+    console.log(channel);
   };
 
   return (
@@ -213,6 +213,7 @@ export default function Channels() {
             </ListItem>
           </Link>
         </List>
+
       ))}
 
       <List css={styles.addChannel} onClick={handleOpen}>
