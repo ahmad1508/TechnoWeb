@@ -15,7 +15,7 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-
+import Divider from '@mui/material/Divider';
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link as RouterLink } from "react-router-dom";
@@ -103,7 +103,7 @@ export default function Channels() {
           },
         );
         setChannels(channels);
-        
+        console.log(channels)
       } catch (err) {
         console.error(err);
       }
@@ -126,15 +126,9 @@ export default function Channels() {
     setParticipants(e.target.value);
   };
 
-  /* const formatParticipants = () => {
-    console.log(participants)
-    setParticipant([...participant, participants.split(",")])
-    console.log(participant)
-
-  } */
 
   const onSubmit = async (e) => {
-    
+
     //formatParticipants()
     handleClose()
     const { data: channel } = await axios.post(
@@ -183,6 +177,19 @@ export default function Channels() {
             <ListItemText primary="Welcome" css={styles.line} />
           </ListItem>
         </Link>
+      </li>
+      <li css={styles.channel}>
+      <ListItem
+            css={{
+              borderRadius: "5px",
+              margin: "0px 15px",
+              marginTop: "10px",
+              maxWidth: "180px",
+              fontSize:"1.5rem"
+            }}
+          >
+            Discussions
+          </ListItem>
       </li>
       {channels && channels.map((channel, i) => (
         <List key={i} css={styles.channel}>

@@ -126,10 +126,8 @@ export default function Dropdown() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
     const handleInvitation = (e) => {
         setInvitation(e.target.value)
-        console.log(invitation)
     }
     const handleYes = () => {
         setButton('yes')
@@ -137,11 +135,14 @@ export default function Dropdown() {
     const handleNo = () => {
         setButton('no')
     }
+
+    /****************************
+    *        Update channel
+    ***************************/
     const onSubmit = (e) => {
         e?.preventDefault()
         handleCloseAdd()
-
-        const { data: channel } = axios.post(
+        const { data: channel } = axios.put(
             `http://localhost:3001/channels/${id}`,
             {
                 invitation: invitation,// a changer selon l'utilisateur
@@ -252,7 +253,7 @@ export default function Dropdown() {
                             type="submit"
                             sx={styles.addButton && styles.formField}
                         >
-                            Create
+                            Add
                         </Button>
                     </form>
                 </Box>

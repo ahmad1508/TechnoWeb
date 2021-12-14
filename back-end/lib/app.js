@@ -28,11 +28,13 @@ app.get("/channels", authenticate, async (req, res) => {
         break;
       } else if (channel.email === req.user.email) {
         channels.push(channel)
+
         break;
       } else {
       }
     }
   })
+
   res.json(channels);
 });
 
@@ -49,7 +51,12 @@ app.get("/channels/:id", async (req, res) => {
 });
 
 app.put("/channels/:id", async (req, res) => {
-  const channel = await db.channels.update(req.body);
+  const invitation = req.body.invitation.split(",");
+  const existing = await db.channels.get(req.params.id);
+  for (let i = 0; i < invitation.length; i++) {
+    existing.participants.push(invitation[i])
+  }
+  const channel = await db.channels.update(req.params.id, existing);
   res.json(channel);
 });
 
