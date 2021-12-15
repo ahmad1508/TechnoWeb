@@ -49,10 +49,12 @@ module.exports = {
       
     },
     /****************  DELETE  ****************** */
-    delete: (id, channel) => {
+    delete: (id, ) => {
       
       //if (!data) throw Error('Unregistered channel id')
-      db.del(`channels:${id}`)
+      const channel = db.del(`channels:${id}`)
+      return merge(channel, { id: id })
+
     } 
   },
   /**********************************

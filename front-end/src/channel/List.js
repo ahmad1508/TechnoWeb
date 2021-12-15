@@ -187,7 +187,7 @@ export default forwardRef(({ channel, messages, setMessages, onScrollDown }, ref
     const newMessages = messages.filter(msg => msg.creation !== creation)
     setMessages(newMessages)
     setOpen(true)
-    
+
     console.log('end')
   }
 
@@ -257,11 +257,11 @@ export default forwardRef(({ channel, messages, setMessages, onScrollDown }, ref
             </Box>
           );
         })}
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Message Deleted
-        </Alert>
-      </Snackbar>
+        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+          <Alert onClose={handleClose} css={{background:"#111"}} sx={{ width: '100%' }}>
+            Message Deleted
+          </Alert>
+        </Snackbar>
       </Box>
       <Box ref={scrollEl} />
     </Box >

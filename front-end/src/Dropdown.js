@@ -10,6 +10,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import Context from "./Context"
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import {
     List,
     Typography,
@@ -103,7 +106,9 @@ const StyledMenu = styled((props) => (
 }));
 
 
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Dropdown() {
     const navigate = useNavigate();
@@ -114,7 +119,8 @@ export default function Dropdown() {
     const [invitation, setInvitation] = useState("")
     const open = Boolean(anchorEl);
     const { id } = useParams()
-    const { oauth, currentChannel } = useContext(Context)
+    const { oauth, currentChannel, setChannels, channels } = useContext(Context)
+    const [openD, setOpenD] = useState(false)
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
     const handleOpenDelete = () => setOpenDelete(true)
@@ -135,7 +141,12 @@ export default function Dropdown() {
     const handleNo = () => {
         setButton('no')
     }
-
+    const handleCloseD = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+      };
     /****************************
     *        Update channel
     ***************************/
@@ -170,7 +181,10 @@ export default function Dropdown() {
                     },
                 }
             );
-            navigate("/");
+            const newChannels = channels.filter((chnl) => chnl.id !== channel.id)
+            setChannels(newChannels)
+            navigate("/channels");
+            setOpenDelete(true)
             console.log(channel)
         }
 
@@ -310,6 +324,11 @@ export default function Dropdown() {
                     </form>
                 </Box>
             </Modal>
+            <Snackbar open={openD} autoHideDuration={6000} onClose={handleCloseD}>
+                <Alert onClose={handleCloseD} severity="info" sx={{ width: '100%' }}>
+                    Channel Deleted
+                </Alert>
+            </Snackbar>
         </List>
     );
 }
