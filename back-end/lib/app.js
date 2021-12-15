@@ -61,8 +61,8 @@ app.put("/channels/:id", async (req, res) => {
 });
 
 app.delete("/channels/:id", async (req, res) => {
-  console.log(req)
   const channel = await db.channels.delete(req.params.id, req.body)
+  
   res.json(channel);
 })
 

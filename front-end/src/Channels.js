@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 // Layout
 import {
@@ -22,6 +22,9 @@ import { Link as RouterLink } from "react-router-dom";
 // Local
 import Context from "./Context";
 import { useNavigate } from "react-router-dom";
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 
 const useStyles = (theme) => ({
@@ -80,17 +83,28 @@ const useStyles = (theme) => ({
   },
 });
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Channels() {
   const [content, setContent] = useState("");
   const [participants, setParticipants] = useState("")
   const styles = useStyles(useTheme());
   const [open, setOpen] = useState(false);
+  const [openVerif, setOpenVerif] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const naviate = useNavigate();
   const { oauth, channels, setChannels, currentChannel, setCurrentChannel } =
     useContext(Context);
 
+  const handleCloseVerif = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenVerif(false);
+  };
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -128,7 +142,7 @@ export default function Channels() {
 
 
   const onSubmit = async (e) => {
-
+    e.preventDefault()
     //formatParticipants()
     handleClose()
     const { data: channel } = await axios.post(
@@ -139,7 +153,9 @@ export default function Channels() {
         email: oauth.email,// a changer selon l'utilisateur
       }
     );
-    console.log(channel);
+
+    setChannels([...channels,channel])
+    setOpenVerif(true)
   };
 
   return (
@@ -179,17 +195,17 @@ export default function Channels() {
         </Link>
       </li>
       <li css={styles.channel}>
-      <ListItem
-            css={{
-              borderRadius: "5px",
-              margin: "0px 15px",
-              marginTop: "10px",
-              maxWidth: "180px",
-              fontSize:"1.5rem"
-            }}
-          >
-            Discussions
-          </ListItem>
+        <ListItem
+          css={{
+            borderRadius: "5px",
+            margin: "0px 15px",
+            marginTop: "10px",
+            maxWidth: "180px",
+            fontSize: "1.5rem"
+          }}
+        >
+          Discussions
+        </ListItem>
       </li>
       {channels && channels.map((channel, i) => (
         <List key={i} css={styles.channel}>
@@ -294,6 +310,11 @@ export default function Channels() {
           </Box>
         </Modal>
       </div>
+      <Snackbar open={openVerif} autoHideDuration={6000} onClose={handleCloseVerif}>
+          <Alert onClose={handleCloseVerif} severity="success" sx={{ width: '100%' }}>
+            Channel added
+          </Alert>
+        </Snackbar>
     </List>
   );
 }

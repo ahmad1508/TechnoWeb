@@ -9,9 +9,12 @@ import React, {
 } from "react";
 import Button from '@mui/material/Button';
 import axios from 'axios'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; 
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // Layout
 import { useContext } from "react";
@@ -121,21 +124,24 @@ const useStyles = (theme) => ({
   },
 });
 
-export default forwardRef(({ channel, messages,setMessages, onScrollDown }, ref) => {
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+export default forwardRef(({ channel, messages, setMessages, onScrollDown }, ref) => {
   const styles = useStyles(useTheme());
   const val = useContext(Context);
   const navigate = useNavigate();
-  const [Open, setOpen] = useState(true)
   //const [newMessages,setMessages]=useState()
-  
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClose = () => {
-    setAnchorEl(null);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll,
@@ -162,24 +168,26 @@ export default forwardRef(({ channel, messages,setMessages, onScrollDown }, ref)
     rootNode.addEventListener("scroll", handleScroll);
     return () => rootNode.removeEventListener("scroll", handleScroll);
   });
-  
+
 
   /****************************
    *        Delete message
   ***************************/
   const handleDeleteMessage = async (e, creation) => {
     e.preventDefault()
-     const {data:message} = await axios.delete(
+    const { data: message } = await axios.delete(
       `http://localhost:3001/channels/${channel.id}/message/${creation}`,
       {
         headers: {
           Authorization: `Bearer ${val.oauth.access_token}`,
         },
       }
-      
+
     );
-    const newMessages = messages.filter(msg=>msg.creation!==creation)
+    const newMessages = messages.filter(msg => msg.creation !== creation)
     setMessages(newMessages)
+    setOpen(true)
+    
     console.log('end')
   }
 
@@ -249,7 +257,11 @@ export default forwardRef(({ channel, messages,setMessages, onScrollDown }, ref)
             </Box>
           );
         })}
-
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Message Deleted
+        </Alert>
+      </Snackbar>
       </Box>
       <Box ref={scrollEl} />
     </Box >

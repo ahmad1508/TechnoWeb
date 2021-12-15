@@ -74,9 +74,6 @@ export default function Channel() {
     setMessages([...messages, message]);
   };
   
-
-
-
   useEffect(() => {
     const fetch = async () => {
       try {
