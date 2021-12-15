@@ -1,10 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import {
+import React, {
   forwardRef,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
+  useState,
+  useEffect
 } from "react";
+import Button from '@mui/material/Button';
+import axios from 'axios'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; 
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import {useNavigate} from 'react-router-dom'
+
 // Layout
 import { useContext } from "react";
 import Context from "../Context";
@@ -108,14 +116,26 @@ const useStyles = (theme) => ({
     marginBottom: "0.25rem",
   },
   message_content: {
+    fontSize: "20px",
     "& p": { margin: "0.5rem 0" },
   },
 });
 
-export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
+export default forwardRef(({ channel, messages,setMessages, onScrollDown }, ref) => {
   const styles = useStyles(useTheme());
   const val = useContext(Context);
-
+  const navigate = useNavigate();
+  const [Open, setOpen] = useState(true)
+  //const [newMessages,setMessages]=useState()
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll,
@@ -142,6 +162,28 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
     rootNode.addEventListener("scroll", handleScroll);
     return () => rootNode.removeEventListener("scroll", handleScroll);
   });
+  
+
+  /****************************
+   *        Delete message
+  ***************************/
+  const handleDeleteMessage = async (e, creation) => {
+    e.preventDefault()
+     const {data:message} = await axios.delete(
+      `http://localhost:3001/channels/${channel.id}/message/${creation}`,
+      {
+        headers: {
+          Authorization: `Bearer ${val.oauth.access_token}`,
+        },
+      }
+      
+    );
+    const newMessages = messages.filter(msg=>msg.creation!==creation)
+    setMessages(newMessages)
+    console.log('end')
+  }
+
+
 
   return (
     <Box css={styles.root} ref={rootEl}>
@@ -157,7 +199,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
           const isMessagesLate =
             i > 1 &&
             parseInt(message?.creation) - parseInt(messages[i - 1]?.creation) >
-              1000 * 60 * 60;
+            1000 * 60 * 60;
           const isLastMessageUser =
             i < messages.length && messages[i + 1]?.author === message?.author;
           const isMessagesConsecutive =
@@ -166,6 +208,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
             <Box
               key={message.creation}
               css={isTheAuthor ? styles.container_author : styles.container}
+
             >
               {!isLastMessageUser ? (
                 <Box css={isTheAuthor ? styles.avatar_author : styles.avatar}>
@@ -174,7 +217,9 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
               ) : (
                 <Box css={styles.empty_avatar}></Box>
               )}
-              <Box css={isTheAuthor ? styles.message_author : styles.message}>
+
+              <Box css={isTheAuthor ? styles.message_author : styles.message} >
+
                 {(i < 1 || !isMessagesConsecutive || isMessagesLate) && (
                   <Box>
                     <Box css={styles.user}>
@@ -182,6 +227,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
                     </Box>
                   </Box>
                 )}
+
                 <Box
                   dangerouslySetInnerHTML={{ __html: value }}
                   css={styles.message_content}
@@ -191,12 +237,46 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
                     new Date(Math.floor(parseInt(message.creation) / 1000))
                   ).calendar()}
                 </Box>
+                <Button css={{ color: "#111", height: "1rem" }}>
+                  <AutoFixNormalIcon />
+                  Modify
+                </Button>
+                <Button css={{ color: "#111", height: "1,5rem" }} onClick={e => handleDeleteMessage(e, message.creation)}>
+                  <DeleteOutlinedIcon />
+                  Delete
+                </Button>
               </Box>
             </Box>
           );
         })}
+
       </Box>
       <Box ref={scrollEl} />
-    </Box>
+    </Box >
   );
 });
+
+
+{/* <StyledMenu
+                id="demo-customized-menu"
+                MenuListProps={{
+                  'aria-labelledby': 'demo-customized-button',
+                }}
+                anchorEl={anchorEl}
+                open={Open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} disableRipple>
+                  <Button >
+                    <AutoFixNormalIcon />
+                    Modify Message
+                  </Button>
+                </MenuItem>
+                <Divider sx={{ my: 0.5, color: "#ffffff" }} />
+                <MenuItem onClick={handleClose} disableRipple>
+                  <Button >
+                    <DeleteIcon />
+                    Delete Message
+                  </Button>
+                </MenuItem>
+              </StyledMenu> */}

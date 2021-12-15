@@ -89,6 +89,7 @@ export default function Channel() {
           }
         );
         setMessages(messages);
+        console.log(messages)
         if (listRef.current) {
           listRef.current.scroll();
         }
@@ -130,6 +131,7 @@ export default function Channel() {
       <List
         channel={channel}
         messages={messages}
+        setMessages={setMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
       />

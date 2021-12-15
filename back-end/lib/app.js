@@ -83,6 +83,17 @@ app.post("/channels/:id/messages", async (req, res) => {
   res.status(201).json(message);// send the message to the the axios request
 });
 
+app.put("/channels/:id/message/:creation", async (req, res) => {
+  console.log(req.params.id,req.params.creation)
+  //const message = await db.messages.create(req.params.id, req.body);
+  //res.status(201).json(message);// send the message to the the axios request
+});
+
+app.delete("/channels/:id/message/:creation", async (req, res) => {
+  const message = await db.messages.delete(req.params.id, req.params.creation);
+  res.status(201).json(message);// send the message to the the axios request
+});
+
 // Users
 
 app.get("/users", async (req, res) => {

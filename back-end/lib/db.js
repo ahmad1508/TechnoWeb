@@ -46,8 +46,7 @@ module.exports = {
     update: async(id, channel) => {
       await db.put(`channels:${id}`, JSON.stringify(channel))
       return merge(channel, { id: id })
-      //if (!original) throw Error('Unregistered channel id')
-      //store.channels[id] = merge(original, channel) */
+      
     },
     /****************  DELETE  ****************** */
     delete: (id, channel) => {
@@ -90,6 +89,25 @@ module.exports = {
         })
       })
     },
+    /****************  UPDATE  ****************** */
+    update: async(channelId, message) => {
+      if (!message.author) throw Error('Invalid message')
+      if (!message.content) throw Error('Invalid message')
+      creation = message.creation
+      await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
+        author: message.author,
+        content: message.content
+      }))
+      return merge(message, { channelId: channelId, creation: creation })
+      //if (!original) throw Error('Unregistered channel id')
+      //store.channels[id] = merge(original, channel) */
+    },
+    /****************  DELETE  ****************** */
+    delete: (channelId,creation) => {
+      //if (!data) throw Error('Unregistered channel id')
+      db.del(`messages:${channelId}:${creation}`)
+      return 
+    } 
   },
   /**********************************
    *    Users CRUD operation  
