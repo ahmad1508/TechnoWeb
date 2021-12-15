@@ -87,6 +87,7 @@ app.post("/channels/:id/messages", async (req, res) => {
 
 app.get("/users", async (req, res) => {
   const users = await db.users.list();
+  console.log(json(users))
   res.json(users);
 });
 
