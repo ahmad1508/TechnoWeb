@@ -12,6 +12,7 @@ import Context from './Context'
 import {
   useNavigate
 } from "react-router-dom";
+import Welcomen from './pages/Welcomen'
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -49,7 +50,7 @@ const useStyles = (theme) => ({
   },
 })
 
-const Redirect = ({ config, codeVerifier, }) => {
+const Redirect = ({ config, codeVerifier }) => {
   const styles = useStyles(useTheme())
   console.log(config)
   console.log(codeVerifier)
@@ -70,7 +71,7 @@ const Redirect = ({ config, codeVerifier, }) => {
   }
   return (
     <div css={styles.root}>
-      <Link onClick={redirect} color="secondary">Login with OpenID Connect and OAuth2</Link>
+      <div onClick={redirect} color="secondary">Login</div>
     </div>
   )
 }
@@ -153,7 +154,7 @@ export default function Login({
       console.log('set code_verifier', codeVerifier)
       setCookie('code_verifier', codeVerifier)
       return (
-        <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
+        <Welcomen codeVerifier={codeVerifier} config={config} base64URLEncode={base64URLEncode} sha256={sha256}/>
       )
     } else { // yes: user is already logged in, great, is is working
       return (
