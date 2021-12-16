@@ -188,9 +188,8 @@ export default function Dropdown() {
   return (
     <List>
       <Button
-        variant="contained"
         type="submit"
-        sx={styles.button && styles.formField}
+        sx={[styles.addButton, styles.button]}
         onClick={handleClick}
       >
         <DotIcon />
