@@ -5,16 +5,16 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-  useEffect
+  useEffect,
 } from "react";
-import Button from '@mui/material/Button';
-import axios from 'axios'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import { useNavigate } from 'react-router-dom'
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Button from "@mui/material/Button";
+import axios from "axios";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
+import { useNavigate } from "react-router-dom";
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 // Layout
 import { useContext } from "react";
@@ -130,167 +130,154 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default forwardRef(({ channel, messages, setMessages, onScrollDown }, ref) => {
-  const styles = useStyles(useTheme());
-  const val = useContext(Context);
-  const navigate = useNavigate();
-  //const [newMessages,setMessages]=useState()
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
-  };
-
-  // Expose the `scroll` action
-  useImperativeHandle(ref, () => ({
-    scroll: scroll,
-  }));
-  const rootEl = useRef(null);
-  const scrollEl = useRef(null);
-  const scroll = () => {
-    scrollEl.current.scrollIntoView();
-  };
-  // See https://dev.to/n8tb1t/tracking-scroll-position-with-react-hooks-3bbj
-  const throttleTimeout = useRef(null); // react-hooks/exhaustive-deps
-  useLayoutEffect(() => {
-    const rootNode = rootEl.current; // react-hooks/exhaustive-deps
-    const handleScroll = () => {
-      if (throttleTimeout.current === null) {
-        throttleTimeout.current = setTimeout(() => {
-          throttleTimeout.current = null;
-          const { scrollTop, offsetHeight, scrollHeight } = rootNode; // react-hooks/exhaustive-deps
-          onScrollDown(scrollTop + offsetHeight < scrollHeight);
-        }, 200);
+export default forwardRef(
+  ({ channel, messages, setMessages, onScrollDown }, ref) => {
+    const styles = useStyles(useTheme());
+    const val = useContext(Context);
+    const navigate = useNavigate();
+    const [open, setOpen] = React.useState(false);
+    const [selected, setSelected] = useState("");
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
       }
+      setOpen(false);
     };
-    handleScroll();
-    rootNode.addEventListener("scroll", handleScroll);
-    return () => rootNode.removeEventListener("scroll", handleScroll);
-  });
 
+    // Expose the `scroll` action
+    useImperativeHandle(ref, () => ({
+      scroll: scroll,
+    }));
+    const rootEl = useRef(null);
+    const scrollEl = useRef(null);
+    const scroll = () => {
+      scrollEl.current.scrollIntoView();
+    };
+    // See https://dev.to/n8tb1t/tracking-scroll-position-with-react-hooks-3bbj
+    const throttleTimeout = useRef(null); // react-hooks/exhaustive-deps
+    useLayoutEffect(() => {
+      const rootNode = rootEl.current; // react-hooks/exhaustive-deps
+      const handleScroll = () => {
+        if (throttleTimeout.current === null) {
+          throttleTimeout.current = setTimeout(() => {
+            throttleTimeout.current = null;
+            const { scrollTop, offsetHeight, scrollHeight } = rootNode; // react-hooks/exhaustive-deps
+            onScrollDown(scrollTop + offsetHeight < scrollHeight);
+          }, 200);
+        }
+      };
+      handleScroll();
+      rootNode.addEventListener("scroll", handleScroll);
+      return () => rootNode.removeEventListener("scroll", handleScroll);
+    });
 
-  /****************************
-   *        Delete message
-  ***************************/
-  const handleDeleteMessage = async (e, creation) => {
-    e.preventDefault()
-    const { data: message } = await axios.delete(
-      `http://localhost:3001/channels/${channel.id}/message/${creation}`,
-      {
-        headers: {
-          Authorization: `Bearer ${val.oauth.access_token}`,
-        },
-      }
+    /****************************
+     *        Delete message
+     ***************************/
+    const handleDeleteMessage = async (e, creation) => {
+      e.preventDefault();
+      const { data: message } = await axios.delete(
+        `http://localhost:3001/channels/${channel.id}/message/${creation}`,
+        {
+          headers: {
+            Authorization: `Bearer ${val.oauth.access_token}`,
+          },
+        }
+      );
+      const newMessages = messages.filter((msg) => msg.creation !== creation);
+      setMessages(newMessages);
+      setOpen(true);
 
-    );
-    const newMessages = messages.filter(msg => msg.creation !== creation)
-    setMessages(newMessages)
-    setOpen(true)
+      console.log("end");
+    };
 
-    console.log('end')
-  }
+    const handleContextMenu = (e, id) => {
+      e.preventDefault();
+      setSelected(selected === id ? "" : id);
+    };
 
-
-
-  return (
-    <Box css={styles.root} ref={rootEl}>
-      <Box css={styles.layout}>
-        {messages.map((message, i) => {
-          const { value } = unified()
-            .use(markdown)
-            .use(remark2rehype)
-            .use(html)
-            .processSync(message.content);
-          const isTheAuthor =
-            message?.author === val.oauth.email?.toLowerCase();
-          const isLastMessageUser =
-            i < messages.length && messages[i + 1]?.author === message?.author;
-          const isMessagesConsecutive =
-            i > 1 && messages[i - 1]?.author === message?.author;
-          if (i > 1)
-            console.log(
-              isMessagesConsecutive,
-              messages[i - 1]?.author,
-              message?.author
-            );
-          return (
-            <Box
-              key={message.creation}
-              css={isTheAuthor ? styles.container_author : styles.container}
-
-            >
-              {!isLastMessageUser ? (
-                <Box css={isTheAuthor ? styles.avatar_author : styles.avatar}>
-                  {message?.author.split("")[0].toUpperCase()}
-                </Box>
-              ) : (
-                <Box css={styles.empty_avatar}></Box>
-              )}
-              <Box css={isTheAuthor ? styles.message_author : styles.message}>
-                {(i < 1 || !isMessagesConsecutive) && (
-                  <Box>
-                    <Box css={styles.user}>
-                      {!isTheAuthor && message.author}
-                    </Box>
-                  </Box>
-                )}
-
-                <Box
-                  dangerouslySetInnerHTML={{ __html: value }}
-                  css={styles.message_content}
-                ></Box>
-                <Box css={isTheAuthor ? styles.date_author : styles.date}>
-                  {dayjs(
-                    new Date(Math.floor(parseInt(message.creation) / 1000))
-                  ).calendar()}
-                </Box>
-                <Button css={{ color: "#111", height: "1rem" }}>
-                  <AutoFixNormalIcon />
-                  Modify
-                </Button>
-                <Button css={{ color: "#111", height: "1,5rem" }} onClick={e => handleDeleteMessage(e, message.creation)}>
-                  <DeleteOutlinedIcon />
-                  Delete
-                </Button>
-              </Box>
-            </Box>
-          );
-        })}
-        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
-          <Alert onClose={handleClose} css={{background:"#111"}} sx={{ width: '100%' }}>
-            Message Deleted
-          </Alert>
-        </Snackbar>
-      </Box>
-      <Box ref={scrollEl} />
-    </Box >
-  );
-});
-
-
-{/* <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                  'aria-labelledby': 'demo-customized-button',
-                }}
-                anchorEl={anchorEl}
-                open={Open}
-                onClose={handleClose}
+    return (
+      <Box css={styles.root} ref={rootEl}>
+        <Box css={styles.layout}>
+          {messages.map((message, i) => {
+            const { value } = unified()
+              .use(markdown)
+              .use(remark2rehype)
+              .use(html)
+              .processSync(message.content);
+            const isTheAuthor =
+              message?.author === val.oauth.email?.toLowerCase();
+            const isLastMessageUser =
+              i < messages.length &&
+              messages[i + 1]?.author === message?.author;
+            const isMessagesConsecutive =
+              i > 1 && messages[i - 1]?.author === message?.author;
+            const isMenuVisible = message.creation === selected;
+            return (
+              <Box
+                key={message.creation}
+                css={isTheAuthor ? styles.container_author : styles.container}
+                onContextMenu={(e) => handleContextMenu(e, message.creation)}
               >
-                <MenuItem onClick={handleClose} disableRipple>
-                  <Button >
-                    <AutoFixNormalIcon />
-                    Modify Message
-                  </Button>
-                </MenuItem>
-                <Divider sx={{ my: 0.5, color: "#ffffff" }} />
-                <MenuItem onClick={handleClose} disableRipple>
-                  <Button >
-                    <DeleteIcon />
-                    Delete Message
-                  </Button>
-                </MenuItem>
-              </StyledMenu> */}
+                {!isLastMessageUser ? (
+                  <Box css={isTheAuthor ? styles.avatar_author : styles.avatar}>
+                    {message?.author.split("")[0].toUpperCase()}
+                  </Box>
+                ) : (
+                  <Box css={styles.empty_avatar}></Box>
+                )}
+                <Box css={isTheAuthor ? styles.message_author : styles.message}>
+                  {(i < 1 || !isMessagesConsecutive) && (
+                    <Box>
+                      <Box css={styles.user}>
+                        {!isTheAuthor && message.author}
+                      </Box>
+                    </Box>
+                  )}
+
+                  <Box
+                    dangerouslySetInnerHTML={{ __html: value }}
+                    css={styles.message_content}
+                  ></Box>
+                  <Box css={isTheAuthor ? styles.date_author : styles.date}>
+                    {dayjs(
+                      new Date(Math.floor(parseInt(message.creation) / 1000))
+                    ).calendar()}
+                  </Box>
+
+                  {isMenuVisible && (
+                    <>
+                      <Button css={{ color: "#111", height: "1rem" }}>
+                        <AutoFixNormalIcon />
+                        Modify
+                      </Button>
+                      <Button
+                        css={{ color: "#111", height: "1,5rem" }}
+                        onClick={(e) =>
+                          handleDeleteMessage(e, message.creation)
+                        }
+                      >
+                        <DeleteOutlinedIcon />
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                </Box>
+              </Box>
+            );
+          })}
+          <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              css={{ background: "#111" }}
+              sx={{ width: "100%" }}
+            >
+              Message Deleted
+            </Alert>
+          </Snackbar>
+        </Box>
+        <Box ref={scrollEl} />
+      </Box>
+    );
+  }
+);
