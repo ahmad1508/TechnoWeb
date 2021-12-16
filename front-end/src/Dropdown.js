@@ -1,21 +1,28 @@
 import React, { useState, useContext } from "react";
-import { styled } from "@mui/material/styles";
-import { Grid, useTheme } from "@mui/material";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import Context from "./Context";
-
-import { ReactComponent as DotIcon } from "./icons/dot.svg";
-
-import Snackbar from "@mui/material/Snackbar";
+// Styles
+import { styled } from "@mui/material/styles";
+import {
+  Grid,
+  useTheme,
+  Button,
+  Menu,
+  MenuItem,
+  Divider,
+  List,
+  Typography,
+  Box,
+  Modal,
+  TextField,
+  Snackbar,
+} from "@mui/material";
+import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
 import MuiAlert from "@mui/material/Alert";
-import { List, Typography, Box, Modal, TextField } from "@mui/material";
+// Local
+import { ReactComponent as DotIcon } from "./icons/dot.svg";
+import Context from "./Context";
 
 const useStyles = (theme) => ({
   modal: {
@@ -281,7 +288,6 @@ export default function Dropdown() {
             <Grid container>
               <Grid md={6}>
                 <Button
-                  variant="contained"
                   type="submit"
                   value="yes"
                   id="yes"
