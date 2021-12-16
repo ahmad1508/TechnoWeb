@@ -9,6 +9,7 @@ import Main from './Main'
 import Login from './Login'
 import Context from './Context'
 import Settings from './Settings'
+import Welcomen from './pages/Welcomen'
 // Rooter
 import {
   Route,
@@ -50,9 +51,9 @@ export default function App() {
     <div className="App" css={styles.root}>
       <Header drawerToggleListener={drawerToggleListener} />
       <Routes>
-        <Route exact path="/" element={oauth ? (gochannels) : (<Login />)} />
+        <Route path="/" element={oauth ? (gochannels) : (<Login />)} />
         <Route path="/channels/*" element={oauth ? (<Main />) : (gohome)} />
-        <Route path="/settings" element={oauth ? (<Settings />) : (gohome)}/>
+        <Route path="/settings" element={oauth ? (<Settings />) : (gohome)} />
         <Route path="/Oups" element={<Oups />} />
       </Routes>
       {/* <Footer/> */}

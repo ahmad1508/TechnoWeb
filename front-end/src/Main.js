@@ -10,6 +10,7 @@ import Channels from "./Channels";
 import Channel from "./Channel";
 import Welcome from "./Welcome";
 import Settings from "./Settings";
+import Welcomen from './pages/Welcomen'
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 import User from "./User";
