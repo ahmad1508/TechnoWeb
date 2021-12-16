@@ -1,6 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
-import {useContext} from 'react'
+import { useContext, useEffect } from 'react'
 // Layout
 import { useTheme } from '@mui/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,10 +10,12 @@ import Context from './Context'
 import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
+import Settings from './Settings'
 import {
   Route,
   Routes,
 } from 'react-router-dom'
+import axios from 'axios';
 
 const useStyles = (theme) => ({
   root: {
@@ -35,18 +37,34 @@ const useStyles = (theme) => ({
 
 export default function Main() {
   const {
+    oauth,
     // currentChannel, not yet used
     drawerVisible,
   } = useContext(Context)
-  
   const theme = useTheme()
   const styles = useStyles(theme)
   const alwaysOpen = useMediaQuery(theme.breakpoints.up('sm'))
   const isDrawerVisible = alwaysOpen || drawerVisible
+  
+  /* const createUser = async () => {
+    axios.post(
+      'http://localhost:3001/users',
+      {
+        username: "rami",
+        email: 'ramisonji@gmail.com',
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${oauth.access_token}`
+        }
+      },
+    )
+  } */
+ 
   return (
     <main css={styles.root}>
       <Drawer
-        PaperProps={{ style: { position: 'relative', backgroundColor: '#222',  } }}
+        PaperProps={{ style: { position: 'relative', backgroundColor: '#222', } }}
         BackdropProps={{ style: { position: 'relative' } }}
         ModalProps={{
           style: { position: 'relative' }
@@ -58,8 +76,8 @@ export default function Main() {
         <Channels />
       </Drawer>
       <Routes>
-        <Route path=":id" element={<Channel />}/>
-        <Route path="*" element={<Welcome />}/>
+        <Route path=":id" element={<Channel />} />
+        <Route path="*" element={<Welcome />} />
       </Routes>
     </main>
   );

@@ -1,4 +1,3 @@
-
 /** @jsxImportSource @emotion/react */
 import { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -50,7 +49,7 @@ const useStyles = (theme) => ({
   },
 })
 
-const Redirect = ({config,codeVerifier,}) => {
+const Redirect = ({ config, codeVerifier, }) => {
   const styles = useStyles(useTheme())
   console.log(config)
   console.log(codeVerifier)
@@ -66,7 +65,7 @@ const Redirect = ({config,codeVerifier,}) => {
       `code_challenge=${code_challenge}&`,
       `code_challenge_method=S256`,
     ].join('')
-    
+
     window.location = url
   }
   return (
@@ -79,11 +78,11 @@ const Redirect = ({config,codeVerifier,}) => {
 const Tokens = ({
   oauth
 }) => {
-  const {setOauth} = useContext(Context)
+  const { setOauth } = useContext(Context)
   const styles = useStyles(useTheme())
-  const {id_token} = oauth
+  const { id_token } = oauth
   const id_payload = id_token.split('.')[1]
-  const {email} = JSON.parse(atob(id_payload))
+  const { email } = JSON.parse(atob(id_payload))
   const logout = (e) => {
     e.stopPropagation()
     setOauth(null)
@@ -104,23 +103,23 @@ const LoadToken = ({
 }) => {
   const styles = useStyles(useTheme())
   const navigate = useNavigate();
-  useEffect( () => {
+  useEffect(() => {
     const fetch = async () => {
       try {
-        const {data} = await axios.post(
+        const { data } = await axios.post(
           config.token_endpoint
-        , qs.stringify ({
-          grant_type: 'authorization_code',
-          client_id: `${config.client_id}`,
-          code_verifier: `${codeVerifier}`,
-          redirect_uri: `${config.redirect_uri}`,
-          code: `${code}`,
-        }))
+          , qs.stringify({
+            grant_type: 'authorization_code',
+            client_id: `${config.client_id}`,
+            code_verifier: `${codeVerifier}`,
+            redirect_uri: `${config.redirect_uri}`,
+            code: `${code}`,
+          }))
         console.log(data)
         removeCookie('code_verifier')
         setOauth(data)
         navigate('/')
-      }catch (err) {
+      } catch (err) {
         console.error(err)
       }
     }
@@ -137,7 +136,7 @@ export default function Login({
   const styles = useStyles(useTheme());
   // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
-  const {oauth, setOauth} = useContext(Context)
+  const { oauth, setOauth } = useContext(Context)
   const config = {
     authorization_endpoint: 'http://localhost:5556/dex/auth',
     token_endpoint: 'http://localhost:5556/dex/token',
@@ -148,20 +147,20 @@ export default function Login({
   const params = new URLSearchParams(window.location.search)
   const code = params.get('code')
   // is there a code query parameters in the url 
-  if(!code){ // no: we are not being redirected from an oauth server
-    if(!oauth){//if we are not logged in 
+  if (!code) { // no: we are not being redirected from an oauth server
+    if (!oauth) {//if we are not logged in 
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
       console.log('set code_verifier', codeVerifier)
       setCookie('code_verifier', codeVerifier)
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    }else{ // yes: user is already logged in, great, is is working
+    } else { // yes: user is already logged in, great, is is working
       return (
         <Tokens oauth={oauth} css={styles.root} />
       )
     }
-  }else{ // yes: we are coming from an oauth server
+  } else { // yes: we are coming from an oauth server
     console.log('get code_verifier', cookies.code_verifier)
     return (
       <LoadToken

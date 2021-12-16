@@ -54,7 +54,8 @@ const useStyles = (theme) => ({
     flexDirection: "Column",
   },
   message: {
-    maxWidth: "70%",
+    maxWidth: "60%",
+    overflowWrap: "anywhere",
     flexDirection: "column",
     alignItems: "flex-start",
     backgroundColor: theme.palette.primary.light,
@@ -64,8 +65,9 @@ const useStyles = (theme) => ({
   },
 
   message_author: {
-    maxWidth: "70%",
+    maxWidth: "60%",
     alignItems: "flex-end",
+    overflowWrap: "anywhere",
     backgroundColor: theme.palette.primary.main,
     borderRadius: "15px 15px 0 15px",
     padding: "0 10px",
