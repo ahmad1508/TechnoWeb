@@ -147,10 +147,11 @@ module.exports = {
         })
       })
     },
-    update: (id, user) => {
-      const original = store.users[id]
-      if (!original) throw Error('Unregistered user id')
-      store.users[id] = merge(original, user)
+    update: async (id, user) => {
+      if (!user.username) throw Error('Invalid user')
+      if (!id) throw Error('Invalid id')
+      await db.put(`users:${id}`, JSON.stringify(user))
+      return merge(user, { id: id })
     },
     delete: (id, user) => {
       db.del(`users:${id}`)

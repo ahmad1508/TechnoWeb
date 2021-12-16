@@ -116,7 +116,6 @@ export default function Channels() {
           },
         );
         setChannels(channels);
-        console.log(channels)
       } catch (err) {
         console.error(err);
       }

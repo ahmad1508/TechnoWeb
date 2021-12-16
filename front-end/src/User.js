@@ -73,15 +73,15 @@ const defaultAvatar = [
   "/avatars/Profilpic_witch.png",
 ];
 
-export default function User() {
-  const { oauth, setUser } = useContext(Context);
+export default function User({ usage }) {
+  const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(user.username);
   const handleUsername = (e) => {
     setUsername(e.target.value);
   };
-  const [selected, setSelected] = useState("");
-
+  const [selected, setSelected] = useState(user.avatar);
+  const isModify = usage === "modify";
   const onSubmit = async (e) => {
     const us =
       selected === ""
@@ -94,29 +94,31 @@ export default function User() {
           };
     const body = {
       user: us,
-      id: oauth.email
+      id: oauth.email,
+    };
+    if (isModify) {
+      await axios.put("http://localhost:3001/users", body);
+    } else {
+      await axios.post("http://localhost:3001/users", body);
     }
-    await axios.post("http://localhost:3001/users", body);
     setUser(us);
   };
   return (
     <Box sx={styles.root}>
-      <Typography
-        id="keep-mounted-modal-title"
-        variant="h5"
-        component="h5"
-        sx={styles.titlediff}
-      >
-        Let's create your user profile !
-      </Typography>
+      {!isModify && (
+        <Typography
+          id="keep-mounted-modal-title"
+          variant="h5"
+          component="h5"
+          sx={styles.titlediff}
+        >
+          Let's create your user profile !
+        </Typography>
+      )}
       <Box sx={styles.main}>
         <Box sx={styles.avatar}>
           {selected === "" ? (
-            username === "" ? (
-              "Avatar"
-            ) : (
-              username.split("")[0].toUpperCase()
-            )
+            username.split("")[0].toUpperCase()
           ) : (
             <img style={styles.big_images} src={selected} alt={selected} />
           )}
@@ -153,7 +155,7 @@ export default function User() {
           variant="contained"
           onClick={onSubmit}
         >
-          Create
+          {isModify?"Update":"Create"}
         </Button>
       </Box>
     </Box>

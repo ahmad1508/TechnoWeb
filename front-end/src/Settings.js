@@ -11,6 +11,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
+import User from './User';
 
 const useStyles = (theme) => ({
     root: {
@@ -44,15 +45,13 @@ export default function Main() {
     const theme = useTheme()
     const styles = useStyles(theme)
     
-
-
-
     return (
         <main css={styles.root} container>
             <Container css={styles.container}>
                 <Typography variant="h4" css={styles.title}>
                     Account Settings
                 </Typography>
+                <User usage="modify"/>
                 <Box css={styles.box}>
                     <Accordion css={styles.accordion}>
                         <Grid container>
