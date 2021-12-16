@@ -28,7 +28,6 @@ app.get("/channels", authenticate, async (req, res) => {
         break;
       } else if (channel.email === req.user.email) {
         channels.push(channel)
-
         break;
       } else {
       }
