@@ -43,21 +43,19 @@ module.exports = {
       })
     },
     /****************  UPDATE  ****************** */
-    update: (id, channel) => {
-      const original = store.channels[id]
-      if (!original) throw Error('Unregistered channel id')
-      store.channels[id] = merge(original, channel)
+    update: async(id, channel) => {
+      await db.put(`channels:${id}`, JSON.stringify(channel))
+      return merge(channel, { id: id })
+      
     },
     /****************  DELETE  ****************** */
-    delete: (id, channel) => {
-      db.get(`channels:${id}`)
-      const original = db.get(`channels:${id}`)
-      if (!original) throw Error('Unregistered channel id')
-      db.del(`channels:${id}`)
-      /* const original = store.channels[id]
-      if (!original) throw Error('Unregistered channel id')
-      delete store.channels[id] */
-    }
+    delete: (id, ) => {
+      
+      //if (!data) throw Error('Unregistered channel id')
+      const channel = db.del(`channels:${id}`)
+      return merge(channel, { id: id })
+
+    } 
   },
   /**********************************
    *    Messages CRUD operation  
@@ -93,6 +91,25 @@ module.exports = {
         })
       })
     },
+    /****************  UPDATE  ****************** */
+    update: async(channelId, message) => {
+      if (!message.author) throw Error('Invalid message')
+      if (!message.content) throw Error('Invalid message')
+      creation = message.creation
+      await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
+        author: message.author,
+        content: message.content
+      }))
+      return merge(message, { channelId: channelId, creation: creation })
+      //if (!original) throw Error('Unregistered channel id')
+      //store.channels[id] = merge(original, channel) */
+    },
+    /****************  DELETE  ****************** */
+    delete: (channelId,creation) => {
+      //if (!data) throw Error('Unregistered channel id')
+      db.del(`messages:${channelId}:${creation}`)
+      return 
+    } 
   },
   /**********************************
    *    Users CRUD operation  

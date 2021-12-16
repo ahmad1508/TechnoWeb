@@ -72,7 +72,7 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-
+  
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -85,6 +85,7 @@ export default function Channel() {
           }
         );
         setMessages(messages);
+        console.log(messages)
         if (listRef.current) {
           listRef.current.scroll();
         }
@@ -124,6 +125,7 @@ export default function Channel() {
       <List
         channel={channel}
         messages={messages}
+        setMessages={setMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
       />
@@ -138,23 +140,3 @@ export default function Channel() {
     </div>
   );
 }
-/***********************
- * Delete channel
- *********************/
-/*const handleDelete = async ()=>{
-  console.log('run')
-  try {
-    await axios.delete(
-      `http://localhost:3001/channels/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${oauth.access_token}`,
-        },
-      }
-    );
-    
-  } catch (err) {
-    navigate("/oups");
-  }
-  console.log('end')
-}*/

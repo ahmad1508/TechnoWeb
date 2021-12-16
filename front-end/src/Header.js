@@ -2,7 +2,7 @@
 import { useContext } from "react";
 // Layout
 import { useTheme } from "@mui/styles";
-import { IconButton, Link, Avatar, Grid } from "@mui/material";
+import { IconButton, Avatar, Grid } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Context from "./Context";

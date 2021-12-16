@@ -1,18 +1,25 @@
-import React, { useState } from "react";
-import { styled } from "@mui/material/styles";
-import { useTheme } from "@mui/material";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useContext } from 'react';
+import { styled } from '@mui/material/styles';
+import { Grid, useTheme } from "@mui/material";
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
+import { useNavigate, useParams } from "react-router-dom";
+import Context from "./Context"
 
-import { ReactComponent as DotIcon } from "./icons/dot.svg";
-
-import { List, Typography, Box, Modal, TextField } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import {
+    List,
+    Typography,
+    Box,
+    Modal,
+    TextField,
+} from "@mui/material";
 
 const useStyles = (theme) => ({
   modal: {
@@ -49,7 +56,22 @@ const useStyles = (theme) => ({
     ":hover": {
       border: `1px solid ${theme.palette.primary.contrastText}`,
     },
-  },
+    addButton: {
+        borderRadius: "5px",
+        margin: "0 10px",
+        maxWidth: "180px",
+        cursor: "pointer",
+        border: `1px solid ${theme.palette.primary.light}`,
+        ":hover": {
+            border: `1px solid ${theme.palette.primary.contrastText}`,
+        },
+    },
+    titlediff: {
+        padding: "5px 0px",
+        textAlign: "center",
+        borderRadius: "5px",
+    },
+
 });
 
 const StyledMenu = styled((props) => (
@@ -92,155 +114,223 @@ const StyledMenu = styled((props) => (
   },
 }));
 
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Dropdown() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [Open, setOpen] = useState(false);
-  const styles = useStyles(useTheme());
-  const [invitation, setInvitation] = useState("");
-  const open = Boolean(anchorEl);
-  const { id } = useParams();
-  const handleOpenAdd = () => setOpen(true);
-  const handleCloseAdd = () => setOpen(false);
-  console.log(id);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [Open, setOpen] = useState(false)
+    const [OpenDelete, setOpenDelete] = useState(false)
+    const styles = useStyles(useTheme());
+    const [invitation, setInvitation] = useState("")
+    const open = Boolean(anchorEl);
+    const { id } = useParams()
+    const { oauth, currentChannel, setChannels, channels } = useContext(Context)
+    const [openD, setOpenD] = useState(false)
+    const handleOpenAdd = () => setOpen(true)
+    const handleCloseAdd = () => setOpen(false)
+    const handleOpenDelete = () => setOpenDelete(true)
+    const handleCloseDelete = () => setOpenDelete(false)
+    const [button, setButton] = useState('')
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const handleInvitation = (e) => {
+        setInvitation(e.target.value)
+    }
+    const handleYes = () => {
+        setButton('yes')
+    }
+    const handleNo = () => {
+        setButton('no')
+    }
+    const handleCloseD = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+      };
+    /****************************
+    *        Update channel
+    ***************************/
+    const onSubmit = (e) => {
+        e?.preventDefault()
+        handleCloseAdd()
+        const { data: channel } = axios.put(
+            `http://localhost:3001/channels/${id}`,
+            {
+                invitation: invitation,// a changer selon l'utilisateur
+            }
+        )
+        setInvitation("")
+    }
 
-  const handleInvitation = (e) => {
-    setInvitation(e.target.value);
-  };
+    /****************************
+    *        Delete channel
+    ***************************/
+    const handleDelete = async (e) => {
+        e.preventDefault()
+        handleCloseDelete()
+        console.log(button)
+        if (button === 'yes') {
+            const { data: channel } = await axios.delete(
+                `http://localhost:3001/channels/${id}`,
+                {
+                    channel: currentChannel,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${oauth.access_token}`,
+                    },
+                }
+            );
+            const newChannels = channels.filter((chnl) => chnl.id !== channel.id)
+            setChannels(newChannels)
+            navigate("/channels");
+            setOpenDelete(true)
+            console.log(channel)
+        }
 
-  const onSubmit = (e) => {
-    e?.preventDefault();
-    handleCloseAdd();
-    const data = axios.post(`http://localhost:3001/channels/${id}`, {
-      invitation: invitation, // a changer selon l'utilisateur
-    });
-    setInvitation("");
-  };
+        console.log('end')
+    }
 
-  return (
-    <List css={styles.root}>
-      <Button
-        sx={{}}
-        id="demo-customized-button"
-        aria-controls="demo-customized-menu"
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        disableElevation
-        onClick={handleClick}
-      >
-        <DotIcon />
-      </Button>
-      <StyledMenu
-        id="demo-customized-menu"
-        MenuListProps={{
-          "aria-labelledby": "demo-customized-button",
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose} disableRipple>
-          <Button onClick={handleOpenAdd}>
-            <PersonAddAltRoundedIcon />
-            Invite someone
-          </Button>
-        </MenuItem>
-        <Divider sx={{ my: 0.5, color: "#ffffff" }} />
-        <MenuItem onClick={handleClose} disableRipple>
-          <DeleteIcon />
-          Delete Channel
-        </MenuItem>
-      </StyledMenu>
-
-      {/**** Invite Div modal *****/}
-      <Modal
-        keepMounted
-        open={Open}
-        onClose={handleCloseAdd}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Box sx={styles.modal}>
-          <Typography
-            id="keep-mounted-modal-title"
-            variant="h3"
-            component="h2"
-            sx={styles.title}
-          >
-            Invite people
-          </Typography>
-
-          <form sx={styles.form} onSubmit={onSubmit} noValidate>
-            <TextField
-              id="outlined-multiline-flexible"
-              label="Partcipants"
-              placeholder="Separate by , "
-              multiline
-              value={invitation}
-              maxRows={4}
-              onChange={handleInvitation}
-              sx={styles.formField}
-            />
 
             <Button
               variant="contained"
               type="submit"
               sx={styles.button && styles.formField}
             >
-              Send
+                <img src='/dot.svg' alt="click me" />
             </Button>
-          </form>
-        </Box>
-      </Modal>
-    </List>
-  );
-}
-
-{
-  /* <div>
-<Modal
-    keepMounted
-    open={openModal}
-    onClose={closeAdd}
-    aria-labelledby="keep-mounted-modal-title"
-    aria-describedby="keep-mounted-modal-description"
->
-    <Box css={styles.modal}>
-        <Typography
-            id="keep-mounted-modal-title"
-            variant="h3"
-            component="h2"
-            css={styles.title}
-        >
-            Invite people to this channel
-        </Typography>
-
-        <form css={styles.form} onSubmit={onSubmit} noValidate>
-
-            <TextField
-                id="outlined-multiline-flexible"
-                label="Partcipants"
-                placeholder="Separate by , "
-                multiline
-                maxRows={4}
-                onChange={handleInvitation}
-                css={styles.formField}
-            />
-
-            <Button
-                variant="contained"
-                type="submit"
-                css={styles.button && styles.formField}
+            <StyledMenu
+                id="demo-customized-menu"
+                MenuListProps={{
+                    'aria-labelledby': 'demo-customized-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
             >
-                Create
-            </Button>
-        </form>
-    </Box>
-</Modal>
-</div> */
+                <MenuItem onClick={handleClose} disableRipple>
+                    <Button onClick={handleOpenAdd}>
+                        <PersonAddAltRoundedIcon />
+                        Invite someone
+                    </Button>
+                </MenuItem>
+                <Divider sx={{ my: 0.5, color: "#ffffff" }} />
+                <MenuItem onClick={handleClose} disableRipple>
+                    <Button onClick={handleOpenDelete}>
+                        <DeleteIcon />
+                        Delete Channel
+                    </Button>
+                </MenuItem>
+            </StyledMenu>
+
+
+            {/**** Invite Div modal *****/}
+            <Modal
+                keepMounted
+                open={Open}
+                onClose={handleCloseAdd}
+                aria-labelledby="keep-mounted-modal-title"
+                aria-describedby="keep-mounted-modal-description"
+            >
+                <Box sx={styles.modal}>
+                    <Typography
+                        id="keep-mounted-modal-title"
+                        variant="h3"
+                        component="h2"
+                        sx={styles.title}
+                    >
+                        Invite people
+                    </Typography>
+
+                    <form sx={styles.form} onSubmit={onSubmit} noValidate>
+
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Partcipants"
+                            placeholder="Separate by , "
+                            multiline
+                            value={invitation}
+                            maxRows={4}
+                            onChange={handleInvitation}
+                            sx={styles.formField}
+                        />
+
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            sx={styles.addButton && styles.formField}
+                        >
+                            Add
+                        </Button>
+                    </form>
+                </Box>
+            </Modal>
+
+            {/**** delete Div modal *****/}
+            <Modal
+                keepMounted
+                open={OpenDelete}
+                onClose={handleCloseDelete}
+                aria-labelledby="keep-mounted-modal-title"
+                aria-describedby="keep-mounted-modal-description"
+            >
+                <Box sx={styles.modal}>
+                    <Typography
+                        id="keep-mounted-modal-title"
+                        variant="h5"
+                        component="h5"
+                        sx={styles.titlediff}
+                    >
+                        Are you sure you want to delete this channel
+                    </Typography>
+
+                    <form sx={styles.form} onSubmit={handleDelete} noValidate>
+
+                        <Grid container>
+                            <Grid md={6}>
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    value='yes'
+                                    id='yes'
+                                    onClick={handleYes}
+                                    sx={styles.addButton && styles.formField}
+                                >
+                                    Yes
+                                </Button>
+                            </Grid>
+                            <Grid md={6}>
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    value="no"
+                                    id='no'
+                                    onClick={handleNo}
+                                    sx={styles.addButton && styles.formField}
+                                >
+                                    No
+                                </Button>
+                            </Grid>
+                        </Grid>
+
+
+                    </form>
+                </Box>
+            </Modal>
+            <Snackbar open={openD} autoHideDuration={6000} onClose={handleCloseD}>
+                <Alert onClose={handleCloseD} severity="info" sx={{ width: '100%' }}>
+                    Channel Deleted
+                </Alert>
+            </Snackbar>
+        </List>
+    );
 }

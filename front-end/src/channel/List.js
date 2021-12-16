@@ -1,15 +1,26 @@
 /** @jsxImportSource @emotion/react */
-import {
+import React, {
   forwardRef,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
+  useState,
+  useEffect
 } from "react";
+import Button from '@mui/material/Button';
+import axios from 'axios'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import { useNavigate } from 'react-router-dom'
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
 // Layout
 import { useContext } from "react";
 import Context from "../Context";
 import { useTheme } from "@mui/styles";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 // Markdown
 import { unified } from "unified";
 import markdown from "remark-parse";
@@ -30,7 +41,6 @@ dayjs.updateLocale("en", {
 const useStyles = (theme) => ({
   root: {
     flex: "1 1 auto",
-
     overflow: "auto",
     "& ul": {
       margin: 0,
@@ -109,13 +119,28 @@ const useStyles = (theme) => ({
     marginBottom: "0.25rem",
   },
   message_content: {
+    fontSize: "20px",
     "& p": { margin: "0.5rem 0" },
   },
 });
 
-export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+export default forwardRef(({ channel, messages, setMessages, onScrollDown }, ref) => {
   const styles = useStyles(useTheme());
   const val = useContext(Context);
+  const navigate = useNavigate();
+  //const [newMessages,setMessages]=useState()
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
@@ -144,6 +169,30 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
     return () => rootNode.removeEventListener("scroll", handleScroll);
   });
 
+
+  /****************************
+   *        Delete message
+  ***************************/
+  const handleDeleteMessage = async (e, creation) => {
+    e.preventDefault()
+    const { data: message } = await axios.delete(
+      `http://localhost:3001/channels/${channel.id}/message/${creation}`,
+      {
+        headers: {
+          Authorization: `Bearer ${val.oauth.access_token}`,
+        },
+      }
+
+    );
+    const newMessages = messages.filter(msg => msg.creation !== creation)
+    setMessages(newMessages)
+    setOpen(true)
+
+    console.log('end')
+  }
+
+
+
   return (
     <Box css={styles.root} ref={rootEl}>
       <Box css={styles.layout}>
@@ -169,6 +218,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
             <Box
               key={message.creation}
               css={isTheAuthor ? styles.container_author : styles.container}
+
             >
               {!isLastMessageUser ? (
                 <Box css={isTheAuthor ? styles.avatar_author : styles.avatar}>
@@ -185,6 +235,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
                     </Box>
                   </Box>
                 )}
+
                 <Box
                   dangerouslySetInnerHTML={{ __html: value }}
                   css={styles.message_content}
@@ -194,12 +245,50 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
                     new Date(Math.floor(parseInt(message.creation) / 1000))
                   ).calendar()}
                 </Box>
+                <Button css={{ color: "#111", height: "1rem" }}>
+                  <AutoFixNormalIcon />
+                  Modify
+                </Button>
+                <Button css={{ color: "#111", height: "1,5rem" }} onClick={e => handleDeleteMessage(e, message.creation)}>
+                  <DeleteOutlinedIcon />
+                  Delete
+                </Button>
               </Box>
             </Box>
           );
         })}
+        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+          <Alert onClose={handleClose} css={{background:"#111"}} sx={{ width: '100%' }}>
+            Message Deleted
+          </Alert>
+        </Snackbar>
       </Box>
       <Box ref={scrollEl} />
-    </Box>
+    </Box >
   );
 });
+
+
+{/* <StyledMenu
+                id="demo-customized-menu"
+                MenuListProps={{
+                  'aria-labelledby': 'demo-customized-button',
+                }}
+                anchorEl={anchorEl}
+                open={Open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} disableRipple>
+                  <Button >
+                    <AutoFixNormalIcon />
+                    Modify Message
+                  </Button>
+                </MenuItem>
+                <Divider sx={{ my: 0.5, color: "#ffffff" }} />
+                <MenuItem onClick={handleClose} disableRipple>
+                  <Button >
+                    <DeleteIcon />
+                    Delete Message
+                  </Button>
+                </MenuItem>
+              </StyledMenu> */}

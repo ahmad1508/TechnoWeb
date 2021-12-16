@@ -24,19 +24,17 @@ app.get("/channels", authenticate, async (req, res) => {
   allChannels.map((channel) => {
     for (let i = 0; i < channel.participants.length; i++) {
       if (channel.participants[i] === req.user.email) {
-                console.log(1)
-
         channels.push(channel)
         break;
       } else if (channel.email === req.user.email) {
-        console.log(2)
         channels.push(channel)
+
         break;
       } else {
-        console.log(3)
       }
     }
   })
+
   res.json(channels);
 });
 
@@ -53,12 +51,18 @@ app.get("/channels/:id", async (req, res) => {
 });
 
 app.put("/channels/:id", async (req, res) => {
-  const channel = await db.channels.update(req.body);
+  const invitation = req.body.invitation.split(",");
+  const existing = await db.channels.get(req.params.id);
+  for (let i = 0; i < invitation.length; i++) {
+    existing.participants.push(invitation[i])
+  }
+  const channel = await db.channels.update(req.params.id, existing);
   res.json(channel);
 });
 
 app.delete("/channels/:id", async (req, res) => {
   const channel = await db.channels.delete(req.params.id, req.body)
+  
   res.json(channel);
 })
 
@@ -79,10 +83,22 @@ app.post("/channels/:id/messages", async (req, res) => {
   res.status(201).json(message);// send the message to the the axios request
 });
 
+app.put("/channels/:id/message/:creation", async (req, res) => {
+  console.log(req.params.id,req.params.creation)
+  //const message = await db.messages.create(req.params.id, req.body);
+  //res.status(201).json(message);// send the message to the the axios request
+});
+
+app.delete("/channels/:id/message/:creation", async (req, res) => {
+  const message = await db.messages.delete(req.params.id, req.params.creation);
+  res.status(201).json(message);// send the message to the the axios request
+});
+
 // Users
 
 app.get("/users", async (req, res) => {
   const users = await db.users.list();
+  console.log(json(users))
   res.json(users);
 });
 
