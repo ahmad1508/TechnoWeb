@@ -97,11 +97,11 @@ app.delete("/channels/:id/message/:creation", async (req, res) => {
 
 app.get("/users", async (req, res) => {
   const users = await db.users.list();
-  console.log(json(users))
   res.json(users);
 });
 
 app.post("/users", async (req, res) => {
+  console.log(req.body)
   const user = await db.users.create(req.body);
   res.status(201).json(user);
 });

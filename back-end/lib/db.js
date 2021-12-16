@@ -108,7 +108,6 @@ module.exports = {
     delete: (channelId,creation) => {
       //if (!data) throw Error('Unregistered channel id')
       db.del(`messages:${channelId}:${creation}`)
-      return 
     } 
   },
   /**********************************
@@ -150,9 +149,8 @@ module.exports = {
       store.users[id] = merge(original, user)
     },
     delete: (id, user) => {
-      const original = store.users[id]
-      if (!original) throw Error('Unregistered user id')
-      delete store.users[id]
+      db.del(`users:${id}`)
+
     }
   },
   /**********************************
