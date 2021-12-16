@@ -65,7 +65,7 @@ const useStyles = (theme) => ({
     display: "flex",
     justifyContent: "flex-start",
     margin: "0 0 0.5rem 1rem",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   container_author: {
     display: "flex",
@@ -155,14 +155,16 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
             .processSync(message.content);
           const isTheAuthor =
             message?.author === val.oauth.email?.toLowerCase();
-          const isMessagesLate =
-            i > 1 &&
-            parseInt(message?.creation) - parseInt(messages[i - 1]?.creation) >
-              1000 * 60 * 60;
           const isLastMessageUser =
             i < messages.length && messages[i + 1]?.author === message?.author;
           const isMessagesConsecutive =
             i > 1 && messages[i - 1]?.author === message?.author;
+          if (i > 1)
+            console.log(
+              isMessagesConsecutive,
+              messages[i - 1]?.author,
+              message?.author
+            );
           return (
             <Box
               key={message.creation}
@@ -176,7 +178,7 @@ export default forwardRef(({ channel, messages, onScrollDown }, ref) => {
                 <Box css={styles.empty_avatar}></Box>
               )}
               <Box css={isTheAuthor ? styles.message_author : styles.message}>
-                {(i < 1 || !isMessagesConsecutive || isMessagesLate) && (
+                {(i < 1 || !isMessagesConsecutive) && (
                   <Box>
                     <Box css={styles.user}>
                       {!isTheAuthor && message.author}
