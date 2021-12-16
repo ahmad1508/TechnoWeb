@@ -57,7 +57,6 @@ const useStyles = (theme) => ({
     padding: "20px",
   },
   title: {
-    background: theme.palette.primary.main,
     padding: "5px 0px",
     textAlign: "center",
     borderRadius: "5px",

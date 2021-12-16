@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useRef, useState, useEffect } from "react";
 import axios from "axios";
+import React from "react";
+import { styled } from "@mui/material/styles";
 // Layout
 import { useTheme } from "@mui/styles";
 import { Fab, Grid } from "@mui/material";
@@ -10,10 +12,9 @@ import Form from "./channel/Form";
 import List from "./channel/List";
 import Context from "./Context";
 import { useNavigate, useParams } from "react-router-dom";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 
-import Dropdown from './Dropdown'
-
+import Dropdown from "./Dropdown";
 
 const useStyles = (theme) => ({
   root: {
@@ -27,7 +28,6 @@ const useStyles = (theme) => ({
   fab: {
     ":hover": {
       backgroundColor: theme.palette.primary.dark,
-
     },
     backgroundColor: theme.palette.primary.light,
     position: "absolute !important",
@@ -41,22 +41,22 @@ const useStyles = (theme) => ({
     fill: theme.palette.primary.main,
   },
   delete: {
-    cursor: 'pointer'
+    cursor: "pointer",
   },
   dots: {
-    cursor: 'pointer'
+    cursor: "pointer",
   },
   header: {
-    width: '100%',
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+    justifyContent: "space-between"
   },
   drop: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
-
-  
 });
-
-
 
 export default function Channel() {
   const navigate = useNavigate();
@@ -69,7 +69,6 @@ export default function Channel() {
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
 
- 
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
@@ -112,18 +111,16 @@ export default function Channel() {
 
   return (
     <div css={styles.root}>
-
       <Grid container css={styles.header}>
-        <Grid md={10}>
-          <h1 css={{ marginLeft: "1rem" }}>{channel.name}
-          </h1>
+        <Grid md={0}>
+          <h1 css={{ marginLeft: "1rem" }}>{channel.name}</h1>
         </Grid>
         <Grid md={2} css={styles.drop}>
-          <Dropdown/>
+          <Dropdown />
         </Grid>
       </Grid>
-      
-      <Divider sx={{ my: 0.5 , color: "#ffffff" }} />
+
+      <Divider sx={{ my: 0.5, color: "#ffffff" }} />
 
       <List
         channel={channel}
