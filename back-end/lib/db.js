@@ -114,17 +114,21 @@ module.exports = {
    *    Users CRUD operation  
    * ********************************/
   users: {
-    create: async (user) => {
+    create: async (user, id) => {
       if (!user.username) throw Error('Invalid user')
-      const id = uuid()
+      if (!id) throw Error('Invalid id')
       await db.put(`users:${id}`, JSON.stringify(user))
       return merge(user, { id: id })
     },
     get: async (id) => {
       if (!id) throw Error('Invalid id')
-      const data = await db.get(`users:${id}`)
-      const user = JSON.parse(data)
-      return merge(user, { id: id })
+      try {
+        const data = await db.get(`users:${id}`)
+        const user = JSON.parse(data)
+        return merge(user, { id: id })
+      } catch (error) {
+        return undefined
+      }
     },
     list: async () => {
       return new Promise((resolve, reject) => {

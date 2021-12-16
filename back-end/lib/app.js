@@ -102,7 +102,7 @@ app.get("/users", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   console.log(req.body)
-  const user = await db.users.create(req.body);
+  const user = await db.users.create(req.body.user, req.body.id);
   res.status(201).json(user);
 });
 
