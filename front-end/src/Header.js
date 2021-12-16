@@ -1,22 +1,20 @@
 /** @jsxImportSource @emotion/react */
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // Layout
 import { useTheme } from "@mui/styles";
-import { IconButton, Avatar, Grid, Box } from "@mui/material";
+import { IconButton, Avatar, Grid } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Context from "./Context";
 import { ReactComponent as LogoIcon } from "./icons/logo-cropped.svg";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Divider, Button } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
-import axios from "axios";
 
 const useStyles = (theme) => ({
   header: {
@@ -130,7 +128,7 @@ export default function Header({ drawerToggleListener }) {
             <Grid container>
               <Grid xs={2} md={3} lg={3}>
                 <Avatar css={styles.avatar}>
-                  {user.avatar ? (
+                  {user?.avatar ? (
                     <img
                       style={styles.avatar}
                       src={user.avatar}
@@ -154,7 +152,7 @@ export default function Header({ drawerToggleListener }) {
                   heigth: "100%",
                 }}
               >
-                {user.username}
+                {user?.username}
               </Grid>
             </Grid>
           </div>
