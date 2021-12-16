@@ -80,7 +80,7 @@ export default function User({ usage }) {
   const handleUsername = (e) => {
     setUsername(e.target.value);
   };
-  const [selected, setSelected] = useState(user.avatar);
+  const [selected, setSelected] = useState(user.avatar || "");
   const isModify = usage === "modify";
   const onSubmit = async (e) => {
     const us =
