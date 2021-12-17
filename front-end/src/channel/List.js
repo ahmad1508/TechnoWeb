@@ -89,11 +89,19 @@ const useStyles = (theme) => ({
     height: "0.25rem",
     marginRight: "0.5rem",
   },
+  avatar_icon: {
+    width: "3rem",
+    height: "3rem",
+    fontSize: "1rem",
+    borderRadius: "50%",
+    backgroundColor: theme.palette.primary.light,
+    margin: "auto",
+  },
   avatar: {
     width: "3rem",
     height: "3rem",
     borderRadius: "50%",
-    backgroundColor: "#fff",
+    backgroundColor: theme.palette.primary.light,
     color: "#000",
     display: "flex",
     justifyContent: "center",
@@ -106,6 +114,7 @@ const useStyles = (theme) => ({
   user: {
     color: theme.palette.primary.main,
     fontWeight: "bold",
+    fontSize: "15px",
     marginTop: "0.25rem",
   },
   date: {
@@ -121,7 +130,7 @@ const useStyles = (theme) => ({
     marginBottom: "0.25rem",
   },
   message_content: {
-    fontSize: "20px",
+    fontSize: "15px",
     "& p": { margin: "0.5rem 0" },
   },
 });
@@ -191,6 +200,7 @@ export default forwardRef(
       console.log("end");
     };
 
+
     const handleContextMenu = (e, id) => {
       e.preventDefault();
       setSelected(selected === id ? "" : id);
@@ -221,6 +231,15 @@ export default forwardRef(
               >
                 {!isLastMessageUser ? (
                   <Box css={isTheAuthor ? styles.avatar_author : styles.avatar}>
+                    {/* {val?.user?.avatar ? (
+                      <img
+                        style={styles.avatar_icon}
+                        src={val.user.avatar}
+                        alt="user avatar"
+                      />
+                    ) : (
+                      val.oauth.email[0].toUpperCase()
+                    )} */}
                     {message?.author.split("")[0].toUpperCase()}
                   </Box>
                 ) : (
@@ -245,14 +264,14 @@ export default forwardRef(
                     ).calendar()}
                   </Box>
 
-                  {isMenuVisible && (
+                  {isMenuVisible && isTheAuthor && (
                     <>
-                      <Button css={{ color: "#111", height: "1rem" }}>
+                      <Button css={{ color: "#111", fontSize:'10px',height: "1rem" }}>
                         <AutoFixNormalIcon />
                         Modify
                       </Button>
                       <Button
-                        css={{ color: "#111", height: "1,5rem" }}
+                        css={{ color: "#111", fontSize:'10px',height: "1,5rem" }}
                         onClick={(e) =>
                           handleDeleteMessage(e, message.creation)
                         }

@@ -23,7 +23,7 @@ const useStyles = (theme) => ({
 
   title: {
     fontWeight: "600",
-    fontSize: "22px",
+    fontSize: "20px",
     marginBottom: "14px",
   },
   Grid1: {
@@ -46,6 +46,7 @@ const useStyles = (theme) => ({
   desc: {
     width: "250px",
     fontWeight: "300",
+    textAlign:'center'
   },
 });
 
@@ -81,10 +82,13 @@ export default function Main({
         <Grid container>
           <Grid xs={12} md={6} lg={7} css={styles.Grid1}>
             <Typography variant="h3" css={{ fontWeight: "600" }}>
-              Notre slogan manifique
+              Messecure
+            </Typography>
+            <Typography variant="h5" css={{ fontWeight: "600" }}>
+              The futuristic way to communicate
             </Typography>
             <Typography
-              variant="body1"
+              variant="body2"
               css={{ fontWeight: "400", paddingTop: "33px" }}
             >
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit
@@ -97,7 +101,7 @@ export default function Main({
               css={{ marginTop: "33px" }}
               onClick={redirect}
             >
-              <Typography variant="body1" css={{ fontWeight: "700" }}>
+              <Typography variant="body3" css={{ fontWeight: "700" }}>
                 Get Started
               </Typography>
             </Button>
@@ -109,7 +113,7 @@ export default function Main({
         </Grid>
 
         <Typography
-          variant="h3"
+          variant="h4"
           css={{ marginTop: "27px", textAlign: "center", fontWeight: "600" }}
         >
           Why messecure ?
@@ -126,7 +130,7 @@ export default function Main({
               Simple
             </Typography>
             <Typography variant="body1" css={styles.desc}>
-              Un petit text descriptif qui decrira blablabla
+              Easy to use, you already know how to get started
             </Typography>
           </Grid>
 
@@ -137,7 +141,7 @@ export default function Main({
               Fast
             </Typography>
             <Typography variant="body1" css={styles.desc}>
-              Un petit text descriptif qui decrira blablabla
+              Delivers messages instantly, in a blink of an eye
             </Typography>
           </Grid>
 
@@ -151,7 +155,7 @@ export default function Main({
               Synced
             </Typography>
             <Typography variant="body1" css={styles.desc}>
-              Un petit text descriptif qui decrira blablabla
+              Access your chats from multiple devices
             </Typography>
           </Grid>
 
@@ -162,7 +166,7 @@ export default function Main({
               Free
             </Typography>
             <Typography variant="body1" css={styles.desc}>
-              Un petit text descriptif qui decrira blablabla
+              Just create your account and get started
             </Typography>
           </Grid>
 
@@ -176,7 +180,7 @@ export default function Main({
               Gamer friendly
             </Typography>
             <Typography variant="body1" css={styles.desc}>
-              Our dark theme is perfect for aspiring gamers and coders
+              An gamer way to communicate with your team
             </Typography>
           </Grid>
 
@@ -190,7 +194,7 @@ export default function Main({
               Secure
             </Typography>
             <Typography variant="body1" css={styles.desc}>
-              Un petit text descriptif qui decrira blablabla
+              Don't worry about your data, they're safe from hackers
             </Typography>
           </Grid>
         </Grid>

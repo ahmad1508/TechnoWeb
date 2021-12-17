@@ -68,7 +68,7 @@ export default function Channel() {
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
-
+  const [otherUsers,setOtherUsers] = useState([])
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
