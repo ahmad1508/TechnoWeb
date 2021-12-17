@@ -41,7 +41,7 @@ connectors:
   name: Google
   config:
     # Connector config values starting with a "$" will read from the environment.
-    clientID: callback995151736395-959bjdri0m18a1sekdldaaabqs9s4uqi.apps.googleusercontent.com
+    clientID: 995151736395-959bjdri0m18a1sekdldaaabqs9s4uqi.apps.googleusercontent.com
     clientSecret: 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
     # Dex's issuer URL + "/callback"
     redirectURI: http://127.0.0.1:5556/dex/callback
