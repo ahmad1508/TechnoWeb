@@ -113,10 +113,10 @@ export default function Channel() {
     <div css={styles.root}>
       <Grid container css={styles.header}>
         <Grid md={0}>
-          <h1 css={{ marginLeft: "1rem" }}>{channel.name}</h1>
+          <h1 css={{ fontWeight:"500",fontSize:"24px",marginLeft: "1rem" }}>{channel.name}</h1>
         </Grid>
         <Grid md={2} css={styles.drop}>
-          <Dropdown />
+          <Dropdown channel={channel}/>
         </Grid>
       </Grid>
 

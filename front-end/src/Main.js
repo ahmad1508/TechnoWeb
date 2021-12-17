@@ -9,7 +9,6 @@ import Context from "./Context";
 import Channels from "./Channels";
 import Channel from "./Channel";
 import Welcome from "./Welcome";
-import Settings from "./Settings";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 import User from "./User";
@@ -78,10 +77,11 @@ export default function Main() {
           </Drawer>
           <Routes>
             <Route path=":id" element={<Channel />} />
+           
             <Route path="*" element={<Welcome />} />
           </Routes>
         </>
-      ):(
+      ) : (
         <User />
       )}
     </main>

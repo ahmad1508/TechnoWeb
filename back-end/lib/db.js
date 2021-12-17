@@ -147,6 +147,7 @@ module.exports = {
         })
       })
     },
+    
     update: async (id, user) => {
       if (!user.username) throw Error('Invalid user')
       if (!id) throw Error('Invalid id')

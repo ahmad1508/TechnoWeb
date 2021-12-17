@@ -99,7 +99,19 @@ app.get("/users", async (req, res) => {
   const users = await db.users.list();
   res.json(users);
 });
+app.post("/friends", async (req, res) => {
+  const users = await db.users.list();
+  const friends = req.body.friends;
+  console.log(friends)
+  const friendsInfo = []
+  users.map((user)=>{
+    for(let i = 0; i<friends.length;i++){
+      if(friends[i] === user.id){friendsInfo.push(user)}
+    }
+  })
 
+  res.send(friendsInfo);
+});
 app.post("/users", async (req, res) => {
   console.log(req.body)
   const user = await db.users.create(req.body.user, req.body.id);

@@ -77,11 +77,11 @@ export default function User({ usage }) {
   const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
   const isModify = usage === "modify";
-  const [username, setUsername] = useState(isModify?user.username:"");
+  const [username, setUsername] = useState(user.username);
   const handleUsername = (e) => {
     setUsername(e.target.value);
   };
-  const [selected, setSelected] = useState(isModify?user.avatar:"");
+  const [selected, setSelected] = useState(user.avatar||"");
    
   const onSubmit = async (e) => {
     const us =
@@ -104,6 +104,7 @@ export default function User({ usage }) {
     }
     setUser(us);
   };
+  console.log(user)
   return (
     <Box sx={styles.root}>
       {!isModify && (
