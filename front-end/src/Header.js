@@ -172,7 +172,7 @@ export default function Header({ drawerToggleListener }) {
                 </Button>
               </Link>
               <Divider css={{ my: 0.5 }} />
-              <Link to="/channels/settings" css={styles.link}>
+              <Link to="/settings" css={styles.link}>
                 <Button onClick={handleClick} css={styles.drawer}>
                   <ListItemIcon>
                     <SettingsIcon />
@@ -181,7 +181,7 @@ export default function Header({ drawerToggleListener }) {
                 </Button>
               </Link>
               <Divider css={{ my: 0.5 }} />
-              <Link to="/channels/friends" css={styles.link}>
+              <Link to="/friends" css={styles.link}>
                 <Button onClick={handleClick} css={styles.drawer}>
                   <ListItemIcon>
                     <PeopleIcon/>
