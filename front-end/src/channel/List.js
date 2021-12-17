@@ -152,7 +152,6 @@ export default forwardRef(
       }
       setOpen(false);
     };
-
     // Expose the `scroll` action
     useImperativeHandle(ref, () => ({
       scroll: scroll,
@@ -162,6 +161,7 @@ export default forwardRef(
     const scroll = () => {
       scrollEl.current.scrollIntoView();
     };
+
     // See https://dev.to/n8tb1t/tracking-scroll-position-with-react-hooks-3bbj
     const throttleTimeout = useRef(null); // react-hooks/exhaustive-deps
     useLayoutEffect(() => {
@@ -210,6 +210,7 @@ export default forwardRef(
       <Box css={styles.root} ref={rootEl}>
         <Box css={styles.layout}>
           {messages.map((message, i) => {
+
             const { value } = unified()
               .use(markdown)
               .use(remark2rehype)
@@ -253,7 +254,10 @@ export default forwardRef(
                       </Box>
                     </Box>
                   )}
-
+                  {message.base64 &&
+                    <Box>
+                      <img src={message.base64} />
+                    </Box>}
                   <Box
                     dangerouslySetInnerHTML={{ __html: value }}
                     css={styles.message_content}
@@ -266,12 +270,12 @@ export default forwardRef(
 
                   {isMenuVisible && isTheAuthor && (
                     <>
-                      <Button css={{ color: "#111", fontSize:'10px',height: "1rem" }}>
+                      <Button css={{ color: "#111", fontSize: '10px', height: "1rem" }}>
                         <AutoFixNormalIcon />
                         Modify
                       </Button>
                       <Button
-                        css={{ color: "#111", fontSize:'10px',height: "1,5rem" }}
+                        css={{ color: "#111", fontSize: '10px', height: "1,5rem" }}
                         onClick={(e) =>
                           handleDeleteMessage(e, message.creation)
                         }

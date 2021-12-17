@@ -74,6 +74,7 @@ app.get("/channels/:id/messages", async (req, res) => {
     return res.status(404).send("Channel does not exist.");
   }
   const messages = await db.messages.list(req.params.id);
+  console.log(messages)
   res.json(messages);
 });
 

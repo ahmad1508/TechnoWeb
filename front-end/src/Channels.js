@@ -106,6 +106,7 @@ export default function Channels() {
     }
     setOpenVerif(false);
   };
+
   useEffect(() => {
     const fetch = async () => {
       try {

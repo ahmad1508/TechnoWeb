@@ -72,7 +72,7 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  
+
   useEffect(() => {
     const fetch = async () => {
       try {
