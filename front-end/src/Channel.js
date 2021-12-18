@@ -61,9 +61,9 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth,setCurrentChannel } = useContext(Context);
+  const { channels, oauth,currentChannel,setCurrentChannel } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
-  //setCurrentChannel(channel?.id);
+  setCurrentChannel(channel?.id);
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
