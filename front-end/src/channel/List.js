@@ -111,6 +111,17 @@ const useStyles = (theme) => ({
     alignItems: "center",
     marginRight: "0.5rem",
   },
+  filled_avatar: {
+    width: "3rem",
+    height: "3rem",
+    borderRadius: "50%",
+    backgroundColor: theme.palette.primary.contrastText,
+    color: "#000",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: "0.5rem",
+  },
   avatar_author: {
     display: "none",
   },
@@ -153,8 +164,7 @@ export default forwardRef(
   ({ channel, messages, setMessages, onScrollDown }, ref) => {
     const styles = useStyles(useTheme());
     const val = useContext(Context);
-    const navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("");
     const handleClose = (event, reason) => {
       if (reason === "clickaway") {
@@ -234,6 +244,7 @@ export default forwardRef(
             const isMessagesConsecutive =
               i > 1 && messages[i - 1]?.author === message?.author;
             const isMenuVisible = message.creation === selected;
+            const hasAvatar = message?.user !== undefined;
             return (
               <Box
                 key={message.creation}
@@ -241,17 +252,24 @@ export default forwardRef(
                 onContextMenu={(e) => handleContextMenu(e, message.creation)}
               >
                 {!isLastMessageUser ? (
-                  <Box css={isTheAuthor ? styles.avatar_author : styles.avatar}>
-                    {/* {val?.user?.avatar ? (
+                  <Box
+                    css={
+                      isTheAuthor
+                        ? styles.avatar_author
+                        : hasAvatar
+                        ? styles.avatar
+                        : styles.filled_avatar
+                    }
+                  >
+                    {hasAvatar ? (
                       <img
-                        style={styles.avatar_icon}
-                        src={val.user.avatar}
-                        alt="user avatar"
+                        src={message.user.avatar}
+                        alt={`${message.user.username} avatar's`}
+                        css={styles.avatar}
                       />
                     ) : (
-                      val.oauth.email[0].toUpperCase()
-                    )} */}
-                    {message?.author.split("")[0].toUpperCase()}
+                      message?.author.split("")[0].toUpperCase()
+                    )}
                   </Box>
                 ) : (
                   <Box css={styles.empty_avatar}></Box>
@@ -260,7 +278,7 @@ export default forwardRef(
                   {(i < 1 || !isMessagesConsecutive) && (
                     <Box>
                       <Box css={styles.user}>
-                        {!isTheAuthor && message.author}
+                        {!isTheAuthor && (hasAvatar?message.user.username:message.author)}
                       </Box>
                     </Box>
                   )}

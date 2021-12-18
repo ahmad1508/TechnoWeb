@@ -88,7 +88,6 @@ export default function Channel() {
           }
         );
         setMessages(messages);
-        console.log(messages)
         if (listRef.current) {
           listRef.current.scroll();
         }
@@ -97,7 +96,7 @@ export default function Channel() {
       }
     };
     fetch();
-  }, [id, oauth, navigate]);
+  }, [id]);
 
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown);
@@ -106,9 +105,8 @@ export default function Channel() {
   const onClickScroll = () => {
     listRef.current.scroll();
   };
-
   // On refresh, context.channel is not yet initialized
-  if (!channel) {
+  if (!currentChannel) {
     return <div>loading</div>;
   }
 
@@ -126,13 +124,13 @@ export default function Channel() {
       <Divider sx={{ my: 0.5, color: "#ffffff" }} />
 
       <List
-        channel={channel}
+        channel={currentChannel}
         messages={messages}
         setMessages={setMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
       />
-      <Form addMessage={addMessage} channel={channel} />
+      <Form addMessage={addMessage} channel={currentChannel} />
       <Fab
         aria-label="Latest messages"
         css={[styles.fab, scrollDown || styles.fabDisabled]}

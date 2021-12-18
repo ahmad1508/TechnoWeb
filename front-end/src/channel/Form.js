@@ -49,25 +49,18 @@ const useStyles = (theme) => {
     upload: {
       height: "100%",
       width: "auto",
-      margin: "0px 5px 0px 0px"
+      margin: "0px 5px 0px 5px",
     },
-    show: {
-      position: 'absolute'
-    },
-    hide: {
-      display:'none'
-    }
-
   };
 };
 
-const Input = styled('input')({
-  display: 'none',
+const Input = styled("input")({
+  display: "none",
 });
 
 export default function Form({ addMessage, channel }, props) {
   const [content, setContent] = useState("");
-  const { oauth } = useContext(Context)
+  const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());
   const [compressedImage, setCompressedImage] = useState("")
   const [files, setFile] = useState(null)
