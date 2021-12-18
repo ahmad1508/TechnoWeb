@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 // Styles
@@ -15,6 +15,7 @@ import {
   Box,
   Modal,
   TextField,
+  Container,
   Snackbar,
 } from "@mui/material";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
@@ -23,8 +24,26 @@ import MuiAlert from "@mui/material/Alert";
 // Local
 import { ReactComponent as DotIcon } from "./icons/dot.svg";
 import Context from "./Context";
+import PeopleIcon from '@mui/icons-material/People';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Accordion from '@mui/material/Accordion';
 
+/* import Switch from '@mui/material/Switch';
+import Paper from '@mui/material/Paper';
+import Slide from '@mui/material/Slide';
+import FormControlLabel from '@mui/material/FormControlLabel';
+ */
 const useStyles = (theme) => ({
+  root: {
+    width: '100 %'
+  },
+  container: {
+    width: '70%',
+  },
   modal: {
     position: "absolute",
     top: "50%",
@@ -35,6 +54,16 @@ const useStyles = (theme) => ({
     background: theme.palette.primary.dark,
     borderRadius: "10px",
     padding: "20px",
+  },
+  modal_participants: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    color: "#ffffff",
+    transform: "translate(-50%, -50%)",
+    width: 350,
+    background: theme.palette.primary.dark,
+    borderRadius: "5px",
   },
   title: {
     padding: "5px 0px",
@@ -64,6 +93,12 @@ const useStyles = (theme) => ({
     padding: "5px 0px",
     textAlign: "center",
     borderRadius: "5px",
+  },
+  participants: {
+    padding: "20px",
+    position: 'relative',
+    margin: 'auto',
+    width: '90%',
   },
 });
 
@@ -111,10 +146,15 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function Dropdown() {
+
+
+
+export default function Dropdown({ channel }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openTop, setOpenTop] = useState(false);
   const [Open, setOpen] = useState(false);
+  const scroll = 'paper'
   const [OpenDelete, setOpenDelete] = useState(false);
   const styles = useStyles(useTheme());
   const [invitation, setInvitation] = useState("");
@@ -122,11 +162,13 @@ export default function Dropdown() {
   const { id } = useParams();
   const { oauth, currentChannel, setChannels, channels } = useContext(Context);
   const [openD, setOpenD] = useState(false);
+
   const handleOpenAdd = () => setOpen(true);
   const handleCloseAdd = () => setOpen(false);
   const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
   const [button, setButton] = useState("");
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -148,6 +190,9 @@ export default function Dropdown() {
     }
     setOpen(false);
   };
+
+
+
   /****************************
    *        Update channel
    ***************************/
@@ -162,6 +207,40 @@ export default function Dropdown() {
     );
     setInvitation("");
   };
+
+  const handleClickOpenTop = () => {
+    setOpenTop(true);
+  };
+
+  const handleCloseTop = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenTop(false);
+  };
+
+  const descriptionElementRef = React.useRef(null);
+  React.useEffect(() => {
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [openTop]);
+
+  const toggleDrawer = (bool) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return
+    }
+
+    setOpenTop(bool);
+  };
+
 
   /****************************
    *        Delete channel
@@ -193,7 +272,7 @@ export default function Dropdown() {
   };
 
   return (
-    <List>
+    <List css={styles.root}>
       <Button
         type="submit"
         sx={[styles.addButton, styles.button]}
@@ -210,6 +289,13 @@ export default function Dropdown() {
         open={open}
         onClose={handleClose}
       >
+        <MenuItem onClick={handleClose} disableRipple>
+          <Button onClick={handleClickOpenTop}>
+            <PeopleIcon />
+            View participants
+          </Button>
+        </MenuItem>
+        <Divider sx={{ my: 0.5, color: "#ffffff" }} />
         <MenuItem onClick={handleClose} disableRipple>
           <Button onClick={handleOpenAdd}>
             <PersonAddAltRoundedIcon />
@@ -269,6 +355,7 @@ export default function Dropdown() {
       {/**** delete Div modal *****/}
       <Modal
         keepMounted
+
         open={OpenDelete}
         onClose={handleCloseDelete}
         aria-labelledby="keep-mounted-modal-title"
@@ -313,11 +400,57 @@ export default function Dropdown() {
           </form>
         </Box>
       </Modal>
+
+
+
+
+      <Modal
+        open={openTop}
+        onClose={handleCloseTop}
+        scroll={scroll}
+        css={{ minWidth: '500px', maxWidth: '300px' }}
+      >
+        <Box sx={styles.modal_participants}>
+          <Box sx={{ padding: '10px' }}>
+            <Typography variant="h4" sx={{textAlign:'center'}}>Channel Participant</Typography>
+          </Box>
+          <Divider sx={{ width: '100%', my: 0.5 }} />
+
+          {channel.participants.map(participant => (
+            <Box sx={styles.participants}>
+              <Typography variant="h6" sx={{textAlign:'center'}}>{participant}</Typography>
+              <Divider sx={{ my: 0.5 }} />
+
+            </Box>
+          ))}
+        </Box>
+      </Modal>
+
+
+      {/*  <Container css={styles.container}>
+        <div>
+          <React.Fragment>
+            <Drawer css={styles.topDrawer} anchor="top" open={openTop} onClose={toggleDrawer(false)}>
+              <List>
+                <ListItemIcon>
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+                <Divider css={{ my: 0.5 }} />
+                <ListItemIcon>
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+              </List>
+            </Drawer>
+          </React.Fragment>
+        </div>
+      </Container> */}
+
+
       <Snackbar open={openD} autoHideDuration={6000} onClose={handleCloseD}>
         <Alert onClose={handleCloseD} severity="info" sx={{ width: "100%" }}>
           Channel Deleted
         </Alert>
       </Snackbar>
-    </List>
+    </List >
   );
 }

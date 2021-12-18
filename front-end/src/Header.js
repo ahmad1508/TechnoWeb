@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { Divider, Button } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from '@mui/icons-material/People';
 
 const useStyles = (theme) => ({
   header: {
@@ -180,9 +181,18 @@ export default function Header({ drawerToggleListener }) {
                 </Button>
               </Link>
               <Divider css={{ my: 0.5 }} />
+              <Link to="/friends" css={styles.link}>
+                <Button onClick={handleClick} css={styles.drawer}>
+                  <ListItemIcon>
+                    <PeopleIcon/>
+                  </ListItemIcon>
+                  <ListItemText primary="Friends" />
+                </Button>
+              </Link>
+              <Divider css={{ my: 0.5 }} />
               <Button onClick={onClickLogout} css={styles.drawer}>
                 <ListItemIcon>
-                  <LogoutIcon />
+                  <LogoutIcon/>
                 </ListItemIcon>
                 <ListItemText primary="Logout" />
               </Button>

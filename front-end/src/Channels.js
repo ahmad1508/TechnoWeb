@@ -28,6 +28,8 @@ import MuiAlert from '@mui/material/Alert';
 
 
 const useStyles = (theme) => ({
+  root:{
+  },
   channel: {
     padding: "0.25rem 0",
   },
@@ -104,6 +106,7 @@ export default function Channels() {
     }
     setOpenVerif(false);
   };
+
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -230,7 +233,8 @@ export default function Channels() {
                   {channel.name[channel.name.length - 1].toUpperCase()}
                 </Avatar>
               </ListItemIcon>
-              <ListItemText primary={channel.name} css={styles.line} />
+              
+              <ListItemText primary={channel.name} css={styles.line} noWrap/>
             </ListItem>
           </Link>
         </List>

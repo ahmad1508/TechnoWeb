@@ -66,7 +66,7 @@ export default function Channel() {
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
-
+  const [otherUsers,setOtherUsers] = useState([])
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
@@ -115,7 +115,7 @@ export default function Channel() {
           <h1 css={{ marginLeft: "1rem" }}>{currentChannel.name}</h1>
         </Grid>
         <Grid md={2} css={styles.drop}>
-          <Dropdown />
+          <Dropdown channel={currentChannel}/>
         </Grid>
       </Grid>
 

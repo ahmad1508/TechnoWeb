@@ -89,6 +89,14 @@ const useStyles = (theme) => ({
     height: "0.25rem",
     marginRight: "0.5rem",
   },
+  avatar_icon: {
+    width: "3rem",
+    height: "3rem",
+    fontSize: "1rem",
+    borderRadius: "50%",
+    backgroundColor: theme.palette.primary.light,
+    margin: "auto",
+  },
   avatar: {
     width: "3rem",
     height: "3rem",
@@ -117,6 +125,7 @@ const useStyles = (theme) => ({
   user: {
     color: theme.palette.primary.main,
     fontWeight: "bold",
+    fontSize: "15px",
     marginTop: "0.25rem",
   },
   date: {
@@ -132,7 +141,7 @@ const useStyles = (theme) => ({
     marginBottom: "0.25rem",
   },
   message_content: {
-    fontSize: "20px",
+    fontSize: "15px",
     "& p": { margin: "0.5rem 0" },
   },
 });
@@ -153,7 +162,6 @@ export default forwardRef(
       }
       setOpen(false);
     };
-
     // Expose the `scroll` action
     useImperativeHandle(ref, () => ({
       scroll: scroll,
@@ -163,6 +171,7 @@ export default forwardRef(
     const scroll = () => {
       scrollEl.current.scrollIntoView();
     };
+
     // See https://dev.to/n8tb1t/tracking-scroll-position-with-react-hooks-3bbj
     const throttleTimeout = useRef(null); // react-hooks/exhaustive-deps
     useLayoutEffect(() => {
@@ -201,6 +210,7 @@ export default forwardRef(
       console.log("end");
     };
 
+
     const handleContextMenu = (e, id) => {
       e.preventDefault();
       setSelected(selected === id ? "" : id);
@@ -210,6 +220,7 @@ export default forwardRef(
       <Box css={styles.root} ref={rootEl}>
         <Box css={styles.layout}>
           {messages.map((message, i) => {
+
             const { value } = unified()
               .use(markdown)
               .use(remark2rehype)
@@ -261,7 +272,10 @@ export default forwardRef(
                       </Box>
                     </Box>
                   )}
-
+                  {message.base64 &&
+                    <Box>
+                      <img src={message.base64} />
+                    </Box>}
                   <Box
                     dangerouslySetInnerHTML={{ __html: value }}
                     css={styles.message_content}
@@ -272,14 +286,14 @@ export default forwardRef(
                     ).calendar()}
                   </Box>
 
-                  {isMenuVisible && (
+                  {isMenuVisible && isTheAuthor && (
                     <>
-                      <Button css={{ color: "#111", height: "1rem" }}>
+                      <Button css={{ color: "#111", fontSize: '10px', height: "1rem" }}>
                         <AutoFixNormalIcon />
                         Modify
                       </Button>
                       <Button
-                        css={{ color: "#111", height: "1,5rem" }}
+                        css={{ color: "#111", fontSize: '10px', height: "1,5rem" }}
                         onClick={(e) =>
                           handleDeleteMessage(e, message.creation)
                         }

@@ -36,6 +36,15 @@ connectors:
     clientID: 05b278d949344566eade
     clientSecret: 8a6006b2743c1e1480e1a043e15411bd96836090
     redirectURI: http://127.0.0.1:5556/dex/callback
+- type: google
+  id: google
+  name: Google
+  config:
+    # Connector config values starting with a "$" will read from the environment.
+    clientID: 995151736395-959bjdri0m18a1sekdldaaabqs9s4uqi.apps.googleusercontent.com
+    clientSecret: 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
+    # Dex's issuer URL + "/callback"
+    redirectURI: http://127.0.0.1:5556/dex/callback
 
 enablePasswordDB: true
 

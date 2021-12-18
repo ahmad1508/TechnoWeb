@@ -76,12 +76,13 @@ const defaultAvatar = [
 export default function User({ usage }) {
   const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
-  const [username, setUsername] = useState(user.username);
+  const isModify = usage === "modify";
+  const [username, setUsername] = useState(isModify?user.username:"");
   const handleUsername = (e) => {
     setUsername(e.target.value);
   };
-  const [selected, setSelected] = useState(user.avatar || "");
-  const isModify = usage === "modify";
+  const [selected, setSelected] = useState(isModify?user.avatar:"");
+   
   const onSubmit = async (e) => {
     const us =
       selected === ""
@@ -103,6 +104,7 @@ export default function User({ usage }) {
     }
     setUser(us);
   };
+  console.log(user)
   return (
     <Box sx={styles.root}>
       {!isModify && (
@@ -118,7 +120,7 @@ export default function User({ usage }) {
       <Box sx={styles.main}>
         <Box sx={styles.avatar}>
           {selected === "" ? (
-            username.split("")[0].toUpperCase()
+            username===""?oauth.email[0].toUpperCase():username.split("")[0].toUpperCase()
           ) : (
             <img style={styles.big_images} src={selected} alt={selected} />
           )}

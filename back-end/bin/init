@@ -10,7 +10,7 @@ const config = {
 (async function() {
   await db.admin.clear();
   await app.listen(config.port);
-  await Promise.all([{
+  /*await Promise.all([{
     name: 'Channel 1',
     messages: [{
       author: 'sergei',
@@ -125,6 +125,6 @@ const config = {
     return Promise.all( channel.messages.map( async (message) => {
       await axios.post(`http://localhost:${config.port}/channels/${id}/messages`, message)
     }))
-  }))
+  }))*/
   process.exit()
 })();
