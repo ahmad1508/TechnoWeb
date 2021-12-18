@@ -9,7 +9,7 @@ import Context from "./Context";
 import Channels from "./Channels";
 import Channel from "./Channel";
 import Welcome from "./Welcome";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate,useParams } from "react-router-dom";
 import axios from "axios";
 import User from "./User";
 
@@ -38,12 +38,13 @@ const useStyles = (theme) => ({
 export default function Main() {
   const {
     oauth,
-    // currentChannel, not yet used
+    currentChannel,
+    setCurrentChannel,
     drawerVisible,
     setUser,
   } = useContext(Context);
   const navigate = useNavigate();
-
+  
   const theme = useTheme();
   const styles = useStyles(theme);
   const alwaysOpen = useMediaQuery(theme.breakpoints.up("sm"));
@@ -60,7 +61,6 @@ export default function Main() {
     };
     getUser();
   }, [oauth, navigate]);
-
   return (
     <main css={styles.root}>
       {userExist ? (

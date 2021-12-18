@@ -50,18 +50,26 @@ app.get("/channels/:id", async (req, res) => {
 });
 
 app.put("/channels/:id", async (req, res) => {
-  const invitation = req.body.invitation.split(",");
+  console.log(req.body)
   const existing = await db.channels.get(req.params.id);
-  for (let i = 0; i < invitation.length; i++) {
-    existing.participants.push(invitation[i])
+  if (req.body.action === "Quit") {
+    console.log("quit")
+    const index = existing.participants.indexOf(req.body.user)
+    existing.participants.splice(index,1)
+  } else {
+    console.log("invitation")
+    const invitation = req.body.invitation.split(",");
+    invitation.forEach(invitee => {
+      existing.participants.push(invitee)
+    })
   }
   const channel = await db.channels.update(req.params.id, existing);
   res.json(channel);
 });
 
 app.delete("/channels/:id", async (req, res) => {
-  const channel = await db.channels.delete(req.params.id, req.body)
-  
+  const channel = await db.channels.delete(req.params.id)
+
   res.json(channel);
 })
 
@@ -74,18 +82,16 @@ app.get("/channels/:id/messages", async (req, res) => {
     return res.status(404).send("Channel does not exist.");
   }
   const messages = await db.messages.list(req.params.id);
-  console.log(messages)
   res.json(messages);
 });
 
 app.post("/channels/:id/messages", async (req, res) => {
-  console.log(req.body)
   const message = await db.messages.create(req.params.id, req.body);
   res.status(201).json(message);// send the message to the the axios request
 });
 
 app.put("/channels/:id/message/:creation", async (req, res) => {
-  console.log(req.params.id,req.params.creation)
+  console.log(req.params.id, req.params.creation)
   //const message = await db.messages.create(req.params.id, req.body);
   //res.status(201).json(message);// send the message to the the axios request
 });
@@ -106,9 +112,9 @@ app.post("/friends", async (req, res) => {
   const friends = req.body.friends;
   console.log(friends)
   const friendsInfo = []
-  users.map((user)=>{
-    for(let i = 0; i<friends.length;i++){
-      if(friends[i] === user.id){friendsInfo.push(user)}
+  users.map((user) => {
+    for (let i = 0; i < friends.length; i++) {
+      if (friends[i] === user.id) { friendsInfo.push(user) }
     }
   })
 

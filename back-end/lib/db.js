@@ -49,7 +49,7 @@ module.exports = {
       
     },
     /****************  DELETE  ****************** */
-    delete: (id, ) => {
+    delete: (id ) => {
       
       //if (!data) throw Error('Unregistered channel id')
       const channel = db.del(`channels:${id}`)

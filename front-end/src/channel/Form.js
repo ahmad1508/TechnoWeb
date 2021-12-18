@@ -65,7 +65,7 @@ const Input = styled("input")({
   display: "none",
 });
 
-export default function Form({ addMessage, channel }, props) {
+export default function Form({ addMessage, channel }) {
   const [content, setContent] = useState("");
   const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());

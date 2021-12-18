@@ -5,6 +5,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
+  useEffect
 } from "react";
 import Button from "@mui/material/Button";
 import axios from "axios";
@@ -12,7 +13,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-
+import Gravatar from 'react-gravatar'
 // Layout
 import { useContext } from "react";
 import Context from "../Context";
@@ -27,7 +28,9 @@ import html from "rehype-stringify";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import updateLocale from "dayjs/plugin/updateLocale";
-import { width } from "@mui/system";
+import Form from './Form.js'
+import { render } from "react-dom";
+
 dayjs.extend(calendar);
 dayjs.extend(updateLocale);
 dayjs.updateLocale("en", {
@@ -164,6 +167,7 @@ export default forwardRef(
     const val = useContext(Context);
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("");
+    //const [hashMail, setHashMail] = useState("")
     const handleClose = (event, reason) => {
       if (reason === "clickaway") {
         return;
@@ -223,6 +227,25 @@ export default forwardRef(
       setSelected(selected === id ? "" : id);
     };
 
+    const handleEditMessage = (e, creation) => {
+      e.preventDefault()
+    }
+
+    /*const stringToHash = (string) => {
+
+      let hash = 0;
+
+      if (string.length == 0) return hash;
+
+      for (let i = 0; i < string.length; i++) {
+        let char = string.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+      }
+
+      console.log(hash)
+    }*/
+
     return (
       <Box css={styles.root} ref={rootEl}>
         <Box css={styles.layout}>
@@ -253,16 +276,15 @@ export default forwardRef(
                       isTheAuthor
                         ? styles.avatar_author
                         : hasAvatar
-                        ? styles.avatar
-                        : styles.filled_avatar
+                          ? styles.avatar
+                          : styles.filled_avatar
                     }
                   >
+
                     {hasAvatar ? (
-                      <img
-                        src={message.user.avatar}
-                        alt={`${message.user.username} avatar's`}
-                        css={styles.avatar}
-                      />
+                      <Gravatar email={message.author} />
+
+
                     ) : (
                       message?.author.split("")[0].toUpperCase()
                     )}
@@ -301,6 +323,7 @@ export default forwardRef(
                           fontSize: "10px",
                           height: "1rem",
                         }}
+                        onClick={(e) => handleEditMessage(e, message.creation)}
                       >
                         <AutoFixNormalIcon />
                         Modify
@@ -339,3 +362,9 @@ export default forwardRef(
     );
   }
 );
+
+{/* <img
+                        src={message.user.avatar}
+                        alt={`${message.user.username} avatar's`}
+                        css={styles.avatar}
+                      /> */}

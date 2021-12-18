@@ -69,9 +69,9 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth,currentChannel,setCurrentChannel } = useContext(Context);
+  const { channels, oauth,setCurrentChannel } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
-  setCurrentChannel(channel?.id);
+  setCurrentChannel(id)
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
@@ -81,9 +81,9 @@ export default function Channel() {
     setMessages([...messages, message]);
   };
   /*useEffect(() => {
-    const channel = channels.find((channel) => channel.id === id);
+    channel = channels.find((channel) => channel.id === id);
     setCurrentChannel(channel);
-  }, [id])*/
+  }, [setCurrentChannel])*/
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -96,7 +96,7 @@ export default function Channel() {
           }
         );
         setMessages(messages);
-          listRef.current.scroll();
+        listRef.current.scroll();
         
       } catch (err) {
         navigate("/oups");
@@ -113,14 +113,14 @@ export default function Channel() {
     listRef.current.scroll();
   };
   // On refresh, context.channel is not yet initialized
-  if (!currentChannel) {
+  if (!channel) {
     return <div>loading</div>;
   }
 
   return (
     <div css={styles.root}>
       <Grid container css={styles.header}>
-        <Grid md={0}>
+        <Grid item>
           <h1 css={styles.headerTitle}>{channel.name}</h1>
         </Grid>
         <Box css={styles.drop}>
@@ -131,13 +131,13 @@ export default function Channel() {
       <Divider sx={styles.divider} />
 
       <List
-        channel={currentChannel}
+        channel={channel}
         messages={messages}
         setMessages={setMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
       />
-      <Form addMessage={addMessage} channel={currentChannel} />
+      <Form addMessage={addMessage} channel={channel} />
       <Fab
         aria-label="Latest messages"
         css={[styles.fab, scrollDown || styles.fabDisabled]}
