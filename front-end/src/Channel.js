@@ -80,10 +80,7 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  /*useEffect(() => {
-    channel = channels.find((channel) => channel.id === id);
-    setCurrentChannel(channel);
-  }, [setCurrentChannel])*/
+  
   useEffect(() => {
     const fetch = async () => {
       try {
