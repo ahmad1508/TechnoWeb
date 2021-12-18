@@ -50,8 +50,11 @@ export default function Form({ addMessage, channel }, props) {
   const [content, setContent] = useState("");
   const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());
-  const [files, setFile] = useState(null);
-  const [base64, setBase64] = useState("");
+  const [compressedImage, setCompressedImage] = useState("")
+  const [files, setFile] = useState(null)
+  const [base64, setBase64] = useState("")
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [emojiPicker, setEmojiPicker] = useState(false);
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {
@@ -83,8 +86,28 @@ export default function Form({ addMessage, channel }, props) {
         console.log(err);
       });
 
-    setFile(e.target.files[0]);
+    setFile(e.target.files[0])
+
   };
+  /*const handleCompressImage = (file)=>{
+    const options = {
+      maxSizeMB :0.08,
+      maxWidthOrHeight:400,
+      useWebWorker:true,
+    }
+    if(options.maxSizeMB >= file/1024){
+      alert("image too small can't compress")
+    }
+
+    let output;
+    imageCompression(file,options).then(result=>{
+      output = result;
+      setCompressedImage(output)
+    })
+  }*/
+
+
+
 
   const onSubmit = async (e) => {
     e?.preventDefault();
@@ -105,10 +128,26 @@ export default function Form({ addMessage, channel }, props) {
     );
     addMessage(message);
     setContent("");
+    setFile(null)
   };
 
   const handleChange = (e) => {
     setContent(e.target.value);
+  };
+
+  const openEmojiPicker = (e) => {
+    e.preventDefault()
+    if (emojiPicker === false) {
+      setEmojiPicker(true)
+    }
+    else {
+      setEmojiPicker(false)
+    }
+
+  }
+
+  const onEmojiClick = (event, emojiObject) => {
+    setContent(emojiObject.emoji);
   };
 
   return (

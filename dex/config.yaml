@@ -45,6 +45,17 @@ connectors:
     clientSecret: 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
     # Dex's issuer URL + "/callback"
     redirectURI: http://127.0.0.1:5556/dex/callback
+- type: microsoft
+    # Required field for connector id.
+  id: microsoft
+    # Required field for connector name.
+  name: Microsoft
+  config:
+          # Credentials can be string literals or pulled from the environment.
+    clientID: $MICROSOFT_APPLICATION_ID
+    clientSecret: $MICROSOFT_CLIENT_SECRET
+    redirectURI: http://127.0.0.1:5556/dex/callback
+    tenant: organizations
 
 enablePasswordDB: true
 

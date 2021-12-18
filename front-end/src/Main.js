@@ -85,7 +85,8 @@ export default function Main() {
           </Routes>
         </>
       ) : (
-        <User />
+        
+          <User />
       )}
     </main>
   );

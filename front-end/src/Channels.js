@@ -158,7 +158,7 @@ export default function Channels() {
 
   return (
     <List css={styles.root}>
-      <li css={styles.channel}>
+      <Box css={styles.channel}>
         <Link
           to="/channels"
           component={RouterLink}
@@ -182,8 +182,8 @@ export default function Channels() {
             <ListItemText primary="Welcome" css={styles.line} />
           </ListItem>
         </Link>
-      </li>
-      <li css={styles.channel}>
+      </Box>
+      <Box css={styles.channel}>
         <ListItem
           css={{
             borderRadius: "5px",
@@ -195,7 +195,7 @@ export default function Channels() {
         >
           Discussions
         </ListItem>
-      </li>
+      </Box>
       {channels &&
         channels.map((channel, i) => (
           <List key={i} css={styles.channel}>

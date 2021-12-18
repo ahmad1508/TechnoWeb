@@ -133,7 +133,7 @@ export default function Header({ drawerToggleListener }) {
           </div>
           <div onClick={toggleDrawer(true)} css={{ cursor: "pointer" }}>
             <Grid container>
-              <Grid xs={2} md={3} lg={3}>
+              <Grid item xs={2} md={3} lg={3}>
                 <Avatar css={styles.avatar}>
                   {user?.avatar ? (
                     <img
@@ -148,6 +148,7 @@ export default function Header({ drawerToggleListener }) {
               </Grid>
 
               <Grid
+              item
                 xs={10}
                 md={9}
                 lg={9}

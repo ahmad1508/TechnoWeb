@@ -5,7 +5,7 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 // Layout
 import { useTheme } from "@mui/styles";
-import { Fab, Grid } from "@mui/material";
+import { Fab, Grid, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 // Local
 import Form from "./channel/Form";
@@ -69,19 +69,21 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel, currentChannel } =
-    useContext(Context);
+  const { channels, oauth,currentChannel,setCurrentChannel } = useContext(Context);
+  const channel = channels.find((channel) => channel.id === id);
+  setCurrentChannel(channel?.id);
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
+  const [otherUsers, setOtherUsers] = useState([])
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  useEffect(() => {
+  /*useEffect(() => {
     const channel = channels.find((channel) => channel.id === id);
-    setCurrentChannel(channel?.id);
-  }, [id]);
+    setCurrentChannel(channel);
+  }, [id])*/
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -125,6 +127,9 @@ export default function Channel() {
         <Grid md={2} css={styles.drop}>
           <Dropdown channel={currentChannel} />
         </Grid>
+        <Box css={styles.drop}>
+          <Dropdown channel={channel} />
+        </Box>
       </Grid>
 
       <Divider sx={styles.divider} />

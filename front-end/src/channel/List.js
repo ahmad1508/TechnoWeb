@@ -27,6 +27,7 @@ import html from "rehype-stringify";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { width } from "@mui/system";
 dayjs.extend(calendar);
 dayjs.extend(updateLocale);
 dayjs.updateLocale("en", {
@@ -65,6 +66,8 @@ const useStyles = (theme) => ({
   message_author: {
     maxWidth: "60%",
     alignItems: "flex-end",
+
+    overflowWrap: "anywhere",
     overflowWrap: "anywhere",
     backgroundColor: theme.palette.primary.main,
     borderRadius: "15px 15px 0 15px",
@@ -139,9 +142,16 @@ const useStyles = (theme) => ({
     marginBottom: "0.25rem",
   },
   message_content: {
-    fontSize: "15px",
+    fontSize: "20px",
     "& p": { margin: "0.5rem 0" },
   },
+  images: {
+    boxShadow: 'rgba(0, 0, 0, 0.35) -50px -50px 50px 50px inset',
+    borderRadius: "10px",
+    marginTop: "10px",
+    maxWidth: '700px',
+    maxHeight: "400px"
+  }
 });
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -269,11 +279,10 @@ export default forwardRef(
                       </Box>
                     </Box>
                   )}
-                  {message.base64 && (
-                    <Box>
-                      <img src={message.base64} />
-                    </Box>
-                  )}
+                  {message.base64 &&
+                    <Box css={styles.images}>
+                      <img src={message.base64} css={{ margin: '20px', maxWidth: "300px" }} />
+                    </Box>}
                   <Box
                     dangerouslySetInnerHTML={{ __html: value }}
                     css={styles.message_content}
