@@ -51,10 +51,18 @@ const useStyles = (theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "1rem",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   drop: {
     justifyContent: "flex-end",
+  },
+  headerTitle: {
+    marginLeft: "1rem",
+    color: theme.palette.primary.contrastText,
+  },
+  divider: {
+    my: 0.5,
+    color: theme.palette.primary.contrastText,
   },
 });
 
@@ -113,15 +121,18 @@ export default function Channel() {
   return (
     <div css={styles.root}>
       <Grid container css={styles.header}>
-        <Grid item xs={9} md={6} lg={7}>
-          <h1 css={{ fontWeight: "500", fontSize: "24px", marginLeft: "1rem" }}>{channel.name}</h1>
+        <Grid md={0}>
+          <h1 css={styles.headerTitle}>{currentChannel.name}</h1>
+        </Grid>
+        <Grid md={2} css={styles.drop}>
+          <Dropdown channel={currentChannel} />
         </Grid>
         <Box css={styles.drop}>
           <Dropdown channel={channel} />
         </Box>
       </Grid>
 
-      <Divider sx={{ my: 0.5, color: "#ffffff" }} />
+      <Divider sx={styles.divider} />
 
       <List
         channel={currentChannel}

@@ -12,14 +12,14 @@ const useStyles = (theme) => ({
     height: '100%',
     flex: '1 1 auto',
     display: 'flex',
-    // background: 'rgba(0,0,0,.2)',
+    backgroundColor: theme.palette.primary.dark
   },
   card: {
     textAlign: 'center',
   },
   icon: {
     width: '30%',
-    fill: '#fff',
+    fill: theme.palette.primary.contrastText,
   }
 })
 

@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Context from "./Context";
 import { ReactComponent as LogoIcon } from "./icons/logo-cropped.svg";
+import { ReactComponent as LogoIconLight } from "./icons/logo-cropped_light.svg";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -15,12 +16,12 @@ import ListItemText from "@mui/material/ListItemText";
 import { Divider, Button } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
-import PeopleIcon from '@mui/icons-material/People';
+import PeopleIcon from "@mui/icons-material/People";
 
 const useStyles = (theme) => ({
   header: {
     padding: theme.spacing(1),
-    backgroundColor: "#222",
+    backgroundColor: theme.palette.primary.light,
     flexShrink: 0,
     display: "flex",
     alignItems: "center",
@@ -42,15 +43,21 @@ const useStyles = (theme) => ({
     width: "150px",
     margin: "10px 20px 10px 20px",
     cursor: "pointer",
-    color: "#fff",
+    color: theme.palette.primary.contrastText,
   },
   link: {
     textDecoration: "none",
   },
+  logo: {
+    with: "2rem",
+    height: "1rem",
+    margin: "0.5rem",
+  },
 });
 
 export default function Header({ drawerToggleListener }) {
-  const styles = useStyles(useTheme());
+  const theme = useTheme();
+  const styles = useStyles(theme);
   const navigate = useNavigate();
   const {
     oauth,
@@ -60,9 +67,10 @@ export default function Header({ drawerToggleListener }) {
     user,
     setUser,
     setCurrentChannel,
+    mode,
   } = useContext(Context);
   const [open, setOpen] = useState(false);
-  const drawerToggle = (e) => {
+  const drawerToggle = () => {
     setDrawerVisible(!drawerVisible);
   };
   const onClickLogout = (e) => {
@@ -71,14 +79,10 @@ export default function Header({ drawerToggleListener }) {
     setUser(null);
     setOpen(false);
   };
-  const toggleDrawer = (bool) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
+  const toggleDrawer = (bool) => (e) => {
+    if (e.type === "keydown" && (e.key === "Tab" || e.key === "Shift")) {
       return;
     }
-
     setOpen(bool);
   };
 
@@ -103,13 +107,11 @@ export default function Header({ drawerToggleListener }) {
           setCurrentChannel(null);
         }}
       >
-        <LogoIcon
-          css={{
-            with: "2rem",
-            height: "1rem",
-            margin: "0.5rem",
-          }}
-        />
+        {mode === "dark" ? (
+          <LogoIcon css={styles.logo} />
+        ) : (
+          <LogoIconLight css={styles.logo} />
+        )}
       </Link>
       {oauth && (
         <div
@@ -122,7 +124,11 @@ export default function Header({ drawerToggleListener }) {
           <div css={{ marginTop: "5px" }}>
             <LogoutIcon
               onClick={onClickLogout}
-              css={{ marginLeft: "0.5rem", cursor: "pointer" }}
+              css={{
+                marginLeft: "0.5rem",
+                cursor: "pointer",
+                fill: theme.palette.primary.contrastText,
+              }}
             />
           </div>
           <div onClick={toggleDrawer(true)} css={{ cursor: "pointer" }}>
@@ -152,6 +158,7 @@ export default function Header({ drawerToggleListener }) {
                   paddingLeft: "1rem",
                   paddingRight: "1rem",
                   heigth: "100%",
+                  color: theme.palette.primary.contrastText,
                 }}
               >
                 {user?.username}
@@ -185,7 +192,7 @@ export default function Header({ drawerToggleListener }) {
               <Link to="/friends" css={styles.link}>
                 <Button onClick={handleClick} css={styles.drawer}>
                   <ListItemIcon>
-                    <PeopleIcon/>
+                    <PeopleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Friends" />
                 </Button>
@@ -193,7 +200,7 @@ export default function Header({ drawerToggleListener }) {
               <Divider css={{ my: 0.5 }} />
               <Button onClick={onClickLogout} css={styles.drawer}>
                 <ListItemIcon>
-                  <LogoutIcon/>
+                  <LogoutIcon />
                 </ListItemIcon>
                 <ListItemText primary="Logout" />
               </Button>

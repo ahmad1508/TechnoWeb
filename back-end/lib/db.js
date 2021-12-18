@@ -69,6 +69,7 @@ module.exports = {
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
         content: message.content,
+        user: message.user,
         base64: message.base64
       }))
       return merge(message, { channelId: channelId, creation: creation })
@@ -157,7 +158,7 @@ module.exports = {
     },
     delete: (id, user) => {
       db.del(`users:${id}`)
-
+      // Must delete user messages and user participation to channels
     }
   },
   /**********************************

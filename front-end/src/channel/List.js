@@ -5,14 +5,11 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-  useEffect,
 } from "react";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import { useNavigate } from "react-router-dom";
-import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
@@ -60,6 +57,7 @@ const useStyles = (theme) => ({
     flexDirection: "column",
     alignItems: "flex-start",
     backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
     borderRadius: "15px 15px 15px 0px",
     padding: "0 10px",
     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
@@ -105,7 +103,7 @@ const useStyles = (theme) => ({
     height: "3rem",
     borderRadius: "50%",
     backgroundColor: theme.palette.primary.light,
-    color: "#000",
+    color: theme.palette.primary.contrastText,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -115,8 +113,8 @@ const useStyles = (theme) => ({
     width: "3rem",
     height: "3rem",
     borderRadius: "50%",
-    backgroundColor: theme.palette.primary.contrastText,
-    color: "#000",
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -220,7 +218,6 @@ export default forwardRef(
       console.log("end");
     };
 
-
     const handleContextMenu = (e, id) => {
       e.preventDefault();
       setSelected(selected === id ? "" : id);
@@ -230,7 +227,6 @@ export default forwardRef(
       <Box css={styles.root} ref={rootEl}>
         <Box css={styles.layout}>
           {messages.map((message, i) => {
-
             const { value } = unified()
               .use(markdown)
               .use(remark2rehype)
@@ -278,7 +274,8 @@ export default forwardRef(
                   {(i < 1 || !isMessagesConsecutive) && (
                     <Box>
                       <Box css={styles.user}>
-                        {!isTheAuthor && (hasAvatar?message.user.username:message.author)}
+                        {!isTheAuthor &&
+                          (hasAvatar ? message.user.username : message.author)}
                       </Box>
                     </Box>
                   )}
@@ -298,12 +295,22 @@ export default forwardRef(
 
                   {isMenuVisible && isTheAuthor && (
                     <>
-                      <Button css={{ color: "#111", fontSize: '10px', height: "1rem" }}>
+                      <Button
+                        css={{
+                          color: "#111",
+                          fontSize: "10px",
+                          height: "1rem",
+                        }}
+                      >
                         <AutoFixNormalIcon />
                         Modify
                       </Button>
                       <Button
-                        css={{ color: "#111", fontSize: '10px', height: "1,5rem" }}
+                        css={{
+                          color: "#111",
+                          fontSize: "10px",
+                          height: "1,5rem",
+                        }}
                         onClick={(e) =>
                           handleDeleteMessage(e, message.creation)
                         }
