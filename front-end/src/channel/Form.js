@@ -2,17 +2,22 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 // Layout
-import { Box, styled, IconButton, TextField, Button, Stack, Modal } from "@mui/material";
+import {
+  Box,
+  styled,
+  IconButton,
+  TextField,
+  Modal,
+} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/styles";
 import Context from "../Context";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import Picker from 'emoji-picker-react'
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import GifIcon from '@mui/icons-material/Gif';
-import GifPicker from 'react-giphy-picker'
-import ReactDOM from 'react-dom'
-import React, { Component, PropTypes } from 'react'
+import Picker from "emoji-picker-react";
+import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
+import GifIcon from "@mui/icons-material/Gif";
+import GifPicker from "react-giphy-picker";
+import React from "react";
 
 const useStyles = (theme) => ({
   form: {
@@ -42,24 +47,27 @@ const useStyles = (theme) => ({
     fill: theme.palette.primary.main,
   },
   upload: {
-    height: "100%",
-    width: "auto",
-    margin: "0px 5px 0px 5px",
+    height: "3rem",
+    width: "3rem",
+  },
+  label: {
+    display: "flex",
+    alignItems: "center"
   },
   picker: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 70,
     left: 150,
   },
   Gif: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 70,
     left: 200,
   },
   opacity: {
-    opacity: 0
+    opacity: 0,
   },
-})
+});
 
 const Input = styled("input")({
   display: "none",
@@ -69,13 +77,12 @@ export default function Form({ addMessage, channel }) {
   const [content, setContent] = useState("");
   const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());
-  const [compressedImage, setCompressedImage] = useState("")
-  const [files, setFile] = useState(null)
-  const [base64, setBase64] = useState("")
+  const [compressedImage, setCompressedImage] = useState("");
+  const [files, setFile] = useState(null);
+  const [base64, setBase64] = useState("");
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [gifPicker, setGifPicker] = useState(false);
-
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {
@@ -107,8 +114,7 @@ export default function Form({ addMessage, channel }) {
         console.log(err);
       });
 
-    setFile(e.target.files[0])
-
+    setFile(e.target.files[0]);
   };
   /*const handleCompressImage = (file)=>{
     const options = {
@@ -127,13 +133,12 @@ export default function Form({ addMessage, channel }) {
     })
   }*/
 
-
-  const onGifSubmit = async (gifObject)=>{
-    const {data:message} = await axios.post(
+  const onGifSubmit = async (gifObject) => {
+    const { data: message } = await axios.post(
       `http://localhost:3001/channels/${channel.id}/messages`,
       {
         content: `![alt](${gifObject.downsized.url})`,
-        author: oauth.email
+        author: oauth.email,
       },
       {
         headers: {
@@ -143,8 +148,7 @@ export default function Form({ addMessage, channel }) {
     );
     addMessage(message);
     setContent("");
-    
-  }
+  };
 
   const onSubmit = async (e) => {
     e?.preventDefault();
@@ -165,7 +169,7 @@ export default function Form({ addMessage, channel }) {
     );
     addMessage(message);
     setContent("");
-    setFile(null)
+    setFile(null);
   };
   const onEmojiClick = (event, emojiObject) => {
     setContent(content + emojiObject.emoji);
@@ -175,55 +179,68 @@ export default function Form({ addMessage, channel }) {
   };
 
   const openEmojiPicker = (e) => {
-    e.preventDefault()
-    setEmojiPicker(true)
-  }
-  
+    e.preventDefault();
+    setEmojiPicker(true);
+  };
+
   const openGifPicker = (e) => {
-    e.preventDefault()
-    setGifPicker(true)
-  }
+    e.preventDefault();
+    setGifPicker(true);
+  };
   const handleCloseEmoji = (reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setEmojiPicker(false)
+    setEmojiPicker(false);
   };
   const handleCloseGif = (reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setGifPicker(false)
+    setGifPicker(false);
   };
 
   return (
     <div>
-
       <form css={styles.form} onSubmit={onSubmit} noValidate>
-        <label htmlFor="contained-button-file">
-          <Input accept="image/*" id="contained-button-file" multiple={false} type="file" onChange={(e) => handleUpload(e)} />
-          <Button variant="contained" css={styles.upload} component="span">
+        <label htmlFor="contained-button-file" style={styles.label}>
+          <Input
+            accept="image/*"
+            id="contained-button-file"
+            multiple={false}
+            type="file"
+            onChange={(e) => handleUpload(e)}
+          />
+          <IconButton variant="contained" css={styles.upload} component="span">
             <AddPhotoAlternateIcon />
-          </Button>
+          </IconButton>
         </label>
-        <label htmlFor="contained-button-emoji">
-
-          <Button variant="contained" onClick={openEmojiPicker} css={styles.upload} component="span">
+        <label htmlFor="contained-button-emoji" style={styles.label}>
+          <IconButton
+            variant="contained"
+            onClick={openEmojiPicker}
+            css={styles.upload}
+            component="span"
+          >
             <InsertEmoticonIcon />
-          </Button>
-          <Modal open={emojiPicker} onClose={handleCloseEmoji} >
-            <Box css={styles.picker} >
+          </IconButton>
+          <Modal open={emojiPicker} onClose={handleCloseEmoji}>
+            <Box css={styles.picker}>
               <Picker css={{ boxShadow: 0 }} onEmojiClick={onEmojiClick} />
             </Box>
           </Modal>
         </label>
-        <label htmlFor="contained-button-gif">
-
-          <Button variant="contained" onClick={openGifPicker} css={styles.upload} component="span">
+        <label htmlFor="contained-button-gif" style={styles.label}>
+          <IconButton
+            variant="contained"
+            onClick={openGifPicker}
+            css={styles.upload}
+            component="span"
+          >
             <GifIcon />
-          </Button>
-          <Modal open={gifPicker} onClose={handleCloseGif} >
-            <Box css={styles.Gif} >
+          </IconButton>
+          <Modal open={gifPicker} onClose={handleCloseGif}>
+            <Box css={styles.Gif}>
               <GifPicker css={{ boxShadow: 0 }} onSelected={onGifSubmit} />
             </Box>
           </Modal>
@@ -239,7 +256,7 @@ export default function Form({ addMessage, channel }) {
           variant="outlined"
           css={styles.content}
           onKeyPress={(ev) => {
-            if ((ev.key === "Enter") && !ev.shiftKey) {
+            if (ev.key === "Enter" && !ev.shiftKey) {
               onSubmit();
               ev.preventDefault();
             }
@@ -251,7 +268,6 @@ export default function Form({ addMessage, channel }) {
           </IconButton>
         </div>
       </form>
-
     </div>
   );
 }
