@@ -9,6 +9,10 @@ import Context from "../Context";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import Picker from 'emoji-picker-react'
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import GifIcon from '@mui/icons-material/Gif';
+import GifPicker from 'react-giphy-picker'
+import ReactDOM from 'react-dom'
+import React, { Component, PropTypes } from 'react'
 
 const useStyles = (theme) => ({
   form: {
@@ -45,8 +49,12 @@ const useStyles = (theme) => ({
   picker: {
     position: 'absolute',
     bottom: 70,
-    left: 70,
-
+    left: 150,
+  },
+  Gif: {
+    position: 'absolute',
+    bottom: 70,
+    left: 200,
   },
   opacity: {
     opacity: 0
@@ -66,6 +74,8 @@ export default function Form({ addMessage, channel }, props) {
   const [base64, setBase64] = useState("")
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiPicker, setEmojiPicker] = useState(false);
+  const [gifPicker, setGifPicker] = useState(false);
+
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {
@@ -118,7 +128,23 @@ export default function Form({ addMessage, channel }, props) {
   }*/
 
 
-
+  const onGifSubmit = async (gifObject)=>{
+    const {data:message} = await axios.post(
+      `http://localhost:3001/channels/${channel.id}/messages`,
+      {
+        content: `![alt](${gifObject.downsized.url})`,
+        author: oauth.email
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${oauth.access_token}`,
+        },
+      }
+    );
+    addMessage(message);
+    setContent("");
+    
+  }
 
   const onSubmit = async (e) => {
     e?.preventDefault();
@@ -152,13 +178,22 @@ export default function Form({ addMessage, channel }, props) {
     e.preventDefault()
     setEmojiPicker(true)
   }
-
-  const handleCloseTop = (reason) => {
+  
+  const openGifPicker = (e) => {
+    e.preventDefault()
+    setGifPicker(true)
+  }
+  const handleCloseEmoji = (reason) => {
     if (reason === "clickaway") {
       return;
     }
     setEmojiPicker(false)
-
+  };
+  const handleCloseGif = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setGifPicker(false)
   };
 
   return (
@@ -171,14 +206,25 @@ export default function Form({ addMessage, channel }, props) {
             <AddPhotoAlternateIcon />
           </Button>
         </label>
-        <label htmlFor="contained-button-file">
+        <label htmlFor="contained-button-emoji">
 
           <Button variant="contained" onClick={openEmojiPicker} css={styles.upload} component="span">
             <InsertEmoticonIcon />
           </Button>
-          <Modal open={emojiPicker} onClose={handleCloseTop} >
+          <Modal open={emojiPicker} onClose={handleCloseEmoji} >
             <Box css={styles.picker} >
               <Picker css={{ boxShadow: 0 }} onEmojiClick={onEmojiClick} />
+            </Box>
+          </Modal>
+        </label>
+        <label htmlFor="contained-button-gif">
+
+          <Button variant="contained" onClick={openGifPicker} css={styles.upload} component="span">
+            <GifIcon />
+          </Button>
+          <Modal open={gifPicker} onClose={handleCloseGif} >
+            <Box css={styles.Gif} >
+              <GifPicker css={{ boxShadow: 0 }} onSelected={onGifSubmit} />
             </Box>
           </Modal>
         </label>

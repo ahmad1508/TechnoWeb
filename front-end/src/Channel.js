@@ -96,9 +96,8 @@ export default function Channel() {
           }
         );
         setMessages(messages);
-        if (listRef.current) {
           listRef.current.scroll();
-        }
+        
       } catch (err) {
         navigate("/oups");
       }
@@ -122,10 +121,7 @@ export default function Channel() {
     <div css={styles.root}>
       <Grid container css={styles.header}>
         <Grid md={0}>
-          <h1 css={styles.headerTitle}>{currentChannel.name}</h1>
-        </Grid>
-        <Grid md={2} css={styles.drop}>
-          <Dropdown channel={currentChannel} />
+          <h1 css={styles.headerTitle}>{channel.name}</h1>
         </Grid>
         <Box css={styles.drop}>
           <Dropdown channel={channel} />
