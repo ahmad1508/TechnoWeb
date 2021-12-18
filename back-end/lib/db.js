@@ -94,13 +94,14 @@ module.exports = {
       })
     },
     /****************  UPDATE  ****************** */
-    update: async(channelId, message) => {
+    update: async(channelId, creation , message) => {
       if (!message.author) throw Error('Invalid message')
       if (!message.content) throw Error('Invalid message')
-      creation = message.creation
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
-        content: message.content
+        content: message.content,
+        user: message.user,
+        base64: message.base64
       }))
       return merge(message, { channelId: channelId, creation: creation })
       //if (!original) throw Error('Unregistered channel id')

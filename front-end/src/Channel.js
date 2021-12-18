@@ -69,14 +69,16 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth,setCurrentChannel } = useContext(Context);
+  const { channels, oauth, setCurrentChannel } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
-  setCurrentChannel(id)
+  setCurrentChannel(id);
+  const [content, setContent] = useState("");
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
-  const [otherUsers, setOtherUsers] = useState([])
+  const [otherUsers, setOtherUsers] = useState([]);
+  const [modify, setModify] = useState("");
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
@@ -94,7 +96,6 @@ export default function Channel() {
         );
         setMessages(messages);
         listRef.current.scroll();
-        
       } catch (err) {
         navigate("/oups");
       }
@@ -131,8 +132,20 @@ export default function Channel() {
         setMessages={setMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
+        setContent={setContent}
+        modify={modify}
+        setModify={setModify}
       />
-      <Form addMessage={addMessage} channel={channel} />
+      <Form
+        messages={messages}
+        setMessages={setMessages}
+        addMessage={addMessage}
+        channel={channel}
+        content={content}
+        setContent={setContent}
+        modify={modify}
+        setModify={setModify}
+      />
       <Fab
         aria-label="Latest messages"
         css={[styles.fab, scrollDown || styles.fabDisabled]}

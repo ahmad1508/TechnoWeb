@@ -152,8 +152,8 @@ app.post("/channels/:id/messages", async (req, res) => {
 
 app.put("/channels/:id/message/:creation", async (req, res) => {
   console.log(req.params.id, req.params.creation)
-  //const message = await db.messages.create(req.params.id, req.body);
-  //res.status(201).json(message);// send the message to the the axios request
+  const message = await db.messages.update(req.params.id,req.params.creation, req.body);
+  res.status(201).json(message);// send the message to the the axios request
 });
 
 app.delete("/channels/:id/message/:creation", async (req, res) => {

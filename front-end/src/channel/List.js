@@ -5,7 +5,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-  useEffect
+  useEffect,
 } from "react";
 import Button from "@mui/material/Button";
 import axios from "axios";
@@ -13,7 +13,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import Gravatar from 'react-gravatar'
+import Gravatar from "react-gravatar";
 // Layout
 import { useContext } from "react";
 import Context from "../Context";
@@ -28,7 +28,7 @@ import html from "rehype-stringify";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import updateLocale from "dayjs/plugin/updateLocale";
-import Form from './Form.js'
+import Form from "./Form.js";
 import { render } from "react-dom";
 
 dayjs.extend(calendar);
@@ -145,16 +145,22 @@ const useStyles = (theme) => ({
     marginBottom: "0.25rem",
   },
   message_content: {
-    fontSize: "20px",
-    "& p": { margin: "0.5rem 0" },
+    fontSize: "14px",
+    "& p": {
+      "& img": {
+        maxWidth: "300px",
+        borderRadius: "10px",
+      },
+      margin: "0.5rem 0",
+    },
   },
   images: {
-    boxShadow: 'rgba(0, 0, 0, 0.35) -50px -50px 50px 50px inset',
+    boxShadow: "rgba(0, 0, 0, 0.35) -50px -50px 50px 50px inset",
     borderRadius: "10px",
     marginTop: "10px",
-    maxWidth: '700px',
-    maxHeight: "400px"
-  }
+    maxWidth: "700px",
+    maxHeight: "400px",
+  },
 });
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -162,7 +168,10 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default forwardRef(
-  ({ channel, messages, setMessages, onScrollDown }, ref) => {
+  (
+    { channel, messages, setMessages, onScrollDown, setModify, setContent },
+    ref
+  ) => {
     const styles = useStyles(useTheme());
     const val = useContext(Context);
     const [open, setOpen] = useState(false);
@@ -227,25 +236,11 @@ export default forwardRef(
       setSelected(selected === id ? "" : id);
     };
 
-    const handleEditMessage = (e, creation) => {
-      e.preventDefault()
-    }
-
-    /*const stringToHash = (string) => {
-
-      let hash = 0;
-
-      if (string.length == 0) return hash;
-
-      for (let i = 0; i < string.length; i++) {
-        let char = string.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-
-      console.log(hash)
-    }*/
-
+    const handleEditMessage = (e, creation, content) => {
+      e.preventDefault();
+      setContent(content);
+      setModify(creation);
+    };
     return (
       <Box css={styles.root} ref={rootEl}>
         <Box css={styles.layout}>
@@ -276,15 +271,12 @@ export default forwardRef(
                       isTheAuthor
                         ? styles.avatar_author
                         : hasAvatar
-                          ? styles.avatar
-                          : styles.filled_avatar
+                        ? styles.avatar
+                        : styles.filled_avatar
                     }
                   >
-
                     {hasAvatar ? (
                       <Gravatar email={message.author} />
-
-
                     ) : (
                       message?.author.split("")[0].toUpperCase()
                     )}
@@ -301,10 +293,14 @@ export default forwardRef(
                       </Box>
                     </Box>
                   )}
-                  {message.base64 &&
+                  {message.base64 && (
                     <Box css={styles.images}>
-                      <img src={message.base64} css={{ margin: '20px', maxWidth: "300px" }} />
-                    </Box>}
+                      <img
+                        src={message.base64}
+                        css={{ margin: "20px", maxWidth: "300px" }}
+                      />
+                    </Box>
+                  )}
                   <Box
                     dangerouslySetInnerHTML={{ __html: value }}
                     css={styles.message_content}
@@ -323,7 +319,7 @@ export default forwardRef(
                           fontSize: "10px",
                           height: "1rem",
                         }}
-                        onClick={(e) => handleEditMessage(e, message.creation)}
+                        onClick={(e) => handleEditMessage(e, message.creation, message.content)}
                       >
                         <AutoFixNormalIcon />
                         Modify
@@ -363,8 +359,10 @@ export default forwardRef(
   }
 );
 
-{/* <img
+{
+  /* <img
                         src={message.user.avatar}
                         alt={`${message.user.username} avatar's`}
                         css={styles.avatar}
-                      /> */}
+                      /> */
+}
