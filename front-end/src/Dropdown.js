@@ -25,6 +25,7 @@ import { ReactComponent as DotIcon } from "./icons/dot.svg";
 import { ReactComponent as DotIconLight } from "./icons/dot_light.svg";
 import Context from "./Context";
 import PeopleIcon from "@mui/icons-material/People";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const useStyles = (theme) => ({
   root: {
@@ -34,7 +35,7 @@ const useStyles = (theme) => ({
     width: "70%",
   },
   modal: {
-    width:'50%',
+    width: '50%',
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -148,12 +149,12 @@ export default function Dropdown({ channel }) {
     useContext(Context);
   const { id } = useParams();
   const styles = useStyles(useTheme());
-
   const handleOpenAdd = () => setOpen(true);
   const handleCloseAdd = () => setOpen(false);
   const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
   const [button, setButton] = useState("");
+  const isTheAdmin = channel?.email === oauth.email?.toLowerCase()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -188,7 +189,10 @@ export default function Dropdown({ channel }) {
         invitation: invitation,
       }
     );
+
     setInvitation("");
+    navigate(`/channels/${id}`)
+
   };
   const handleClickOpenTop = () => {
     setOpenTop(true);
@@ -227,7 +231,6 @@ export default function Dropdown({ channel }) {
   const handleDelete = async (e) => {
     e.preventDefault();
     handleCloseDelete();
-    console.log(button);
     if (button === "yes") {
       const { data: channel } = await axios.delete(
         `http://localhost:3001/channels/${id}`,
@@ -243,9 +246,29 @@ export default function Dropdown({ channel }) {
       const newChannels = channels.filter((chnl) => chnl.id !== channel.id);
       setChannels(newChannels);
       navigate("/channels");
-      setOpenDelete(true);
+      setOpenDelete(false);
     }
   };
+
+  const onQuitchannel = async (e) => {
+    e.preventDefault();
+    const { data: channel } = await axios.put(
+      `http://localhost:3001/channels/${id}`,
+      {
+        action: 'Quit',
+        user: oauth.email
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${oauth.access_token}`,
+        },
+      }
+    );
+    const newChannels = channels.filter((chnl) => chnl.id !== channel.id);
+    setChannels(newChannels);
+    navigate("/channels");
+
+  }
 
   return (
     <List css={styles.root}>
@@ -279,12 +302,22 @@ export default function Dropdown({ channel }) {
           </Button>
         </MenuItem>
         <Divider sx={{ my: 0.5, color: "#ffffff" }} />
-        <MenuItem onClick={handleClose} disableRipple>
-          <Button onClick={handleOpenDelete}>
-            <DeleteIcon />
-            Delete Channel
-          </Button>
-        </MenuItem>
+        {isTheAdmin ? (
+          <MenuItem onClick={handleClose} disableRipple>
+            <Button onClick={handleOpenDelete}>
+              <DeleteIcon />
+              Delete Channel
+            </Button>
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={handleClose} disableRipple>
+            <Button onClick={onQuitchannel}>
+              <ExitToAppIcon />
+              Quit Channel
+            </Button>
+          </MenuItem>
+        )
+        }
       </StyledMenu>
 
       {/**** Invite Div modal *****/}
@@ -359,7 +392,7 @@ export default function Dropdown({ channel }) {
                   Yes
                 </Button>
               </Grid>
-              <Grid item  xs={12} md={6} lg={6}>
+              <Grid item xs={12} md={6} lg={6}>
                 <Button
                   variant="contained"
                   type="submit"
@@ -389,9 +422,14 @@ export default function Dropdown({ channel }) {
             </Typography>
           </Box>
           <Divider sx={{ width: "100%", my: 0.5 }} />
-
+          <Box sx={styles.participants}>
+              <Typography variant="h6" sx={{ textAlign: "center" }}>
+                {channel.email}
+              </Typography>
+              <Divider sx={{ my: 0.5 }} />
+            </Box>
           {channel.participants.map((participant) => (
-            <Box sx={styles.participants}>
+            <Box sx={styles.participants} key={participant}>
               <Typography variant="h6" sx={{ textAlign: "center" }}>
                 {participant}
               </Typography>

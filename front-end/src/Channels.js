@@ -88,7 +88,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function Channels() {
   const theme = useTheme();
   const styles = useStyles(theme);
-
+  
   const [content, setContent] = useState("");
   const [participants, setParticipants] = useState("");
   const [open, setOpen] = useState(false);
@@ -118,6 +118,8 @@ export default function Channels() {
           }
         );
         setChannels(channels);
+
+        console.log(channels)
       } catch (err) {
         console.error(err);
       }
@@ -225,7 +227,7 @@ export default function Channels() {
                   </Avatar>
                 </ListItemIcon>
 
-                <ListItemText primary={channel.name} css={styles.line} noWrap />
+                <ListItemText primary={channel.name} css={styles.line}/>
               </ListItem>
             </Link>
           </List>
