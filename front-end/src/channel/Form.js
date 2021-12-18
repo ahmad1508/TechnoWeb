@@ -7,7 +7,9 @@ import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/styles";
 import Context from "../Context";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { isTyping } from "react-chat-engine";
+import Picker from 'emoji-picker-react'
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+
 const useStyles = (theme) => ({
   form: {
     padding: ".5rem",
