@@ -61,9 +61,9 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel } = useContext(Context);
+  const { channels, oauth,setCurrentChannel } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
-  setCurrentChannel(channel?.id);
+  //setCurrentChannel(channel?.id);
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
@@ -72,7 +72,10 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-
+  /*useEffect(() => {
+    const channel = channels.find((channel) => channel.id === id);
+    setCurrentChannel(channel);
+  }, [id])*/
   useEffect(() => {
     const fetch = async () => {
       try {
