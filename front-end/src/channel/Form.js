@@ -2,13 +2,7 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 // Layout
-import {
-  Box,
-  styled,
-  IconButton,
-  TextField,
-  Modal,
-} from "@mui/material";
+import { Box, styled, IconButton, TextField, Modal } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/styles";
 import Context from "../Context";
@@ -52,7 +46,7 @@ const useStyles = (theme) => ({
   },
   label: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   picker: {
     position: "absolute",
@@ -73,8 +67,16 @@ const Input = styled("input")({
   display: "none",
 });
 
-export default function Form({ addMessage, channel }) {
-  const [content, setContent] = useState("");
+export default function Form({
+  messages,
+  setMessages,
+  addMessage,
+  channel,
+  content,
+  setContent,
+  modify,
+  setModify,
+}) {
   const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());
   const [compressedImage, setCompressedImage] = useState("");
@@ -104,6 +106,8 @@ export default function Form({ addMessage, channel }) {
   const handleUpload = (e) => {
     let file = files;
     file = e.target.files[0];
+    if (file.size > 70 * 1024) return;
+    // TODO: Add a pop-up message that tells the image is too large
     getBase64(file)
       .then((result) => {
         file["base64"] = result;
@@ -116,22 +120,6 @@ export default function Form({ addMessage, channel }) {
 
     setFile(e.target.files[0]);
   };
-  /*const handleCompressImage = (file)=>{
-    const options = {
-      maxSizeMB :0.08,
-      maxWidthOrHeight:400,
-      useWebWorker:true,
-    }
-    if(options.maxSizeMB >= file/1024){
-      alert("image too small can't compress")
-    }
-
-    let output;
-    imageCompression(file,options).then(result=>{
-      output = result;
-      setCompressedImage(output)
-    })
-  }*/
 
   const onGifSubmit = async (gifObject) => {
     const { data: message } = await axios.post(
@@ -152,22 +140,47 @@ export default function Form({ addMessage, channel }) {
 
   const onSubmit = async (e) => {
     e?.preventDefault();
-
-    const { data: message } = await axios.post(
-      `http://localhost:3001/channels/${channel.id}/messages`,
-      {
-        content: content,
-        author: oauth.email,
-        base64: base64 !== "" ? base64 : "",
-        user: user,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${oauth.access_token}`,
+    if (modify !== "") {
+      const { data: message } = await axios.put(
+        `http://localhost:3001/channels/${channel.id}/message/${modify}`,
+        {
+          content: content,
+          author: oauth.email,
+          base64: base64 !== "" ? base64 : "",
+          user: user,
         },
-      }
-    );
-    addMessage(message);
+        {
+          headers: {
+            Authorization: `Bearer ${oauth.access_token}`,
+          },
+        }
+      );
+      const newMessages = messages.map((msg) => {
+        if (msg.creation === modify) {
+          msg.content = content;
+        }
+        return msg;
+      });
+      setMessages(newMessages);
+      setModify("");
+    } else {
+      const { data: message } = await axios.post(
+        `http://localhost:3001/channels/${channel.id}/messages`,
+        {
+          content: content,
+          author: oauth.email,
+          base64: base64 !== "" ? base64 : "",
+          user: user,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${oauth.access_token}`,
+          },
+        }
+      );
+      addMessage(message);
+    }
+
     setContent("");
     setFile(null);
   };

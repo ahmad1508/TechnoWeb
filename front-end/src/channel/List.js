@@ -168,7 +168,10 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default forwardRef(
-  ({ channel, messages, setMessages, onScrollDown }, ref) => {
+  (
+    { channel, messages, setMessages, onScrollDown, setModify, setContent },
+    ref
+  ) => {
     const styles = useStyles(useTheme());
     const val = useContext(Context);
     const [open, setOpen] = useState(false);
@@ -233,25 +236,11 @@ export default forwardRef(
       setSelected(selected === id ? "" : id);
     };
 
-    const handleEditMessage = (e, creation) => {
+    const handleEditMessage = (e, creation, content) => {
       e.preventDefault();
+      setContent(content);
+      setModify(creation);
     };
-
-    /*const stringToHash = (string) => {
-
-      let hash = 0;
-
-      if (string.length == 0) return hash;
-
-      for (let i = 0; i < string.length; i++) {
-        let char = string.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-
-      console.log(hash)
-    }*/
-
     return (
       <Box css={styles.root} ref={rootEl}>
         <Box css={styles.layout}>
@@ -330,7 +319,7 @@ export default forwardRef(
                           fontSize: "10px",
                           height: "1rem",
                         }}
-                        onClick={(e) => handleEditMessage(e, message.creation)}
+                        onClick={(e) => handleEditMessage(e, message.creation, message.content)}
                       >
                         <AutoFixNormalIcon />
                         Modify
