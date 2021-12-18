@@ -51,29 +51,37 @@ const useStyles = (theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "1rem",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   drop: {
     justifyContent: "flex-end",
+  },
+  headerTitle: {
+    marginLeft: "1rem",
+    color: theme.palette.primary.contrastText,
+  },
+  divider: {
+    my: 0.5,
+    color: theme.palette.primary.contrastText,
   },
 });
 
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel, currentChannel } = useContext(Context);
+  const { channels, oauth, setCurrentChannel, currentChannel } =
+    useContext(Context);
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
-  const [otherUsers,setOtherUsers] = useState([])
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
   useEffect(() => {
     const channel = channels.find((channel) => channel.id === id);
     setCurrentChannel(channel?.id);
-  }, [id])
+  }, [id]);
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -112,14 +120,14 @@ export default function Channel() {
     <div css={styles.root}>
       <Grid container css={styles.header}>
         <Grid md={0}>
-          <h1 css={{ marginLeft: "1rem" }}>{currentChannel.name}</h1>
+          <h1 css={styles.headerTitle}>{currentChannel.name}</h1>
         </Grid>
         <Grid md={2} css={styles.drop}>
-          <Dropdown channel={currentChannel}/>
+          <Dropdown channel={currentChannel} />
         </Grid>
       </Grid>
 
-      <Divider sx={{ my: 0.5, color: "#ffffff" }} />
+      <Divider sx={styles.divider} />
 
       <List
         channel={currentChannel}

@@ -15,21 +15,18 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link as RouterLink } from "react-router-dom";
 // Local
 import Context from "./Context";
 import { useNavigate } from "react-router-dom";
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const useStyles = (theme) => ({
-  root:{
-  },
   channel: {
     padding: "0.25rem 0",
   },
@@ -38,13 +35,13 @@ const useStyles = (theme) => ({
     bottom: 0,
   },
   line: {
-    color: "#fff",
+    color: theme.palette.primary.contrastText,
   },
   avatar: {
     width: "2.25rem",
     height: "2.25rem",
     fontSize: "1rem",
-    backgroundColor: "#fff",
+    backgroundColor: theme.palette.primary.contrastText,
   },
   modal: {
     position: "absolute",
@@ -89,9 +86,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function Channels() {
+  const theme = useTheme();
+  const styles = useStyles(theme);
+
   const [content, setContent] = useState("");
-  const [participants, setParticipants] = useState("")
-  const styles = useStyles(useTheme());
+  const [participants, setParticipants] = useState("");
   const [open, setOpen] = useState(false);
   const [openVerif, setOpenVerif] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -101,7 +100,7 @@ export default function Channels() {
     useContext(Context);
 
   const handleCloseVerif = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpenVerif(false);
@@ -116,7 +115,7 @@ export default function Channels() {
             headers: {
               Authorization: `Bearer ${oauth.access_token}`,
             },
-          },
+          }
         );
         setChannels(channels);
       } catch (err) {
@@ -135,32 +134,30 @@ export default function Channels() {
    *************************/
   const handleChannelName = (e) => {
     setContent(e.target.value);
-
   };
   const handleParticipants = (e) => {
     setParticipants(e.target.value);
   };
 
-
   const onSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     //formatParticipants()
-    handleClose()
+    handleClose();
     const { data: channel } = await axios.post(
       `http://localhost:3001/channels`,
       {
         name: content,
         participants: participants,
-        email: oauth.email,// a changer selon l'utilisateur
+        email: oauth.email, // a changer selon l'utilisateur
       }
     );
 
-    setChannels([...channels,channel])
-    setOpenVerif(true)
+    setChannels([...channels, channel]);
+    setOpenVerif(true);
   };
 
   return (
-    <List css={styles.root} >
+    <List css={styles.root}>
       <li css={styles.channel}>
         <Link
           to="/channels"
@@ -172,24 +169,15 @@ export default function Channels() {
             css={{
               backgroundColor:
                 currentChannel === undefined || currentChannel === null
-                  ? "#8774e1"
-                  : "#222",
+                  ? theme.palette.primary.main
+                  : theme.palette.primary.dark,
               borderRadius: "5px",
               margin: "0 10px",
               maxWidth: "180px",
             }}
           >
             <ListItemIcon>
-              <Avatar
-                sx={{
-                  width: "2.25rem",
-                  height: "2.25rem",
-                  fontSize: "1rem",
-                  backgroundColor: "#fff",
-                }}
-              >
-                W
-              </Avatar>
+              <Avatar sx={styles.avatar}>W</Avatar>
             </ListItemIcon>
             <ListItemText primary="Welcome" css={styles.line} />
           </ListItem>
@@ -202,47 +190,48 @@ export default function Channels() {
             margin: "0px 15px",
             marginTop: "10px",
             maxWidth: "180px",
-            fontSize: "1.5rem"
+            fontSize: "1.5rem",
           }}
         >
           Discussions
         </ListItem>
       </li>
-      {channels && channels.map((channel, i) => (
-        <List key={i} css={styles.channel}>
-          <Link
-            underline="none"
-            href={`/channels/${channel.id}`}
-            onClick={(e) => {
-              e.preventDefault();
-              naviate(`/channels/${channel.id}`);
-            }}
-          >
-            <ListItem
-              css={{
-                backgroundColor:
-                  currentChannel?.id === channel.id ? "#8774e1" : "#222",
-                borderRadius: "5px",
-                margin: "0 10px",
-                maxWidth: "180px",
+      {channels &&
+        channels.map((channel, i) => (
+          <List key={i} css={styles.channel}>
+            <Link
+              underline="none"
+              href={`/channels/${channel.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                naviate(`/channels/${channel.id}`);
               }}
             >
-              <ListItemIcon>
-                <Avatar css={styles.avatar}>
-                  {channel.name[0].toUpperCase()}
-                  {channel.name[channel.name.length - 1].toUpperCase()}
-                </Avatar>
-              </ListItemIcon>
-              
-              <ListItemText primary={channel.name} css={styles.line} noWrap/>
-            </ListItem>
-          </Link>
-        </List>
+              <ListItem
+                css={{
+                  backgroundColor:
+                    currentChannel?.id === channel.id
+                      ? theme.palette.primary.main
+                      : theme.palette.primary.dark,
+                  borderRadius: "5px",
+                  margin: "0 10px",
+                  maxWidth: "180px",
+                }}
+              >
+                <ListItemIcon>
+                  <Avatar css={styles.avatar}>
+                    {channel.name[0].toUpperCase()}
+                    {channel.name[channel.name.length - 1].toUpperCase()}
+                  </Avatar>
+                </ListItemIcon>
 
-      ))}
+                <ListItemText primary={channel.name} css={styles.line} noWrap />
+              </ListItem>
+            </Link>
+          </List>
+        ))}
 
       <List css={styles.addChannel} onClick={handleOpen}>
-
         <ListItem
           css={{
             borderRadius: "5px",
@@ -250,7 +239,7 @@ export default function Channels() {
             maxWidth: "180px",
             background: "#8774e1",
             opacity: 1,
-            cursor: 'pointer'
+            cursor: "pointer",
           }}
         >
           <ListItemIcon>
@@ -312,11 +301,19 @@ export default function Channels() {
           </Box>
         </Modal>
       </div>
-      <Snackbar open={openVerif} autoHideDuration={6000} onClose={handleCloseVerif}>
-          <Alert onClose={handleCloseVerif} severity="success" sx={{ width: '100%' }}>
-            Channel added
-          </Alert>
-        </Snackbar>
+      <Snackbar
+        open={openVerif}
+        autoHideDuration={6000}
+        onClose={handleCloseVerif}
+      >
+        <Alert
+          onClose={handleCloseVerif}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Channel added
+        </Alert>
+      </Snackbar>
     </List>
   );
 }

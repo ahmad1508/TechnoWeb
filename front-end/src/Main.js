@@ -9,17 +9,21 @@ import Context from "./Context";
 import Channels from "./Channels";
 import Channel from "./Channel";
 import Welcome from "./Welcome";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
 import User from "./User";
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor: "#111",
+    backgroundColor: theme.palette.primary.dark,
     overflow: "hidden",
     flex: "1 1 auto",
     display: "flex",
     flexDirection: "row",
+    position: "relative",
+  },
+  paperStyle: {
+    backgroundColor: theme.palette.primary.light,
     position: "relative",
   },
   drawer: {
@@ -37,25 +41,25 @@ export default function Main() {
     // currentChannel, not yet used
     drawerVisible,
     setUser,
-    user
   } = useContext(Context);
+  const navigate = useNavigate();
+
   const theme = useTheme();
   const styles = useStyles(theme);
   const alwaysOpen = useMediaQuery(theme.breakpoints.up("sm"));
   const isDrawerVisible = alwaysOpen || drawerVisible;
   const [userExist, setUserExist] = useState(true);
 
-
   useEffect(() => {
     const getUser = async () => {
       const res = await axios.get(`http://localhost:3001/users/${oauth.email}`);
       setUserExist(res.data !== "");
       if (res.data !== "") {
-        setUser(res.data)
+        setUser(res.data);
       }
     };
     getUser();
-  }, [oauth]);
+  }, [oauth, navigate]);
 
   return (
     <main css={styles.root}>
@@ -63,7 +67,7 @@ export default function Main() {
         <>
           <Drawer
             PaperProps={{
-              style: { position: "relative", backgroundColor: "#222" },
+              style: styles.paperStyle,
             }}
             BackdropProps={{ style: { position: "relative" } }}
             ModalProps={{

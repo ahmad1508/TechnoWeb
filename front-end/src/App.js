@@ -1,6 +1,6 @@
 
 /** @jsxImportSource @emotion/react */
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, createContext, useMemo } from 'react'
 // Local
 import Oups from './Oups'
 //import Footer from './Footer'
@@ -10,6 +10,10 @@ import Login from './Login'
 import Context from './Context'
 import Settings from "./Settings";
 import Friends from "./pages/Friends";
+import {
+  createTheme,
+  ThemeProvider,
+} from "@mui/material/styles";
 // Rooter
 import {
   Route,
@@ -17,6 +21,33 @@ import {
   Navigate,
   useLocation
 } from "react-router-dom"
+const ColorModeContext = createContext({ toggleColorMode: () => {} });
+
+const getDesignTokens = (mode) => ({
+  palette: {
+    mode,
+    ...(mode === "light"
+      ? {
+          // palette values for light mode
+          primary: {
+            main: "#8774e1",
+            light: "#fff",
+            dark: "#eee",
+            contrastText: "#000",
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: {
+            main: "#8774e1",
+            light: "#222",
+            dark: "#111",
+            contrastText: "#ffffff",
+          },
+        }),
+  },
+});
+
 
 const styles = {
   root: {
@@ -29,11 +60,25 @@ const styles = {
 
 export default function App() {
   const location = useLocation()
-  const { oauth, user, setUser } = useContext(Context)
+  const { oauth, mode, setMode } = useContext(Context)
   const [drawerMobileVisible, setDrawerMobileVisible] = useState(false)
   const drawerToggleListener = () => {
     setDrawerMobileVisible(!drawerMobileVisible)
   }
+
+  const colorMode = useMemo(
+    () => ({
+      // The dark mode switch would invoke this method
+      toggleColorMode: () => {
+        setMode((prevMode) =>
+          prevMode === 'light' ? 'dark' : 'light',
+        );
+      },
+    }),
+    [],
+  );
+  // Update the theme only if the mode changes
+const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
   const gochannels = (<Navigate
     to={{
@@ -48,6 +93,8 @@ export default function App() {
     }}
   />)
   return (
+    <ColorModeContext.Provider value={colorMode}>
+    <ThemeProvider theme={theme}>
     <div className="App" css={styles.root}>
 
       <Header drawerToggleListener={drawerToggleListener} />
@@ -58,7 +105,8 @@ export default function App() {
         <Route path="/Friends" element={oauth ? (<Friends />) : (gohome)} />
         <Route path="/Oups" element={<Oups />} />
       </Routes>
-
     </div>
+    </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }

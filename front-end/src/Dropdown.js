@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 // Styles
@@ -15,7 +15,6 @@ import {
   Box,
   Modal,
   TextField,
-  Container,
   Snackbar,
 } from "@mui/material";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
@@ -23,32 +22,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MuiAlert from "@mui/material/Alert";
 // Local
 import { ReactComponent as DotIcon } from "./icons/dot.svg";
+import { ReactComponent as DotIconLight } from "./icons/dot_light.svg";
 import Context from "./Context";
-import PeopleIcon from '@mui/icons-material/People';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Accordion from '@mui/material/Accordion';
+import PeopleIcon from "@mui/icons-material/People";
 
-/* import Switch from '@mui/material/Switch';
-import Paper from '@mui/material/Paper';
-import Slide from '@mui/material/Slide';
-import FormControlLabel from '@mui/material/FormControlLabel';
- */
 const useStyles = (theme) => ({
   root: {
-    width: '100 %'
+    width: "100 %",
   },
   container: {
-    width: '70%',
+    width: "70%",
   },
   modal: {
     position: "absolute",
     top: "50%",
     left: "50%",
-    color: "#ffffff",
+    color: theme.palette.primary.contrastText,
     transform: "translate(-50%, -50%)",
     width: 500,
     background: theme.palette.primary.dark,
@@ -59,7 +48,7 @@ const useStyles = (theme) => ({
     position: "absolute",
     top: "50%",
     left: "50%",
-    color: "#ffffff",
+    color: theme.palette.primary.contrastText,
     transform: "translate(-50%, -50%)",
     width: 350,
     background: theme.palette.primary.dark,
@@ -96,9 +85,9 @@ const useStyles = (theme) => ({
   },
   participants: {
     padding: "20px",
-    position: 'relative',
-    margin: 'auto',
-    width: '90%',
+    position: "relative",
+    margin: "auto",
+    width: "90%",
   },
 });
 
@@ -146,22 +135,20 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-
-
-
 export default function Dropdown({ channel }) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [openTop, setOpenTop] = useState(false);
   const [Open, setOpen] = useState(false);
-  const scroll = 'paper'
   const [OpenDelete, setOpenDelete] = useState(false);
-  const styles = useStyles(useTheme());
   const [invitation, setInvitation] = useState("");
-  const open = Boolean(anchorEl);
-  const { id } = useParams();
-  const { oauth, currentChannel, setChannels, channels } = useContext(Context);
   const [openD, setOpenD] = useState(false);
+  const scroll = "paper";
+  const open = Boolean(anchorEl);
+  const { oauth, currentChannel, setChannels, channels, mode } =
+    useContext(Context);
+  const { id } = useParams();
+  const styles = useStyles(useTheme());
 
   const handleOpenAdd = () => setOpen(true);
   const handleCloseAdd = () => setOpen(false);
@@ -190,9 +177,6 @@ export default function Dropdown({ channel }) {
     }
     setOpen(false);
   };
-
-
-
   /****************************
    *        Update channel
    ***************************/
@@ -202,16 +186,14 @@ export default function Dropdown({ channel }) {
     const { data: channel } = axios.put(
       `http://localhost:3001/channels/${id}`,
       {
-        invitation: invitation, // a changer selon l'utilisateur
+        invitation: invitation,
       }
     );
     setInvitation("");
   };
-
   const handleClickOpenTop = () => {
     setOpenTop(true);
   };
-
   const handleCloseTop = (reason) => {
     if (reason === "clickaway") {
       return;
@@ -219,8 +201,8 @@ export default function Dropdown({ channel }) {
     setOpenTop(false);
   };
 
-  const descriptionElementRef = React.useRef(null);
-  React.useEffect(() => {
+  const descriptionElementRef = useRef(null);
+  useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -232,15 +214,13 @@ export default function Dropdown({ channel }) {
   const toggleDrawer = (bool) => (event) => {
     if (
       event &&
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
     ) {
-      return
+      return;
     }
-
     setOpenTop(bool);
   };
-
 
   /****************************
    *        Delete channel
@@ -265,10 +245,7 @@ export default function Dropdown({ channel }) {
       setChannels(newChannels);
       navigate("/channels");
       setOpenDelete(true);
-      console.log(channel);
     }
-
-    console.log("end");
   };
 
   return (
@@ -278,7 +255,7 @@ export default function Dropdown({ channel }) {
         sx={[styles.addButton, styles.button]}
         onClick={handleClick}
       >
-        <DotIcon />
+        {mode === "dark" ? <DotIcon /> : <DotIconLight />}
       </Button>
       <StyledMenu
         id="demo-customized-menu"
@@ -355,7 +332,6 @@ export default function Dropdown({ channel }) {
       {/**** delete Div modal *****/}
       <Modal
         keepMounted
-
         open={OpenDelete}
         onClose={handleCloseDelete}
         aria-labelledby="keep-mounted-modal-title"
@@ -401,31 +377,30 @@ export default function Dropdown({ channel }) {
         </Box>
       </Modal>
 
-
-
-
       <Modal
         open={openTop}
         onClose={handleCloseTop}
         scroll={scroll}
-        css={{ minWidth: '500px', maxWidth: '300px' }}
+        css={{ minWidth: "500px", maxWidth: "300px" }}
       >
         <Box sx={styles.modal_participants}>
-          <Box sx={{ padding: '10px' }}>
-            <Typography variant="h4" sx={{textAlign:'center'}}>Channel Participant</Typography>
+          <Box sx={{ padding: "10px" }}>
+            <Typography variant="h4" sx={{ textAlign: "center" }}>
+              Channel Participant
+            </Typography>
           </Box>
-          <Divider sx={{ width: '100%', my: 0.5 }} />
+          <Divider sx={{ width: "100%", my: 0.5 }} />
 
-          {channel.participants.map(participant => (
+          {channel.participants.map((participant) => (
             <Box sx={styles.participants}>
-              <Typography variant="h6" sx={{textAlign:'center'}}>{participant}</Typography>
+              <Typography variant="h6" sx={{ textAlign: "center" }}>
+                {participant}
+              </Typography>
               <Divider sx={{ my: 0.5 }} />
-
             </Box>
           ))}
         </Box>
       </Modal>
-
 
       {/*  <Container css={styles.container}>
         <div>
@@ -445,12 +420,11 @@ export default function Dropdown({ channel }) {
         </div>
       </Container> */}
 
-
       <Snackbar open={openD} autoHideDuration={6000} onClose={handleCloseD}>
         <Alert onClose={handleCloseD} severity="info" sx={{ width: "100%" }}>
           Channel Deleted
         </Alert>
       </Snackbar>
-    </List >
+    </List>
   );
 }
