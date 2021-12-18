@@ -1,22 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 // Layout
 import { useTheme } from "@mui/styles";
-import { IconButton, Avatar, Grid } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Context from "./Context";
-import { ReactComponent as LogoIcon } from "./icons/logo-cropped.svg";
-import { ReactComponent as LogoIconLight } from "./icons/logo-cropped_light.svg";
+import { IconButton, Avatar, Grid, Divider, Button } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Divider, Button } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { ReactComponent as LogoIcon } from "./icons/logo-cropped.svg";
+import { ReactComponent as LogoIconLight } from "./icons/logo-cropped_light.svg";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Context from "./Context";
 
 const useStyles = (theme) => ({
   header: {
@@ -58,7 +58,7 @@ const useStyles = (theme) => ({
 export default function Header({ drawerToggleListener }) {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const navigate = useNavigate();
+  const {removeCookie} = useCookies([])
   const {
     oauth,
     setOauth,
@@ -78,6 +78,7 @@ export default function Header({ drawerToggleListener }) {
     setOauth(null);
     setUser(null);
     setOpen(false);
+    removeCookie('mode');
   };
   const toggleDrawer = (bool) => (e) => {
     if (e.type === "keydown" && (e.key === "Tab" || e.key === "Shift")) {

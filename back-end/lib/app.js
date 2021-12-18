@@ -16,8 +16,68 @@ app.get("/", (req, res) => {
   res.send(["<h1>ECE WebTech Chat</h1>"].join(""));
 });
 
-// Channels
+const http = require('http').createServer(app);
+// const io = require('socket.io')(http, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"]
+//   }
+// });
 
+// var STATIC_CHANNELS = [{
+//   name: 'Global chat',
+//   participants: 0,
+//   id: 1,
+//   sockets: []
+// }, {
+//   name: 'Funny',
+//   participants: 0,
+//   id: 2,
+//   sockets: []
+// }];
+
+// io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
+//   console.log('new client connected');
+//   socket.emit('connection', null);
+//   socket.on('channel-join', id => {
+//     console.log('channel join', id);
+//     STATIC_CHANNELS.forEach(c => {
+//         if (c.id === id) {
+//             if (c.sockets.indexOf(socket.id) == (-1)) {
+//                 c.sockets.push(socket.id);
+//                 c.participants++;
+//                 io.emit('channel', c);
+//             }
+//         } else {
+//             let index = c.sockets.indexOf(socket.id);
+//             if (index != (-1)) {
+//                 c.sockets.splice(index, 1);
+//                 c.participants--;
+//                 io.emit('channel', c);
+//             }
+//         }
+//     });
+
+//     return id;
+// });
+// socket.on('send-message', message => {
+//     io.emit('message', message);
+// });
+
+// socket.on('disconnect', () => {
+//     STATIC_CHANNELS.forEach(c => {
+//         let index = c.sockets.indexOf(socket.id);
+//         if (index != (-1)) {
+//             c.sockets.splice(index, 1);
+//             c.participants--;
+//             io.emit('channel', c);
+//         }
+//     });
+// });
+
+// });
+
+// Channels
 app.get("/channels", authenticate, async (req, res) => {
   const allChannels = await db.channels.list();
   const channels = [];
@@ -94,7 +154,6 @@ app.delete("/channels/:id/message/:creation", async (req, res) => {
   const message = await db.messages.delete(req.params.id, req.params.creation);
   res.status(201).json(message);// send the message to the the axios request
 });
-
 // Users
 
 app.get("/users", async (req, res) => {
@@ -111,7 +170,6 @@ app.post("/friends", async (req, res) => {
       if(friends[i] === user.id){friendsInfo.push(user)}
     }
   })
-
   res.send(friendsInfo);
 });
 app.post("/users", async (req, res) => {
@@ -130,4 +188,4 @@ app.put("/users/", async (req, res) => {
   res.json(user);
 });
 
-module.exports = app;
+module.exports = http;

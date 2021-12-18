@@ -3,6 +3,7 @@ import { useContext } from "react";
 // Layout
 import { useTheme } from "@mui/styles";
 import { Box, Grid, Container } from "@mui/material";
+import { useCookies } from "react-cookie";
 
 import Accordion from "@mui/material/Accordion";
 import Typography from "@mui/material/Typography";
@@ -30,7 +31,7 @@ const useStyles = (theme) => ({
   },
   title: {
     margin: "30px",
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
   },
   box: {
     marginTop: "10px",
@@ -45,6 +46,7 @@ export default function Main() {
   const theme = useTheme();
   const styles = useStyles(theme);
   const { mode, setMode } = useContext(Context);
+  const [, setCookie] = useCookies(["mode"]);
 
   return (
     <main css={styles.root} container>
@@ -77,6 +79,7 @@ export default function Main() {
                   labelPlacement="start"
                   onChange={(e) => {
                     setMode(!e.target.checked ? "light" : "dark");
+                    setCookie("mode",!e.target.checked ? "light" : "dark");
                   }}
                 />
               </Grid>

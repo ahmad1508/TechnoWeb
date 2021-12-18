@@ -127,9 +127,7 @@ export default function Channel() {
           <Dropdown channel={channel} />
         </Box>
       </Grid>
-
       <Divider sx={styles.divider} />
-
       <List
         channel={currentChannel}
         messages={messages}
