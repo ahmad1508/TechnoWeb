@@ -7,7 +7,12 @@ import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/styles";
 import Context from "../Context";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { isTyping } from 'react-chat-engine'
+import imageCompression from 'browser-image-compression';
+import Picker from 'emoji-picker-react';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+
+
+
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
   const borderColor =
@@ -44,7 +49,13 @@ const useStyles = (theme) => {
     upload: {
       height: "100%",
       width: "auto",
-      margin: "0px 5px 0px 5px"
+      margin: "0px 5px 0px 0px"
+    },
+    show: {
+      position: 'absolute'
+    },
+    hide: {
+      display:'none'
     }
 
   };
@@ -58,8 +69,11 @@ export default function Form({ addMessage, channel }, props) {
   const [content, setContent] = useState("");
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme());
+  const [compressedImage, setCompressedImage] = useState("")
   const [files, setFile] = useState(null)
   const [base64, setBase64] = useState("")
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [emojiPicker, setEmojiPicker] = useState(false);
 
   const getBase64 = file => {
     return new Promise(resolve => {
@@ -88,6 +102,7 @@ export default function Form({ addMessage, channel }, props) {
 
     let file = files
     file = e.target.files[0]
+
     getBase64(file)
       .then(result => {
         file["base64"] = result;
@@ -100,7 +115,23 @@ export default function Form({ addMessage, channel }, props) {
 
     setFile(e.target.files[0])
 
-  }; 
+  };
+  /*const handleCompressImage = (file)=>{
+    const options = {
+      maxSizeMB :0.08,
+      maxWidthOrHeight:400,
+      useWebWorker:true,
+    }
+    if(options.maxSizeMB >= file/1024){
+      alert("image too small can't compress")
+    }
+
+    let output;
+    imageCompression(file,options).then(result=>{
+      output = result;
+      setCompressedImage(output)
+    })
+  }*/
 
 
 
@@ -113,7 +144,7 @@ export default function Form({ addMessage, channel }, props) {
       {
         content: content,
         author: oauth.email,
-        base64:base64!==""?base64:""
+        base64: base64 !== "" ? base64 : ""
       },
       {
         headers: {
@@ -123,6 +154,7 @@ export default function Form({ addMessage, channel }, props) {
     );
     addMessage(message);
     setContent("");
+    setFile(null)
     /*
       a changer selon l'utilisateur*/
   };
@@ -131,36 +163,64 @@ export default function Form({ addMessage, channel }, props) {
     setContent(e.target.value);
   };
 
-  return (
-    <form css={styles.form} onSubmit={onSubmit} noValidate>
-      <label htmlFor="contained-button-file">
-        <Input accept="image/*" id="contained-button-file" multiple={false} type="file" onChange={(e) => handleUpload(e)} />
-        <Button variant="contained" css={styles.upload} component="span">
-          <AddPhotoAlternateIcon />
-        </Button>
-      </label>
+  const openEmojiPicker = (e) => {
+    e.preventDefault()
+    if (emojiPicker === false) {
+      setEmojiPicker(true)
+    }
+    else {
+      setEmojiPicker(false)
+    }
 
-      <TextField
-        id="outlined-multiline-flexible"
-        label="Message"
-        multiline
-        maxRows={4}
-        value={content}
-        onChange={handleChange}
-        variant="outlined"
-        css={styles.content}
-        onKeyPress={(ev) => {
-          if ((ev.key === "Enter") && !ev.shiftKey) {
-            onSubmit();
-            ev.preventDefault();
-          }
-        }}
-      />
-      <div>
-        <IconButton type="submit" css={styles.send}>
-          <SendIcon css={styles.sendIcon} />
-        </IconButton>
-      </div>
-    </form>
+  }
+
+  const onEmojiClick = (event, emojiObject) => {
+    setContent(emojiObject.emoji);
+  };
+
+  return (
+    <div>
+      {/* <Picker css={styles.show} open={emojiPicker} /> */}
+
+      <form css={styles.form} onSubmit={onSubmit} noValidate>
+        <label htmlFor="contained-button-file">
+          <Input accept="image/*" id="contained-button-file" multiple={false} type="file" onChange={(e) => handleUpload(e)} />
+          <Button variant="contained" css={styles.upload} component="span">
+            <AddPhotoAlternateIcon />
+          </Button>
+        </label>
+        <label htmlFor="contained-button-file">
+
+          <Button variant="contained" onClick={openEmojiPicker} css={styles.upload} component="span">
+            <InsertEmoticonIcon />
+          </Button>
+
+
+
+        </label>
+
+        <TextField
+          id="outlined-multiline-flexible"
+          label="Message"
+          multiline
+          maxRows={4}
+          value={content}
+          onChange={handleChange}
+          variant="outlined"
+          css={styles.content}
+          onKeyPress={(ev) => {
+            if ((ev.key === "Enter") && !ev.shiftKey) {
+              onSubmit();
+              ev.preventDefault();
+            }
+          }}
+        />
+        <div>
+          <IconButton type="submit" css={styles.send}>
+            <SendIcon css={styles.sendIcon} />
+          </IconButton>
+        </div>
+      </form>
+    </div>
   );
 }

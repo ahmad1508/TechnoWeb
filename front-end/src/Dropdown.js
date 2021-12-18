@@ -45,12 +45,12 @@ const useStyles = (theme) => ({
     width: '70%',
   },
   modal: {
+    width:'50%',
     position: "absolute",
     top: "50%",
     left: "50%",
     color: "#ffffff",
     transform: "translate(-50%, -50%)",
-    width: 500,
     background: theme.palette.primary.dark,
     borderRadius: "10px",
     padding: "20px",
@@ -82,7 +82,6 @@ const useStyles = (theme) => ({
   addButton: {
     borderRadius: "5px",
     margin: "0 10px",
-    maxWidth: "180px",
     cursor: "pointer",
     border: `1px solid ${theme.palette.primary.light}`,
     ":hover": {
@@ -207,7 +206,6 @@ export default function Dropdown({ channel }) {
     );
     setInvitation("");
   };
-
   const handleClickOpenTop = () => {
     setOpenTop(true);
   };
@@ -275,7 +273,7 @@ export default function Dropdown({ channel }) {
     <List css={styles.root}>
       <Button
         type="submit"
-        sx={[styles.addButton, styles.button]}
+        css={[styles.addButton, styles.button]}
         onClick={handleClick}
       >
         <DotIcon />
@@ -355,7 +353,6 @@ export default function Dropdown({ channel }) {
       {/**** delete Div modal *****/}
       <Modal
         keepMounted
-
         open={OpenDelete}
         onClose={handleCloseDelete}
         aria-labelledby="keep-mounted-modal-title"
@@ -373,7 +370,7 @@ export default function Dropdown({ channel }) {
 
           <form sx={styles.form} onSubmit={handleDelete} noValidate>
             <Grid container>
-              <Grid md={6}>
+              <Grid item xs={12} md={6} lg={6}>
                 <Button
                   type="submit"
                   value="yes"
@@ -384,7 +381,7 @@ export default function Dropdown({ channel }) {
                   Yes
                 </Button>
               </Grid>
-              <Grid md={6}>
+              <Grid item  xs={12} md={6} lg={6}>
                 <Button
                   variant="contained"
                   type="submit"
@@ -417,7 +414,7 @@ export default function Dropdown({ channel }) {
           <Divider sx={{ width: '100%', my: 0.5 }} />
 
           {channel.participants.map(participant => (
-            <Box sx={styles.participants}>
+            <Box sx={styles.participants} key={participant}>
               <Typography variant="h6" sx={{textAlign:'center'}}>{participant}</Typography>
               <Divider sx={{ my: 0.5 }} />
 

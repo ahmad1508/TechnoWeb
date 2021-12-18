@@ -5,7 +5,7 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 // Layout
 import { useTheme } from "@mui/styles";
-import { Fab, Grid } from "@mui/material";
+import { Fab, Grid, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 // Local
 import Form from "./channel/Form";
@@ -68,7 +68,7 @@ export default function Channel() {
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
-  const [otherUsers,setOtherUsers] = useState([])
+  const [otherUsers, setOtherUsers] = useState([])
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
@@ -112,12 +112,12 @@ export default function Channel() {
   return (
     <div css={styles.root}>
       <Grid container css={styles.header}>
-        <Grid md={0}>
-          <h1 css={{ fontWeight:"500",fontSize:"24px",marginLeft: "1rem" }}>{channel.name}</h1>
+        <Grid item xs={9} md={6} lg={7}>
+          <h1 css={{ fontWeight: "500", fontSize: "24px", marginLeft: "1rem" }}>{channel.name}</h1>
         </Grid>
-        <Grid md={2} css={styles.drop}>
-          <Dropdown channel={channel}/>
-        </Grid>
+        <Box css={styles.drop}>
+          <Dropdown channel={channel} />
+        </Box>
       </Grid>
 
       <Divider sx={{ my: 0.5, color: "#ffffff" }} />
