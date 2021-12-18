@@ -61,9 +61,7 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel } = useContext(Context);
-  const channel = channels.find((channel) => channel.id === id);
-  setCurrentChannel(channel?.id);
+  const { channels, oauth, setCurrentChannel, currentChannel } = useContext(Context);
   const styles = useStyles(useTheme());
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
@@ -72,7 +70,10 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  
+  useEffect(() => {
+    const channel = channels.find((channel) => channel.id === id);
+    setCurrentChannel(channel?.id);
+  }, [id])
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -85,7 +86,6 @@ export default function Channel() {
           }
         );
         setMessages(messages);
-        console.log(messages)
         if (listRef.current) {
           listRef.current.scroll();
         }
@@ -94,7 +94,7 @@ export default function Channel() {
       }
     };
     fetch();
-  }, [id, oauth, navigate]);
+  }, [id]);
 
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown);
@@ -103,9 +103,8 @@ export default function Channel() {
   const onClickScroll = () => {
     listRef.current.scroll();
   };
-
   // On refresh, context.channel is not yet initialized
-  if (!channel) {
+  if (!currentChannel) {
     return <div>loading</div>;
   }
 
@@ -113,7 +112,7 @@ export default function Channel() {
     <div css={styles.root}>
       <Grid container css={styles.header}>
         <Grid md={0}>
-          <h1 css={{ marginLeft: "1rem" }}>{channel.name}</h1>
+          <h1 css={{ marginLeft: "1rem" }}>{currentChannel.name}</h1>
         </Grid>
         <Grid md={2} css={styles.drop}>
           <Dropdown />
@@ -123,13 +122,13 @@ export default function Channel() {
       <Divider sx={{ my: 0.5, color: "#ffffff" }} />
 
       <List
-        channel={channel}
+        channel={currentChannel}
         messages={messages}
         setMessages={setMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
       />
-      <Form addMessage={addMessage} channel={channel} />
+      <Form addMessage={addMessage} channel={currentChannel} />
       <Fab
         aria-label="Latest messages"
         css={[styles.fab, scrollDown || styles.fabDisabled]}

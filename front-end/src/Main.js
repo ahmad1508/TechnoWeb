@@ -57,7 +57,7 @@ export default function Main() {
       }
     };
     getUser();
-  }, [oauth, user]);
+  }, [oauth]);
 
   return (
     <main css={styles.root}>

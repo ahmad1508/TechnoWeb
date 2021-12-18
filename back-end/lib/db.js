@@ -68,7 +68,8 @@ module.exports = {
       creation = microtime.now()
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
-        content: message.content
+        content: message.content,
+        user: message.user,
       }))
       return merge(message, { channelId: channelId, creation: creation })
     },
