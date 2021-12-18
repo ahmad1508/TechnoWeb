@@ -2,7 +2,7 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 // Layout
-import { styled, IconButton, TextField, Button, Stack } from "@mui/material";
+import { Box, styled, IconButton, TextField, Button, Stack, Modal } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/styles";
 import Context from "../Context";
@@ -51,6 +51,15 @@ const useStyles = (theme) => {
       width: "auto",
       margin: "0px 5px 0px 5px",
     },
+    picker: {
+      position: 'absolute',
+      bottom: 70,
+      left: 70,
+
+    },
+    opacity: {
+      opacity: 0
+    }
   };
 };
 
@@ -151,29 +160,28 @@ export default function Form({ addMessage, channel }, props) {
     /*
       a changer selon l'utilisateur*/
   };
-
+  const onEmojiClick = (event, emojiObject) => {
+    setContent(content + emojiObject.emoji);
+  };
   const handleChange = (e) => {
     setContent(e.target.value);
   };
 
   const openEmojiPicker = (e) => {
     e.preventDefault()
-    if (emojiPicker === false) {
-      setEmojiPicker(true)
-    }
-    else {
-      setEmojiPicker(false)
-    }
-
+    setEmojiPicker(true)
   }
 
-  const onEmojiClick = (event, emojiObject) => {
-    setContent(emojiObject.emoji);
+  const handleCloseTop = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setEmojiPicker(false)
+
   };
 
   return (
     <div>
-      {/* <Picker css={styles.show} open={emojiPicker} /> */}
 
       <form css={styles.form} onSubmit={onSubmit} noValidate>
         <label htmlFor="contained-button-file">
@@ -187,9 +195,11 @@ export default function Form({ addMessage, channel }, props) {
           <Button variant="contained" onClick={openEmojiPicker} css={styles.upload} component="span">
             <InsertEmoticonIcon />
           </Button>
-
-
-
+          <Modal open={emojiPicker} onClose={handleCloseTop} >
+            <Box css={styles.picker} >
+              <Picker css={{boxShadow:0}} onEmojiClick={onEmojiClick} />
+            </Box>
+          </Modal>
         </label>
 
         <TextField
@@ -214,6 +224,7 @@ export default function Form({ addMessage, channel }, props) {
           </IconButton>
         </div>
       </form>
+
     </div>
   );
 }
