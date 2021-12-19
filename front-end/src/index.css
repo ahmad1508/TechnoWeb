@@ -44,18 +44,12 @@ ul {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #8774e1;
+  background: #999;
   border-radius: 2px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #6e60b8;
+  background: #888;
 }
 
-/* Mozilla */
-/* width & color */
-* {
-  scrollbar-color: #8774e1 #fff;
-  scrollbar-width: thin;
-}
