@@ -89,7 +89,8 @@ export default function Channel() {
             id:user.id,
             avatar:user.avatar,
             friends: [],
-            invitation:[]
+            invitation:[],
+            sentInvites:[]
           },
           {
             headers: {

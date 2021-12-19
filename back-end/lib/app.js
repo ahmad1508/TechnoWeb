@@ -200,7 +200,12 @@ app.put("/users/:id", async (req, res) => {
     const index = newinvit.invitation.indexOf(req.body.invitationFrom)
     if (index === (-1)) {
       newinvit.invitation.push(req.body.invitationFrom)
+      const me = await db.users.get(req.body.invitationFrom)
+      console.log(me)
+      me.sentInvites.push(newinvit.id)
+      console.log(me)
       user = await db.users.update(req.params.id, newinvit);
+      await db.users.update(me.id, me);
     }
   } else if (req.body.request === 'reject') {
     const me = req.body.user;
@@ -212,11 +217,16 @@ app.put("/users/:id", async (req, res) => {
     console.log(req.body)
     const me = req.body.user;
     const index = me.invitation.indexOf(req.params.id)
+    const sender = await db.users.get(req.params.id)
+    const indexInSent = sender.sentInvites.indexOf(me.id)
     if (index !== (-1)) {
       me.invitation.splice(index, 1)
+      sender.sentInvites.splice(index,1)
     }
+    console.log(sender)
     me.friends.push(req.params.id)
     user = await db.users.update(me.id, me);
+    await db.users.update(sender.id, sender);
 
   } else if (req.body.request === 'delete') {
     const me = req.body.user;

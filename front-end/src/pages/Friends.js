@@ -82,6 +82,7 @@ export default function Main() {
   const { oauth, user, setUser } = useContext(Context)
   const haveFriends = user.friends !== []
   const haveInvitation = user.Invitation !== []
+  const sentInvites = user.sentInvites !== []
   const [myFriends, setFriends] = useState([])
   const [open, setOpen] = useState(false)
   const [i, SetI] = useState(0)
@@ -154,6 +155,8 @@ export default function Main() {
             request: "invited"
           },
           { headers: { Authorization: `Bearer ${oauth.access_token}` } })
+
+        
         /*const { data: person } = await axios.put(
           `http://localhost:3001/users/${friend}`,
           {
@@ -204,7 +207,7 @@ export default function Main() {
 
   }
 
-  const removeFriend = async (e,friendID)=>{
+  const removeFriend = async (e, friendID) => {
     e.preventDefault()
 
     await axios.put(
@@ -215,19 +218,19 @@ export default function Main() {
       },
       { headers: { Authorization: `Bearer ${oauth.access_token}` } })
 
-      const newFriends = myFriends.filter((friend)=>friend.id!==friendID)
-      setFriends(newFriends)
-      const { data: person } = await axios.get(
-        `http://localhost:3001/users/${friendID}`,
-        { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-      await axios.put(
-        `http://localhost:3001/users/${user.id}`,
-        {
-          user: person,
-          request: 'delete'
-        },
-        { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-  
+    const newFriends = myFriends.filter((friend) => friend.id !== friendID)
+    setFriends(newFriends)
+    const { data: person } = await axios.get(
+      `http://localhost:3001/users/${friendID}`,
+      { headers: { Authorization: `Bearer ${oauth.access_token}` } })
+    await axios.put(
+      `http://localhost:3001/users/${user.id}`,
+      {
+        user: person,
+        request: 'delete'
+      },
+      { headers: { Authorization: `Bearer ${oauth.access_token}` } })
+
   }
 
 
@@ -279,7 +282,7 @@ export default function Main() {
                   <Typography variant="h6">{friend.id}</Typography>
                 </Grid>
                 <Grid item xs={2} md={2} lg={2} css={{ display: 'flex', alignItems: 'center' }} >
-                  <Button onClick={(e)=>removeFriend(e,friend.id)}>
+                  <Button onClick={(e) => removeFriend(e, friend.id)}>
                     <Typography variant="h6"><DeleteIcon /></Typography>
                   </Button>
                 </Grid>
@@ -320,6 +323,34 @@ export default function Main() {
           ))}
         </Box>
 
+        <Box css={styles.box}>
+          <Box css={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="h4" css={styles.title}>
+              Pending Invites
+            </Typography>
+          </Box>
+
+          {sentInvites && user.sentInvites.map((invited) => (
+            <Accordion css={styles.accordion} key={j++}>
+
+              <Grid container>
+                <Grid item xs={3} md={2} lg={1} >
+                  <Gravatar email={invited} css={styles.avatar} />
+                </Grid>
+                <Grid item xs={7} md={8} lg={9} css={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="h6">{invited}</Typography>
+                </Grid>
+                <Grid item xs={2} md={2} lg={2} >
+                  <Box css={styles.accept}>
+                    <Typography variant="body1">Pending invite</Typography>
+                  </Box>
+
+
+                </Grid>
+              </Grid>
+            </Accordion>
+          ))}
+        </Box>
 
       </Container>
 
