@@ -59,7 +59,7 @@ const useStyles = (theme) => ({
 export default function Header({ drawerToggleListener }) {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const  [,,removeCookies ] = useCookies([]);
+  const [, , removeCookies] = useCookies([]);
   const {
     oauth,
     setOauth,
@@ -81,7 +81,7 @@ export default function Header({ drawerToggleListener }) {
     setOpen(false);
     removeCookies("mode");
   };
-  
+
 
   const toggleDrawer = (bool) => (e) => {
     if (e.type === "keydown" && (e.key === "Tab" || e.key === "Shift")) {
@@ -106,7 +106,7 @@ export default function Header({ drawerToggleListener }) {
         <MenuIcon />
       </IconButton>
       <Link
-        to="/"
+        to="/channels/Welcome"
         onClick={() => {
           setCurrentChannel(null);
         }}
@@ -175,7 +175,7 @@ export default function Header({ drawerToggleListener }) {
         <React.Fragment>
           <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
             <List>
-              <Link to="/" css={styles.link}>
+              <Link to="/channels/Welcome" css={styles.link}>
                 <Button onClick={handleClick} css={styles.drawer}>
                   <ListItemIcon>
                     <HomeIcon />
@@ -193,14 +193,14 @@ export default function Header({ drawerToggleListener }) {
                 </Button>
               </Link>
               <Divider css={{ my: 0.5 }} />
-              <Link to="/friends" css={styles.link}>
+              {/* <Link to="/friends" css={styles.link}>
                 <Button onClick={handleClick} css={styles.drawer}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Friends" />
                 </Button>
-              </Link>
+              </Link> */}
               <Divider css={{ my: 0.5 }} />
               <Button onClick={onClickLogout} css={styles.drawer}>
                 <ListItemIcon>

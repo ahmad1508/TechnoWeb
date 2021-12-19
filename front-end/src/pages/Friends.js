@@ -1,12 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React, { useContext, useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Layout
 import { useTheme } from "@mui/styles";
 import { Box, Grid, Container, Typography, Button, TextField, IconButton, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
-import { ReactComponent as Prototype } from "../icons/prototype.svg";
 import Context from '../Context'
 import Accordion from '@mui/material/Accordion';
 import axios from 'axios'
@@ -228,8 +227,8 @@ export default function Main() {
 
   }
 
-  const reatePrivateChat = (e,friendID)=>{
-    
+  const reatePrivateChat = (e, friendID) => {
+
   }
 
 
