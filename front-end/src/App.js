@@ -80,12 +80,12 @@ export default function App() {
         setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
       },
     }),
-    []
+    [setMode]
   );
   useEffect(() => {
     if (cookies.mode === undefined) return;
     setMode(cookies.mode);
-  }, [navigate]);
+  }, [cookies.mode,setMode]);
   // Update the theme only if the mode changes
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
@@ -114,7 +114,6 @@ export default function App() {
             <Route path="/" element={oauth ? gochannels : <Login />} />
             <Route path="/channels/*" element={oauth ? <Main /> : gohome} />
             <Route path="/settings" element={oauth ? <Settings /> : gohome} />
-            <Route path="/Friends" element={oauth ? <Friends /> : gohome} />
             <Route path="/Oups" element={<Oups />} />
           </Routes>
         </div>

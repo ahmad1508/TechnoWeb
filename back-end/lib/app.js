@@ -115,7 +115,7 @@ app.put("/channels/:id", async (req, res) => {
   if (req.body.action === "Quit") {
     console.log("quit")
     const index = existing.participants.indexOf(req.body.user)
-    existing.participants.splice(index,1)
+    existing.participants.splice(index, 1)
   } else {
     console.log("invitation")
     const invitation = req.body.invitation.split(",");
@@ -152,7 +152,7 @@ app.post("/channels/:id/messages", async (req, res) => {
 
 app.put("/channels/:id/message/:creation", async (req, res) => {
   console.log(req.params.id, req.params.creation)
-  const message = await db.messages.update(req.params.id,req.params.creation, req.body);
+  const message = await db.messages.update(req.params.id, req.params.creation, req.body);
   res.status(201).json(message);// send the message to the the axios request
 });
 
@@ -160,13 +160,17 @@ app.delete("/channels/:id/message/:creation", async (req, res) => {
   const message = await db.messages.delete(req.params.id, req.params.creation);
   res.status(201).json(message);// send the message to the the axios request
 });
+
+
+
+
 // Users
 
 app.get("/users", async (req, res) => {
   const users = await db.users.list();
   res.json(users);
 });
-app.post("/friends", async (req, res) => {
+/*app.post("/friends", async (req, res) => {
   const users = await db.users.list();
   const friends = req.body.friends;
   console.log(friends)
@@ -177,7 +181,7 @@ app.post("/friends", async (req, res) => {
     }
   })
   res.send(friendsInfo);
-});
+});*/
 app.post("/users", async (req, res) => {
   console.log(req.body)
   const user = await db.users.create(req.body.user, req.body.id);
@@ -189,8 +193,40 @@ app.get("/users/:id", async (req, res) => {
   res.json(user);
 });
 
-app.put("/users/", async (req, res) => {
-  const user = await db.users.update(req.body.id, req.body.user);
+app.put("/users/:id", async (req, res) => {
+  let user
+  if (req.body.request === 'invited') {
+    const newinvit = req.body.user;
+    const index = newinvit.invitation.indexOf(req.body.invitationFrom)
+    if (index === (-1)) {
+      newinvit.invitation.push(req.body.invitationFrom)
+      user = await db.users.update(req.params.id, newinvit);
+    }
+  } else if (req.body.request === 'reject') {
+    const me = req.body.user;
+    const index = me.invitation.indexOf(req.params.id)
+    me.invitation.splice(index, 1)
+    user = await db.users.update(me.id, me);
+
+  } else if (req.body.request === 'accept') {
+    console.log(req.body)
+    const me = req.body.user;
+    const index = me.invitation.indexOf(req.params.id)
+    if (index !== (-1)) {
+      me.invitation.splice(index, 1)
+    }
+    me.friends.push(req.params.id)
+    user = await db.users.update(me.id, me);
+
+  } else if (req.body.request === 'delete') {
+    const me = req.body.user;
+    const index = me.friends.indexOf(req.params.id)
+    me.friends.splice(index, 1)
+    user = await db.users.update(me.id, me)
+  } else {
+    user = await db.users.update(req.params.id, req.body);
+  }
+
   res.json(user);
 });
 

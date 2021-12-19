@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 // Layout
 import { useTheme } from "@mui/styles";
@@ -17,6 +17,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Context from "./Context";
+
 
 const useStyles = (theme) => ({
   header: {
@@ -58,7 +59,7 @@ const useStyles = (theme) => ({
 export default function Header({ drawerToggleListener }) {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const {removeCookie} = useCookies([])
+  const [, , removeCookie] = useCookies([])
   const {
     oauth,
     setOauth,
@@ -80,6 +81,8 @@ export default function Header({ drawerToggleListener }) {
     setOpen(false);
     removeCookie('mode');
   };
+  
+
   const toggleDrawer = (bool) => (e) => {
     if (e.type === "keydown" && (e.key === "Tab" || e.key === "Shift")) {
       return;
@@ -149,7 +152,7 @@ export default function Header({ drawerToggleListener }) {
               </Grid>
 
               <Grid
-              item
+                item
                 xs={10}
                 md={9}
                 lg={9}

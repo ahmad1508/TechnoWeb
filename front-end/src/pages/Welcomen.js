@@ -1,17 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { useContext, useEffect } from "react";
 // Layout
 import { useTheme } from "@mui/styles";
-import { Box, Grid, Container, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Grid, Container, Typography, Button } from "@mui/material";
 import { ReactComponent as Prototype } from "../icons/prototype.svg";
-/* import Simple from '../icons/Simple.png';
-import Private from '../icons/private.png';
-import Synced from '../icons/Synced.png';
-import Powerful from '../icons/Powerful.png';
-import Fast from '../icons/Fast.png';
-import Secure from '../icons/Secure.png';
- */
 
 const useStyles = (theme) => ({
   root: {

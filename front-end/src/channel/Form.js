@@ -11,7 +11,6 @@ import Picker from "emoji-picker-react";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import GifIcon from "@mui/icons-material/Gif";
 import GifPicker from "react-giphy-picker";
-import React from "react";
 
 const useStyles = (theme) => ({
   form: {
@@ -79,16 +78,13 @@ export default function Form({
 }) {
   const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());
-  const [compressedImage, setCompressedImage] = useState("");
   const [files, setFile] = useState(null);
   const [base64, setBase64] = useState("");
-  const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [gifPicker, setGifPicker] = useState(false);
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {
-      let fileInfo;
       let baseURL = "";
       // Make new FileReader
       let reader = new FileReader();
@@ -141,7 +137,7 @@ export default function Form({
   const onSubmit = async (e) => {
     e?.preventDefault();
     if (modify !== "") {
-      const { data: message } = await axios.put(
+      await axios.put(
         `http://localhost:3001/channels/${channel.id}/message/${modify}`,
         {
           content: content,
