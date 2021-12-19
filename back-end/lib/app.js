@@ -99,7 +99,11 @@ app.get("/channels", authenticate, async (req, res) => {
 
 app.post("/channels", async (req, res) => {
   const createChannel = req.body
-  createChannel.participants = createChannel.participants.split(",")
+  if (createChannel.participants !== "") {
+    createChannel.participants = createChannel.participants.split(",")
+  } else {
+    createChannel.participants=[]
+  }
   const channel = await db.channels.create(createChannel);
   res.status(201).json(channel);
 });
@@ -221,7 +225,7 @@ app.put("/users/:id", async (req, res) => {
     const indexInSent = sender.sentInvites.indexOf(me.id)
     if (index !== (-1)) {
       me.invitation.splice(index, 1)
-      sender.sentInvites.splice(index,1)
+      sender.sentInvites.splice(index, 1)
     }
     console.log(sender)
     me.friends.push(req.params.id)
@@ -233,7 +237,7 @@ app.put("/users/:id", async (req, res) => {
     const index = me.friends.indexOf(req.params.id)
     me.friends.splice(index, 1)
     user = await db.users.update(me.id, me)
-  } else if(req.body.request==="modify"){
+  } else if (req.body.request === "modify") {
     const me = await db.users.get(req.params.id)
     me.username = req.body.user.username
     me.avatar = req.body.user.avatar

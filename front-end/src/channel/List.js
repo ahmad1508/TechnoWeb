@@ -144,7 +144,7 @@ const useStyles = (theme) => ({
     fontSize: "14px",
     "& p": {
       "& img": {
-        maxWidth: "300px",
+        maxWidth: "200px",
         borderRadius: "10px",
       },
       margin: "0.5rem 0",
@@ -293,7 +293,7 @@ export default forwardRef(
                     <Box css={styles.images}>
                       <img
                         src={message.base64}
-                        css={{ margin: "20px", maxWidth: "300px" }}
+                        css={{ margin: "20px", maxWidth: "300px",width:'150px' }}
                         alt="img"
                       />
                     </Box>

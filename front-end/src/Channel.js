@@ -67,7 +67,7 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel,user,setUser } = useContext(Context);
+  const { channels, oauth, setCurrentChannel, user, setUser } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
   setCurrentChannel(id);
   const [content, setContent] = useState("");
@@ -115,13 +115,14 @@ export default function Channel() {
           }
         );
         setMessages(messages);
-        listRef.current.scroll();
+        listRef.current.scroll()
+
       } catch (err) {
         navigate("/oups");
       }
     };
     fetch();
-  }, [id,oauth.access_token,navigate]);
+  }, [id, oauth.access_token, navigate]);
 
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown);

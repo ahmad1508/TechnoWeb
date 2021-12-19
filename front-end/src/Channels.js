@@ -162,7 +162,7 @@ export default function Channels() {
       {
         name: content,
         participants: participants,
-        email: oauth.email, // a changer selon l'utilisateur
+        email: oauth.email, 
       }
     );
 
