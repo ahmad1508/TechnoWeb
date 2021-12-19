@@ -98,10 +98,16 @@ export default function User({ usage }) {
       user: us,
       id: oauth.email,
       friends:[],
-      invitation:[]
+      invitation:[],
+      sentInvites:[]
+    };
+    const body2 = {
+      user: us,
+      id: oauth.email,
+      request:"modify"
     };
     if (isModify) {
-      await axios.put("http://localhost:3001/users", body);
+      await axios.put(`http://localhost:3001/users/${oauth.email}`, body2);
     } else {
       await axios.post("http://localhost:3001/users", body);
     }

@@ -59,7 +59,7 @@ const useStyles = (theme) => ({
 export default function Header({ drawerToggleListener }) {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const { removeCookies } = useCookies([]);
+  const  [,,removeCookies ] = useCookies([]);
   const {
     oauth,
     setOauth,

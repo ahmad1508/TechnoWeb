@@ -233,8 +233,11 @@ app.put("/users/:id", async (req, res) => {
     const index = me.friends.indexOf(req.params.id)
     me.friends.splice(index, 1)
     user = await db.users.update(me.id, me)
-  } else {
-    user = await db.users.update(req.params.id, req.body);
+  } else if(req.body.request==="modify"){
+    const me = await db.users.get(req.params.id)
+    me.username = req.body.user.username
+    me.avatar = req.body.user.avatar
+    user = await db.users.update(req.params.id, me);
   }
 
   res.json(user);
