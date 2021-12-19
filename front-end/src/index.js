@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { CookiesProvider } from "react-cookie";
 import "./index.css";
@@ -8,9 +8,6 @@ import * as serviceWorker from "./serviceWorker";
 import "typeface-roboto";
 // Layout
 import { BrowserRouter as Router } from "react-router-dom";
-
-
-
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,8 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useRef, useState, useEffect } from "react";
 import axios from "axios";
-import React from "react";
-import { styled } from "@mui/material/styles";
 // Layout
 import { useTheme } from "@mui/styles";
 import { Fab, Grid, Box } from "@mui/material";
@@ -69,7 +67,7 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel } = useContext(Context);
+  const { channels, oauth, setCurrentChannel,user,setUser } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
   setCurrentChannel(id);
   const [content, setContent] = useState("");
@@ -77,12 +75,33 @@ export default function Channel() {
   const listRef = useRef();
   const [messages, setMessages] = useState([]);
   const [scrollDown, setScrollDown] = useState(false);
-  const [otherUsers, setOtherUsers] = useState([]);
   const [modify, setModify] = useState("");
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  
+  /*useEffect(() => {
+    const fetchFriendsInfo = async () => {
+      try {
+        const { data: friends } = await axios.put(
+          `http://localhost:3001/users/${oauth.email}`,
+          {
+            username:user.username,
+            id:user.id,
+            avatar:user.avatar,
+            friends: [],
+            invitation:[]
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${oauth.access_token}`,
+            },
+          })
+
+      }catch(err){
+        console.log(err)
+      }}
+    fetchFriendsInfo()
+  }, [setUser])*/
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -101,7 +120,7 @@ export default function Channel() {
       }
     };
     fetch();
-  }, [id]);
+  }, [id,oauth.access_token,navigate]);
 
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown);

@@ -73,20 +73,20 @@ export default function Main() {
         <Box css={styles.box}>
           <Accordion css={styles.accordion}>
             <Grid container>
-              <Grid xs={8} md={10} lg={10}>
+              <Grid item xs={8} md={10} lg={10}>
                 <Typography variant="h6">Account Information</Typography>
               </Grid>
-              <Grid xs={4} md={2} lg={2} css={{ paddingLeft: "30px" }}>
+              <Grid item xs={4} md={2} lg={2} css={{ paddingLeft: "30px" }}>
                 <AutoFixHighIcon />
               </Grid>
             </Grid>
           </Accordion>
           <Accordion css={styles.accordion}>
             <Grid container>
-              <Grid xs={8} md={10} lg={10}>
+              <Grid item xs={8} md={10} lg={10}>
                 <Typography variant="h6">Dark Mode</Typography>
               </Grid>
-              <Grid xs={4} md={2} lg={2}>
+              <Grid item xs={4} md={2} lg={2}>
                 <FormControlLabel
                   checked={mode === "dark"}
                   control={<Switch color="primary" />}
@@ -102,10 +102,10 @@ export default function Main() {
           </Accordion>
           <Accordion css={styles.accordion}>
             <Grid container>
-              <Grid xs={8} md={9} lg={10}>
+              <Grid item xs={8} md={9} lg={10}>
                 <Typography variant="h6">Language</Typography>
               </Grid>
-              <Grid xs={4} md={3} lg={2} css={{ paddingLeft: "30px" }}>
+              <Grid item xs={4} md={3} lg={2} css={{ paddingLeft: "30px" }}>
                 <GTranslateIcon />
               </Grid>
             </Grid>

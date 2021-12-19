@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme, TextField, Button } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext,useEffect } from "react";
 import Context from "./Context";
 
 const useStyles = (theme) => ({
@@ -74,6 +74,7 @@ const defaultAvatar = [
 ];
 
 export default function User({ usage }) {
+  let i=0
   const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
   const isModify = usage === "modify";
@@ -96,6 +97,8 @@ export default function User({ usage }) {
     const body = {
       user: us,
       id: oauth.email,
+      friends:[],
+      invitation:[]
     };
     if (isModify) {
       await axios.put("http://localhost:3001/users", body);
@@ -129,6 +132,7 @@ export default function User({ usage }) {
           {defaultAvatar.map((avatar) => {
             return (
               <Box
+                key={i++}
                 sx={styles.small_avatar}
                 onClick={() => {
                   if (selected === avatar) {

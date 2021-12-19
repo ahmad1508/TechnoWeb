@@ -5,7 +5,6 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-  useEffect,
 } from "react";
 import Button from "@mui/material/Button";
 import axios from "axios";
@@ -28,8 +27,7 @@ import html from "rehype-stringify";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import updateLocale from "dayjs/plugin/updateLocale";
-import Form from "./Form.js";
-import { render } from "react-dom";
+
 
 dayjs.extend(calendar);
 dayjs.extend(updateLocale);
@@ -69,8 +67,6 @@ const useStyles = (theme) => ({
   message_author: {
     maxWidth: "60%",
     alignItems: "flex-end",
-
-    overflowWrap: "anywhere",
     overflowWrap: "anywhere",
     backgroundColor: theme.palette.primary.main,
     borderRadius: "15px 15px 0 15px",
@@ -216,7 +212,7 @@ export default forwardRef(
      ***************************/
     const handleDeleteMessage = async (e, creation) => {
       e.preventDefault();
-      const { data: message } = await axios.delete(
+      await axios.delete(
         `http://localhost:3001/channels/${channel.id}/message/${creation}`,
         {
           headers: {
@@ -271,8 +267,8 @@ export default forwardRef(
                       isTheAuthor
                         ? styles.avatar_author
                         : hasAvatar
-                        ? styles.avatar
-                        : styles.filled_avatar
+                          ? styles.avatar
+                          : styles.filled_avatar
                     }
                   >
                     {hasAvatar ? (
@@ -298,6 +294,7 @@ export default forwardRef(
                       <img
                         src={message.base64}
                         css={{ margin: "20px", maxWidth: "300px" }}
+                        alt="img"
                       />
                     </Box>
                   )}

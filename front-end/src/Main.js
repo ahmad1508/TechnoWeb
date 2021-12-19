@@ -9,7 +9,8 @@ import Context from "./Context";
 import Channels from "./Channels";
 import Channel from "./Channel";
 import Welcome from "./Welcome";
-import { Route, Routes, useNavigate,useParams } from "react-router-dom";
+import Friends from './pages/Friends'
+import { Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
 import User from "./User";
 
@@ -38,8 +39,6 @@ const useStyles = (theme) => ({
 export default function Main() {
   const {
     oauth,
-    currentChannel,
-    setCurrentChannel,
     drawerVisible,
     setUser,
   } = useContext(Context);
@@ -55,12 +54,13 @@ export default function Main() {
     const getUser = async () => {
       const res = await axios.get(`http://localhost:3001/users/${oauth.email}`);
       setUserExist(res.data !== "");
+      console.log(res.data)
       if (res.data !== "") {
         setUser(res.data);
       }
     };
     getUser();
-  }, [oauth, navigate]);
+  }, [oauth, navigate,setUser]);
   return (
     <main css={styles.root}>
       {userExist ? (
@@ -81,7 +81,8 @@ export default function Main() {
           </Drawer>
           <Routes>
             <Route path=":id" element={<Channel />} />
-            <Route path="*" element={<Welcome />} />
+            <Route path="Welcome" element={<Welcome />} />
+            <Route path="Friends" element={<Friends />} />
           </Routes>
         </>
       ) : (

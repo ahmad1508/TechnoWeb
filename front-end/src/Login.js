@@ -50,7 +50,7 @@ const useStyles = (theme) => ({
   },
 })
 
-const Redirect = ({ config, codeVerifier }) => {
+/*const Redirect = ({ config, codeVerifier }) => {
   const styles = useStyles(useTheme())
   console.log(config)
   console.log(codeVerifier)
@@ -74,7 +74,7 @@ const Redirect = ({ config, codeVerifier }) => {
       <div onClick={redirect} color="secondary">Login</div>
     </div>
   )
-}
+}*/
 
 const Tokens = ({
   oauth

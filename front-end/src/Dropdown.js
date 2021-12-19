@@ -183,7 +183,7 @@ export default function Dropdown({ channel }) {
   const onSubmit = (e) => {
     e?.preventDefault();
     handleCloseAdd();
-    const { data: channel } = axios.put(
+    axios.put(
       `http://localhost:3001/channels/${id}`,
       {
         invitation: invitation,
@@ -212,9 +212,9 @@ export default function Dropdown({ channel }) {
         descriptionElement.focus();
       }
     }
-  }, [openTop]);
+  }, [openTop,open]);
 
-  const toggleDrawer = (bool) => (event) => {
+  /*const toggleDrawer = (bool) => (event) => {
     if (
       event &&
       event.type === "keydown" &&
@@ -223,7 +223,7 @@ export default function Dropdown({ channel }) {
       return;
     }
     setOpenTop(bool);
-  };
+  };*/
 
   /****************************
    *        Delete channel
@@ -423,11 +423,11 @@ export default function Dropdown({ channel }) {
           </Box>
           <Divider sx={{ width: "100%", my: 0.5 }} />
           <Box sx={styles.participants}>
-              <Typography variant="h6" sx={{ textAlign: "center" }}>
-                {channel.email}
-              </Typography>
-              <Divider sx={{ my: 0.5 }} />
-            </Box>
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              {channel.email}
+            </Typography>
+            <Divider sx={{ my: 0.5 }} />
+          </Box>
           {channel.participants.map((participant) => (
             <Box sx={styles.participants} key={participant}>
               <Typography variant="h6" sx={{ textAlign: "center" }}>

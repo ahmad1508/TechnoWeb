@@ -15,14 +15,12 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link as RouterLink } from "react-router-dom";
 // Local
 import Context from "./Context";
 import { useNavigate } from "react-router-dom";
-import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
@@ -104,6 +102,7 @@ export default function Channels() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const naviate = useNavigate();
+  const [page,setPage] = useState('Welcome')
   const { oauth, channels, setChannels, currentChannel, setCurrentChannel } =
     useContext(Context);
 
@@ -137,7 +136,12 @@ export default function Channels() {
 
   const clickWelcome = () => {
     setCurrentChannel(null);
+    setPage('Welcome')
   };
+  const clickFriends = ()=>{
+    setCurrentChannel(null);
+    setPage('Friends')
+  }
 
   /************************
    * Handle creation submit
@@ -170,7 +174,7 @@ export default function Channels() {
     <List css={styles.root}>
       <Box css={styles.channel}>
         <Link
-          to="/channels"
+          to="/channels/Welcome"
           component={RouterLink}
           underline="none"
           onClick={clickWelcome}
@@ -178,7 +182,8 @@ export default function Channels() {
           <ListItem
             css={{
               backgroundColor:
-                currentChannel === undefined || currentChannel === null
+              (page === 'Welcome' && currentChannel === undefined) ||
+              (page === 'Welcome' && currentChannel === null)
                   ? theme.palette.primary.main
                   : theme.palette.primary.dark,
               borderRadius: "5px",
@@ -190,6 +195,32 @@ export default function Channels() {
               <Avatar sx={styles.avatar}>W</Avatar>
             </ListItemIcon>
             <ListItemText primary="Welcome" css={styles.line} />
+          </ListItem>
+        </Link>
+      </Box>
+      <Box css={styles.channel}>
+        <Link
+          to="/channels/friends"
+          component={RouterLink}
+          underline="none"
+          onClick={clickFriends}
+        >
+          <ListItem
+            css={{
+              backgroundColor:
+              (page === 'Friends' && currentChannel === undefined) ||
+              (page === 'Friends' && currentChannel === null)
+                  ? theme.palette.primary.main
+                  : theme.palette.primary.dark,
+              borderRadius: "5px",
+              margin: "0 10px",
+              maxWidth: "180px",
+            }}
+          >
+            <ListItemIcon>
+              <Avatar sx={styles.avatar}>F</Avatar>
+            </ListItemIcon>
+            <ListItemText primary="Friends" css={styles.line} />
           </ListItem>
         </Link>
       </Box>
