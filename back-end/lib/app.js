@@ -102,7 +102,7 @@ app.post("/channels", async (req, res) => {
   if (createChannel.participants !== "") {
     createChannel.participants = createChannel.participants.split(",")
   } else {
-    createChannel.participants=[]
+    createChannel.participants = []
   }
   const channel = await db.channels.create(createChannel);
   res.status(201).json(channel);
@@ -124,7 +124,10 @@ app.put("/channels/:id", async (req, res) => {
     console.log("invitation")
     const invitation = req.body.invitation.split(",");
     invitation.forEach(invitee => {
-      existing.participants.push(invitee)
+      const index = existing.participants.indexOf(invitee)
+      if (index===(-1)) {
+        existing.participants.push(invitee)
+      }
     })
   }
   const channel = await db.channels.update(req.params.id, existing);

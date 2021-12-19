@@ -14,6 +14,9 @@ import Gravatar from 'react-gravatar'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from '@mui/icons-material/Delete';
+import PhonelinkLockIcon from '@mui/icons-material/PhonelinkLock';
+import Tooltip from '@mui/material/Tooltip';
+
 const useStyles = (theme) => ({
   root: {
     backgroundColor: theme.palette.primary.dark,
@@ -156,15 +159,7 @@ export default function Main() {
           },
           { headers: { Authorization: `Bearer ${oauth.access_token}` } })
 
-        
-        /*const { data: person } = await axios.put(
-          `http://localhost:3001/users/${friend}`,
-          {
-            user: person,
-            invitationTo: oauth.email,
-            request: "invitee"
-          },
-          { headers: { Authorization: `Bearer ${oauth.access_token}` } })*/
+
       }
 
     })
@@ -233,6 +228,9 @@ export default function Main() {
 
   }
 
+  const reatePrivateChat = (e,friendID)=>{
+    
+  }
 
 
   return (
@@ -282,8 +280,19 @@ export default function Main() {
                   <Typography variant="h6">{friend.id}</Typography>
                 </Grid>
                 <Grid item xs={2} md={2} lg={2} css={{ display: 'flex', alignItems: 'center' }} >
+                  <Button onClick={(e) => reatePrivateChat(e, friend.id)}>
+                    <Typography variant="h6">
+                      <Tooltip title="Private chat">
+                        <PhonelinkLockIcon />
+                      </Tooltip>
+                    </Typography>
+                  </Button>
                   <Button onClick={(e) => removeFriend(e, friend.id)}>
-                    <Typography variant="h6"><DeleteIcon /></Typography>
+                    <Typography variant="h6">
+                      <Tooltip title="Delete">
+                        <DeleteIcon />
+                      </Tooltip>
+                    </Typography>
                   </Button>
                 </Grid>
               </Grid>

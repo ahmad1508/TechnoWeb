@@ -180,12 +180,13 @@ export default function Dropdown({ channel }) {
   /****************************
    *        Update channel
    ***************************/
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e?.preventDefault();
     handleCloseAdd();
-    axios.put(
+    await axios.put(
       `http://localhost:3001/channels/${id}`,
       {
+        channel:currentChannel,
         invitation: invitation,
       }
     );
