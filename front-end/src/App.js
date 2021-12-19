@@ -23,14 +23,14 @@ import { useCookies } from "react-cookie";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-const getDesignTokens = (mode) => ({
+const getDesignTokens = (mode, primaryColor) => ({
   palette: {
     mode,
     ...(mode === "light"
       ? {
           // palette values for light mode
           primary: {
-            main: "#8774e1",
+            main: primaryColor,
             light: "#fff",
             dark: "#eee",
             contrastText: "#000",
@@ -39,7 +39,7 @@ const getDesignTokens = (mode) => ({
       : {
           // palette values for dark mode
           primary: {
-            main: "#8774e1",
+            main: primaryColor,
             light: "#222",
             dark: "#111",
             contrastText: "#ffffff",
@@ -61,7 +61,7 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [cookies, ,] = useCookies(["mode"]);
-  const { oauth, mode, setMode } = useContext(Context);
+  const { oauth, mode, setMode, primaryColor } = useContext(Context);
   const [drawerMobileVisible, setDrawerMobileVisible] = useState(false);
   // const socket = socketClient("http://127.0.0.1:8080");
   // useEffect(() =>{
@@ -87,7 +87,7 @@ export default function App() {
     setMode(cookies.mode);
   }, [navigate]);
   // Update the theme only if the mode changes
-  const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  const theme = useMemo(() => createTheme(getDesignTokens(mode, primaryColor)), [mode, primaryColor]);
 
   const gochannels = (
     <Navigate

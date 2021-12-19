@@ -6,6 +6,8 @@ const Context = React.createContext();
 export default Context;
 
 export const Provider = ({ children }) => {
+  const defaultColor = "#f44336";
+  const [primaryColor, setPrimaryColor] = React.useState(defaultColor);
   const [cookies, setCookie, removeCookie] = useCookies([]);
   const [oauth, setOauth] = useState(cookies.oauth);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -47,6 +49,8 @@ export const Provider = ({ children }) => {
         setUser: setUser,
         mode: mode,
         setMode: setMode,
+        primaryColor: primaryColor,
+        setPrimaryColor: setPrimaryColor,
       }}
     >
       {children}

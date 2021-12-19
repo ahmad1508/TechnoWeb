@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { useContext } from "react";
+import { useContext, useState } from "react";
 // Layout
 import { useTheme } from "@mui/styles";
 import { Box, Grid, Container } from "@mui/material";
 import { useCookies } from "react-cookie";
+import { CirclePicker } from "react-color";
 
 import Accordion from "@mui/material/Accordion";
 import Typography from "@mui/material/Typography";
@@ -40,13 +41,27 @@ const useStyles = (theme) => ({
   accordion: {
     padding: "10px 20px 10px 20px",
   },
+  round: {
+    backgroundColor: theme.palette.primary.main,
+    width: "2rem",
+    height: "2rem",
+    borderRadius: "50%",
+    cursor: "pointer",
+  },
+  wrapper: {
+    backgroundColor: theme.palette.primary.light,
+    display: "flex",
+    position: "relative",
+    marginTop: "1rem",
+  },
 });
 
 export default function Main() {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const { mode, setMode } = useContext(Context);
+  const { mode, setMode, primaryColor, setPrimaryColor } = useContext(Context);
   const [, setCookie] = useCookies(["mode"]);
+  const [display, setDisplay] = useState(false);
 
   return (
     <main css={styles.root} container>
@@ -79,7 +94,7 @@ export default function Main() {
                   labelPlacement="start"
                   onChange={(e) => {
                     setMode(!e.target.checked ? "light" : "dark");
-                    setCookie("mode",!e.target.checked ? "light" : "dark");
+                    setCookie("mode", !e.target.checked ? "light" : "dark");
                   }}
                 />
               </Grid>
@@ -92,6 +107,32 @@ export default function Main() {
               </Grid>
               <Grid xs={4} md={3} lg={2} css={{ paddingLeft: "30px" }}>
                 <GTranslateIcon />
+              </Grid>
+            </Grid>
+          </Accordion>
+          <Accordion css={styles.accordion}>
+            <Grid container>
+              <Grid xs={8} md={9} lg={10}>
+                <Typography variant="h6">Color</Typography>
+              </Grid>
+              <Grid xs={4} md={3} lg={2} css={{ paddingLeft: "30px" }}>
+                <Box
+                  style={styles.round}
+                  onClick={() => {
+                    const newState = !display;
+                    setDisplay(newState);
+                  }}
+                />
+                {display && (
+                  <Box style={styles.wrapper}>
+                    <CirclePicker
+                      color={primaryColor}
+                      onChangeComplete={(color) => {
+                        setPrimaryColor(color.hex);
+                      }}
+                    />
+                  </Box>
+                )}
               </Grid>
             </Grid>
           </Accordion>

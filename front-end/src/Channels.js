@@ -79,6 +79,14 @@ const useStyles = (theme) => ({
       border: `1px solid ${theme.palette.primary.contrastText}`,
     },
   },
+  addButton: {
+    borderRadius: "5px",
+    margin: "0 10px",
+    maxWidth: "180px",
+    background: theme.palette.primary.main,
+    opacity: 1,
+    cursor: "pointer",
+  }
 });
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -235,14 +243,7 @@ export default function Channels() {
 
       <List css={styles.addChannel} onClick={handleOpen}>
         <ListItem
-          css={{
-            borderRadius: "5px",
-            margin: "0 10px",
-            maxWidth: "180px",
-            background: "#8774e1",
-            opacity: 1,
-            cursor: "pointer",
-          }}
+          css={styles.addButton}
         >
           <ListItemIcon>
             <AddIcon />

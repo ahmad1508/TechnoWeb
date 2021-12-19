@@ -58,7 +58,7 @@ const useStyles = (theme) => ({
 export default function Header({ drawerToggleListener }) {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const {removeCookie} = useCookies([])
+  const { removeCookies } = useCookies([]);
   const {
     oauth,
     setOauth,
@@ -78,7 +78,7 @@ export default function Header({ drawerToggleListener }) {
     setOauth(null);
     setUser(null);
     setOpen(false);
-    removeCookie('mode');
+    removeCookies("mode");
   };
   const toggleDrawer = (bool) => (e) => {
     if (e.type === "keydown" && (e.key === "Tab" || e.key === "Shift")) {
@@ -149,7 +149,7 @@ export default function Header({ drawerToggleListener }) {
               </Grid>
 
               <Grid
-              item
+                item
                 xs={10}
                 md={9}
                 lg={9}
