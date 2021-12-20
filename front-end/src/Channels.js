@@ -57,6 +57,7 @@ const useStyles = (theme) => ({
     padding: "5px 0px",
     textAlign: "center",
     borderRadius: "5px",
+    color: theme.palette.primary.contrastText
   },
   formField: {
     width: "95%",

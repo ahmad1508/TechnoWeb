@@ -18,6 +18,7 @@ const useStyles = (theme) => ({
     textAlign: "center",
     borderRadius: "5px",
     width: "100%",
+    color: theme.palette.primary.contrastText
   },
   avatar: {
     width: "5rem",
@@ -27,7 +28,7 @@ const useStyles = (theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
     fontSize: "3rem",
   },
   small_avatar: {
@@ -73,7 +74,7 @@ const defaultAvatar = [
   "/avatars/Profilpic_witch.png",
 ];
 
-export default function User({ usage }) {
+export default function User({ usage, setUserExist = () => {} }) {
   let i=0
   const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
@@ -112,10 +113,23 @@ export default function User({ usage }) {
       await axios.put(`http://localhost:3001/users/${oauth.email}`, body2);
     } else {
       await axios.post("http://localhost:3001/users", body);
+      setUserExist(true);
     }
     setUser(us);
   };
-  console.log(user)
+  useEffect(() => {
+    if (user) return
+    // get user
+    const getUser = async () => {
+      const res = await axios.get(`http://localhost:3001/users/${oauth.email}`);
+      if (res.data !== "") {
+        setUser(res.data);
+        setUsername(res.data.username)
+        setSelected(res.data.avatar)
+      }
+    };
+    getUser();
+  }, [])
   return (
     <Box sx={styles.root}>
 

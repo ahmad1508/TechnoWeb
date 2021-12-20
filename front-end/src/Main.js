@@ -60,7 +60,7 @@ export default function Main() {
       }
     };
     getUser();
-  }, [oauth, navigate,setUser]);
+  }, [oauth, navigate, setUser]);
   return (
     <main css={styles.root}>
       {userExist ? (
@@ -86,7 +86,7 @@ export default function Main() {
           </Routes>
         </>
       ) : (
-          <User />
+          <User setUserExist={setUserExist}/>
       )}
     </main>
   );
