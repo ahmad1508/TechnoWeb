@@ -246,7 +246,7 @@ export default function Dropdown({ channel }) {
       );
       const newChannels = channels.filter((chnl) => chnl.id !== channel.id);
       setChannels(newChannels);
-      navigate("/channels");
+      navigate("/");
       setOpenDelete(false);
     }
   };
