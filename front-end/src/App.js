@@ -92,7 +92,7 @@ export default function App() {
   const gochannels = (
     <Navigate
       to={{
-        pathname: "/channels",
+        pathname: "/channels/Welcome",
         state: { from: location },
       }}
     />

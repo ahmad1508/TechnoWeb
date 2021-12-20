@@ -82,40 +82,47 @@ export default function Main() {
   const navigate = useNavigate()
   const styles = useStyles(theme);
   const { oauth, user, setUser } = useContext(Context)
-  const haveFriends = user.friends !== []
-  const haveInvitation = user.Invitation !== []
-  const sentInvites = user.sentInvites !== []
+  const [haveFriends, setHaveFriends] = useState()
+  const [haveInvitation, setHaveInvitations] = useState()
+  const [sentInvites, setHaveInvites] = useState()
   const [myFriends, setFriends] = useState([])
   const [open, setOpen] = useState(false)
   const [i, SetI] = useState(0)
   const [addFriend, setAddFriend] = useState()
   const [person, setPerson] = useState()
   const [openD, setOpenD] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
   let j = 0
-
   useEffect(() => {
-    const fetch = async (friendId) => {
-      try {
-        const { data: friend } = await axios.get(
-          `http://localhost:3001/users/${friendId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${oauth.access_token}`,
-            },
-          }
-        )
-        setFriends(myFriends => {
-          return [...myFriends, friend]
-        })
-      } catch (err) {
-        console.log(err)
+    if (user) {
+      setIsLoading(false)
+      setHaveInvitations(user.Invitation !== [])
+      setHaveInvites(user.sentInvites !== [])
+      setHaveFriends(user.friends !== [])
+      if (i === 0) {
+        user.friends.forEach(friend => fetch(friend))
+        SetI(1)
       }
     }
-    if (i === 0) {
-      user.friends.forEach(friend => fetch(friend))
-      SetI(1)
+  }, [user])
+
+  const fetch = async (friendId) => {
+    try {
+      const { data: friend } = await axios.get(
+        `http://localhost:3001/users/${friendId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${oauth.access_token}`,
+          },
+        }
+      )
+      setFriends(myFriends => {
+        return [...myFriends, friend]
+      })
+    } catch (err) {
+      console.log(err)
     }
-  }, [user.friends])
+  }
 
   const handleCloseD = (event, reason) => {
     if (reason === "clickaway") {
@@ -234,7 +241,10 @@ export default function Main() {
 
   return (
     <main css={styles.root}>
-      <Container>
+
+      {isLoading && <div>Loading</div>}
+
+      {user && (<Container>
         <Box css={styles.box}>
           <Box css={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="h4" css={styles.title}>
@@ -360,7 +370,7 @@ export default function Main() {
           ))}
         </Box>
 
-      </Container>
+      </Container>)}
 
       <Snackbar open={openD} autoHideDuration={6000} onClose={handleCloseD}>
         <Alert onClose={handleCloseD} severity="info" sx={{ width: "100%" }}>

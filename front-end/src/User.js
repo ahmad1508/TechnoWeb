@@ -79,10 +79,12 @@ export default function User({ usage }) {
   const styles = useStyles(useTheme());
   const isModify = usage === "modify";
   const [username, setUsername] = useState(isModify?user?.username:"");
+  const [selected, setSelected] = useState(isModify?user?.avatar:"");
+
+  
   const handleUsername = (e) => {
     setUsername(e.target.value);
   };
-  const [selected, setSelected] = useState(isModify?user?.avatar:"");
    
   const onSubmit = async (e) => {
     const us =
@@ -116,6 +118,7 @@ export default function User({ usage }) {
   console.log(user)
   return (
     <Box sx={styles.root}>
+
       {!isModify && (
         <Typography
           id="keep-mounted-modal-title"
