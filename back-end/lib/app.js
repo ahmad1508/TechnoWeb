@@ -122,11 +122,14 @@ app.get("/users/:id", async (req, res) => {
 
 app.put("/users/:id", async (req, res) => {
   let user;
+  let me;
+  let index;
+  let sender;
   switch (req.body.request) {
     case "invited":
       if (req.body.invitationFrom !== req.body.user.id) {
         const newinvit = req.body.user;
-        const index = newinvit.invitation.indexOf(req.body.invitationFrom);
+        index = newinvit.invitation.indexOf(req.body.invitationFrom);
         if (index === -1) {
           newinvit.invitation.push(req.body.invitationFrom);
           const me = await db.users.get(req.body.invitationFrom);
@@ -138,9 +141,9 @@ app.put("/users/:id", async (req, res) => {
       break;
     case "reject":
       const senderID = req.params.id;
-      const sender = await db.users.get(senderID);
-      const me = req.body.user;
-      const index = me.invitation.indexOf(req.params.id);
+      sender = await db.users.get(senderID);
+      me = req.body.user;
+      index = me.invitation.indexOf(req.params.id);
       const indexSender = sender.sentInvites.indexOf(me.id);
       me.invitation.splice(index, 1);
       sender.sentInvites.splice(indexSender, 1);
@@ -148,9 +151,9 @@ app.put("/users/:id", async (req, res) => {
       await db.users.update(sender.id, sender);
       break;
     case "accept":
-      const me = req.body.user; //get the authenticated user
-      const index = me.invitation.indexOf(req.params.id); //get the index of the snder in the invitation list
-      const sender = await db.users.get(req.params.id); // and get the info in the db
+      me = req.body.user; //get the authenticated user
+      index = me.invitation.indexOf(req.params.id); //get the index of the snder in the invitation list
+      sender = await db.users.get(req.params.id); // and get the info in the db
       const indexInSent = sender.sentInvites.indexOf(me.id); //get the auth user in the sent invites if the sender
       if (index !== -1) {
         me.invitation.splice(index, 1); //remove from the invitation list
@@ -163,8 +166,8 @@ app.put("/users/:id", async (req, res) => {
       await db.users.update(sender.id, sender);
       break;
     case "delete":
-      const me = req.body.user;
-      const index = me.friends.indexOf(req.params.id);
+      me = req.body.user;
+      index = me.friends.indexOf(req.params.id);
       me.friends.splice(index, 1);
       user = await db.users.update(me.id, me);
       break;
