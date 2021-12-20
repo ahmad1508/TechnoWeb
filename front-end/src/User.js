@@ -99,7 +99,7 @@ export default function User({ usage, setUserExist = () => {} }) {
             avatar: selected,
             friends: user.friends || [],
             invitation: user.invitation || [],
-            sendInvites: user.sendInvites || [],
+            sentInvites: user.sentInvites || [],
           };
     const body = {
       user: us,
