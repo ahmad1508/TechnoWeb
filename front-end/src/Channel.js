@@ -103,7 +103,7 @@ export default function Channel() {
       }}
     fetchFriendsInfo()
   }, [setUser])*/
-
+  
   useEffect(() => {
     const fetch = async () => {
       try {

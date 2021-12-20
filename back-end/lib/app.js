@@ -203,16 +203,18 @@ app.get("/users/:id", async (req, res) => {
 app.put("/users/:id", async (req, res) => {
   let user
   if (req.body.request === 'invited') {
-    const newinvit = req.body.user;
-    const index = newinvit.invitation.indexOf(req.body.invitationFrom)
-    if (index === (-1)) {
-      newinvit.invitation.push(req.body.invitationFrom)
-      const me = await db.users.get(req.body.invitationFrom)
-      console.log(me)
-      me.sentInvites.push(newinvit.id)
-      console.log(me)
-      await db.users.update(req.params.id, newinvit);
-      user = await db.users.update(me.id, me);
+    if (req.body.invitationFrom !== req.body.user.id) {
+      const newinvit = req.body.user;
+      const index = newinvit.invitation.indexOf(req.body.invitationFrom)
+      if (index === (-1)) {
+        newinvit.invitation.push(req.body.invitationFrom)
+        const me = await db.users.get(req.body.invitationFrom)
+        console.log(me)
+        me.sentInvites.push(newinvit.id)
+        console.log(me)
+        await db.users.update(req.params.id, newinvit);
+        user = await db.users.update(me.id, me);
+      }
     }
   } else if (req.body.request === 'reject') {
     const senderID = req.params.id
@@ -223,6 +225,7 @@ app.put("/users/:id", async (req, res) => {
     me.invitation.splice(index, 1)
     sender.sentInvites.splice(indexSender, 1)
     user = await db.users.update(me.id, me);
+    await db.users.update(sender.id, sender);
 
   } else if (req.body.request === 'accept') {
     console.log(req.body)

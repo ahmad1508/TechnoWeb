@@ -99,13 +99,13 @@ export default function Main() {
       setHaveInvitations(user.Invitation !== [])
       setHaveInvites(user.sentInvites !== [])
       setHaveFriends(user.friends !== [])
-      
-      if (i===0) {
+
+      if (i === 0) {
         user.friends.forEach(friend => fetch(friend))
         SetI(1)
       }
     }
-  }, [user,setUser])
+  }, [user, setUser])
 
   const fetch = async (friendId) => {
     try {
@@ -165,7 +165,9 @@ export default function Main() {
             request: "invited"
           },
           { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-        setUser(updatedUser)
+        if (updatedUser) {
+          setUser(updatedUser)
+        }
 
 
       }
@@ -182,19 +184,8 @@ export default function Main() {
         request: 'accept'
       },
       { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-    /* const { data: person } = await axios.get(
-      `http://localhost:3001/users/${invite}`,
-      { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-    console.log(person)
 
-    const { data: updatedUser } = await axios.put(
-      `http://localhost:3001/users/${user.id}`,
-      {
-        user: person,
-        request: 'accept'
-      },
-      { headers: { Authorization: `Bearer ${oauth.access_token}` } }) */
-      SetI(0)
+    SetI(0)
     setUser(updatedUser)
   }
 
