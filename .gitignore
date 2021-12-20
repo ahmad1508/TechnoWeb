@@ -104,3 +104,5 @@ dist
 
 # LvL Db
 db/
+
+.DS_Store

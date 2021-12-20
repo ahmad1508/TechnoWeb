@@ -21,6 +21,7 @@ There is two modes of installations in your computer.
 - [Docker](https://www.docker.com/)
 - [Docker-compose](https://docs.docker.com/compose/install/) >= v3.9
 ### Commands
+Rename `docker-compose-all.yaml` in `docker-compose.yaml`   
 run 
 ```bash
 docker-compose up -d
@@ -32,7 +33,7 @@ And voilà, your front-end is available on port `3000`.
 - [Docker](https://www.docker.com/)
 - [Docker-compose](https://docs.docker.com/compose/install/) >= v3.9
 ### Commands
-Rename `docker-compose-dex-only.yaml` in `docker-compose.yaml`
+Rename `docker-compose-dex-only.yaml` in `docker-compose.yaml`   
 run (for `dex`)
 ```bash
 docker-compose up -d
