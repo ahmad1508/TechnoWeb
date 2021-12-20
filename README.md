@@ -22,11 +22,19 @@ There is two modes of installations in your computer.
 - [Docker-compose](https://docs.docker.com/compose/install/) >= v3.9
 ### Commands
 Rename `docker-compose-all.yaml` in `docker-compose.yaml`   
+```bash
+echo "REACT_LOCAL_PORT=8888
+REACT_DOCKER_PORT=80
+
+NODE_LOCAL_PORT=3001
+NODE_DOCKER_PORT=1313" > .env
+```
 run 
 ```bash
+docker-compose build
 docker-compose up -d
 ```
-And voilà, your front-end is available on port `3000`.
+And voilà, your front-end is available on port `8888`.
 ## Old school
 ### Prerequisites
 - [NodeJS](https://nodejs.org/en/) >= v12
@@ -34,17 +42,18 @@ And voilà, your front-end is available on port `3000`.
 - [Docker-compose](https://docs.docker.com/compose/install/) >= v3.9
 ### Commands
 Rename `docker-compose-dex-only.yaml` in `docker-compose.yaml`   
+
 run (for `dex`)
 ```bash
 docker-compose up -d
 ```
 then
 ```bash
-cd front-end && npm run start
+cd front-end && npm i && npm run start
 ```
 open a `new terminal` and run
 ```bash
-cd ../back-end && npm run start
+cd ../back-end && npm i && npm run start
 ```
 And voilà, your front-end is available on port `3000`.
 # Features
