@@ -52,6 +52,7 @@ You can
   - Invite, remove, accept, decline friends/friend invitations
   - Change your avatar with fancy home made avatars ![avatar example](../assets/pp/Profilpic_mexican.png)
   - Use gravatar avatars
+  - Upload your own avatar (up to 70Ko)
   - Change your username
   - Have private chatroom with a friend
 - Channels
@@ -62,7 +63,7 @@ You can
   - Quit channel when you are not the author of it
 - Messages
   - Send messages in channels
-  - Send images (up to 70ko), gif and emoji ![gif example](https://media3.giphy.com/media/ue1GO5swPdORq/giphy.gif?cid=e1bb72ffyem6dfhan0yp6hb90aneavx4mv09wiwqwm82svml&rid=giphy.gif&ct=g)
+  - Send images (up to 70Ko), gif and emoji ![gif example](https://media3.giphy.com/media/ue1GO5swPdORq/giphy.gif?cid=e1bb72ffyem6dfhan0yp6hb90aneavx4mv09wiwqwm82svml&rid=giphy.gif&ct=g)
   - Use markdown and html in your messages.
   - Write multi-line messages using `shift + enter` and send your messages using `enter`
   - Delete / Update your messages (using `right click` on a message)
