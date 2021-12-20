@@ -1,9 +1,16 @@
-import { Box, Typography, useTheme, TextField, Button, styled, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useTheme,
+  TextField,
+  Button,
+  styled,
+  IconButton,
+} from "@mui/material";
 import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
 import Context from "./Context";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Tooltip from "@mui/material/Tooltip";
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 const useStyles = (theme) => ({
   root: {
@@ -64,6 +71,13 @@ const useStyles = (theme) => ({
     marginTop: "1rem",
     padding: "0.5rem 3rem",
   },
+  label: {
+    width: "3.5rem",
+    height: "3.5rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
 });
 
 const defaultAvatar = [
@@ -78,7 +92,7 @@ const defaultAvatar = [
 const Input = styled("input")({
   display: "none",
 });
-export default function User({ usage, setUserExist = () => { } }) {
+export default function User({ usage, setUserExist = () => {} }) {
   let i = 0;
   const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
@@ -108,21 +122,22 @@ export default function User({ usage, setUserExist = () => { } }) {
   const handleUpload = (e) => {
     let file = files;
     file = e.target.files[0];
-    if (file.size > 70 * 1024) alert('image too big');
+    if (file.size > 70 * 1024) {
+      alert("image too big");
+      return;
+    }
     // TODO: Add a pop-up message that tells the image is too large
     getBase64(file)
       .then((result) => {
         file["base64"] = result;
         setFile(file);
         setBase64(result);
+        setSelected(result);
       })
       .catch((err) => {
         console.log(err);
       });
-
     setFile(e.target.files[0]);
-    setSelected(base64)
-    
   };
 
   const handleUsername = (e) => {
@@ -132,18 +147,18 @@ export default function User({ usage, setUserExist = () => { } }) {
     const us =
       selected === ""
         ? {
-          username,
-          friends: [],
-          invitation: [],
-          sentInvites: [],
-        }
+            username,
+            friends: [],
+            invitation: [],
+            sentInvites: [],
+          }
         : {
-          username,
-          avatar: selected,
-          friends: user.friends || [],
-          invitation: user.invitation || [],
-          sentInvites: user.sentInvites || [],
-        };
+            username,
+            avatar: selected,
+            friends: user.friends || [],
+            invitation: user.invitation || [],
+            sentInvites: user.sentInvites || [],
+          };
     const body = {
       user: us,
       id: oauth.email,
@@ -154,16 +169,12 @@ export default function User({ usage, setUserExist = () => { } }) {
       request: "modify",
     };
     if (isModify) {
-      const u = await axios.put(`http://localhost:3001/users/${oauth.email}`, body2);
-      console.log(u)
+      await axios.put(`http://localhost:3001/users/${oauth.email}`, body2);
     } else {
       await axios.post("http://localhost:3001/users", body);
       setUserExist(true);
     }
-    console.log(us);
     setUser(us);
-    
-    
   };
   useEffect(() => {
     if (user) return;
@@ -220,27 +231,25 @@ export default function User({ usage, setUserExist = () => { } }) {
               </Box>
             );
           })}
-          <label htmlFor="contained-button-file" style={styles.label}>
+
+          <label htmlFor="icon-button-file" style={styles.label}>
             <Input
               accept="image/*"
-              id="contained-button-file"
+              id="icon-button-file"
               multiple={false}
               type="file"
-              css={styles.upload}
               onChange={(e) => handleUpload(e)}
             />
-            <IconButton variant="contained" css={styles.upload} component="span">
-              <Tooltip title="Add your own photo">
-                <AccountCircleIcon />
-              </Tooltip>
-              <Typography variant="body1" sx={{marginLeft:'10px'}}> Upload your avatar <Typography variant="body2">Changes on save</Typography></Typography>
-            
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
             </IconButton>
           </label>
         </Box>
-        <Box sx={styles.avatar_wrapper}>
-
-        </Box>
+        <Box sx={styles.avatar_wrapper}></Box>
         <TextField
           id="outlined-multiline-flexible"
           label="Username"
