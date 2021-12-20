@@ -59,6 +59,7 @@ You can
   - Invite/remove people in your channel
   - Delete channel
   - View channel participants
+  - Quit channel when you are not the author of it
 - Messages
   - Send messages in channels
   - Send images (up to 70ko), gif and emoji ![gif example](https://media3.giphy.com/media/ue1GO5swPdORq/giphy.gif?cid=e1bb72ffyem6dfhan0yp6hb90aneavx4mv09wiwqwm82svml&rid=giphy.gif&ct=g)

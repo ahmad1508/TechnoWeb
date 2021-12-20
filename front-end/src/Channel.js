@@ -79,30 +79,6 @@ export default function Channel() {
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
-  /*useEffect(() => {
-    const fetchFriendsInfo = async () => {
-      try {
-        const { data: friends } = await axios.put(
-          `http://localhost:3001/users/${oauth.email}`,
-          {
-            username:user.username,
-            id:user.id,
-            avatar:user.avatar,
-            friends: [],
-            invitation:[],
-            sentInvites:[]
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${oauth.access_token}`,
-            },
-          })
-
-      }catch(err){
-        console.log(err)
-      }}
-    fetchFriendsInfo()
-  }, [setUser])*/
   
   useEffect(() => {
     const fetch = async () => {
