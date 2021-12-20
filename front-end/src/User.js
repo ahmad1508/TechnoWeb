@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme, TextField, Button } from "@mui/material";
 import axios from "axios";
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Context from "./Context";
 
 const useStyles = (theme) => ({
@@ -18,6 +18,7 @@ const useStyles = (theme) => ({
     textAlign: "center",
     borderRadius: "5px",
     width: "100%",
+    color: theme.palette.primary.contrastText,
   },
   avatar: {
     width: "5rem",
@@ -27,7 +28,7 @@ const useStyles = (theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
     fontSize: "3rem",
   },
   small_avatar: {
@@ -73,52 +74,67 @@ const defaultAvatar = [
   "/avatars/Profilpic_witch.png",
 ];
 
-export default function User({ usage }) {
-  let i=0
+export default function User({ usage, setUserExist = () => {} }) {
+  let i = 0;
   const { oauth, setUser, user } = useContext(Context);
   const styles = useStyles(useTheme());
   const isModify = usage === "modify";
-  const [username, setUsername] = useState(isModify?user?.username:"");
-  const [selected, setSelected] = useState(isModify?user?.avatar:"");
+  const [username, setUsername] = useState(isModify ? user?.username : "");
+  const [selected, setSelected] = useState(isModify ? user?.avatar : "");
 
-  
   const handleUsername = (e) => {
     setUsername(e.target.value);
   };
-   
   const onSubmit = async (e) => {
     const us =
       selected === ""
         ? {
             username,
+            friends: [],
+            invitation: [],
+            sentInvites: [],
           }
         : {
             username,
             avatar: selected,
+            friends: user.friends || [],
+            invitation: user.invitation || [],
+            sendInvites: user.sendInvites || [],
           };
     const body = {
       user: us,
       id: oauth.email,
-      friends:[],
-      invitation:[],
-      sentInvites:[]
     };
     const body2 = {
       user: us,
       id: oauth.email,
-      request:"modify"
+      request: "modify",
     };
     if (isModify) {
-      await axios.put(`http://localhost:3001/users/${oauth.email}`, body2);
+      const u = await axios.put(`http://localhost:3001/users/${oauth.email}`, body2);
+      console.log(u)
     } else {
       await axios.post("http://localhost:3001/users", body);
+      setUserExist(true);
     }
+    console.log(us);
     setUser(us);
   };
-  console.log(user)
+  useEffect(() => {
+    if (user) return;
+    // get user
+    const getUser = async () => {
+      const res = await axios.get(`http://localhost:3001/users/${oauth.email}`);
+      if (res.data !== "") {
+        setUser(res.data);
+        setUsername(res.data.username);
+        setSelected(res.data.avatar);
+      }
+    };
+    getUser();
+  }, []);
   return (
     <Box sx={styles.root}>
-
       {!isModify && (
         <Typography
           id="keep-mounted-modal-title"
@@ -132,7 +148,11 @@ export default function User({ usage }) {
       <Box sx={styles.main}>
         <Box sx={styles.avatar}>
           {selected === "" ? (
-            username===""?oauth.email[0].toUpperCase():username.split("")[0].toUpperCase()
+            username === "" ? (
+              oauth.email[0].toUpperCase()
+            ) : (
+              username.split("")[0].toUpperCase()
+            )
           ) : (
             <img style={styles.big_images} src={selected} alt={selected} />
           )}
@@ -170,7 +190,7 @@ export default function User({ usage }) {
           variant="contained"
           onClick={onSubmit}
         >
-          {isModify?"Update":"Create"}
+          {isModify ? "Update" : "Create"}
         </Button>
       </Box>
     </Box>

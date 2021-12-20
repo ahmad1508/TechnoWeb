@@ -235,10 +235,7 @@ app.put("/users/:id", async (req, res) => {
     user = await db.users.update(me.id, me)
 
   } else if (req.body.request === "modify") {
-    const me = await db.users.get(req.params.id)
-    me.username = req.body.user.username
-    me.avatar = req.body.user.avatar
-    user = await db.users.update(req.params.id, me);
+    user = await db.users.update(req.params.id, req.body.user);
   } else {
     user = await db.users.update(req.params.id, req.body);
   }
