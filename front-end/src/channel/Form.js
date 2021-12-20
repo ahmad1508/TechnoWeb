@@ -88,10 +88,10 @@ export default function Form({
 }) {
   const { oauth, user } = useContext(Context);
   const styles = useStyles(useTheme());
-  const [files, setFile] = useState(null);
-  const [base64, setBase64] = useState("");
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [gifPicker, setGifPicker] = useState(false);
+  const [files, setFile] = useState(null);
+  const [base64, setBase64] = useState("");
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {

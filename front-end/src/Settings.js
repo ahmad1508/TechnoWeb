@@ -60,7 +60,7 @@ export default function Main() {
   const { mode, setMode, primaryColor, setPrimaryColor } = useContext(Context);
   const [, setCookie] = useCookies(["mode"]);
   const [display, setDisplay] = useState(false);
-
+  
   return (
     <main css={styles.root} container>
       <Container css={styles.container}>
