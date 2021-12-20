@@ -10,8 +10,15 @@ import {
 import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
 import Context from "./Context";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Tooltip from "@mui/material/Tooltip";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const useStyles = (theme) => ({
   root: {
     width: "100%",
@@ -99,9 +106,9 @@ export default function User({ usage, setUserExist = () => {} }) {
   const isModify = usage === "modify";
   const [username, setUsername] = useState(isModify ? user?.username : "");
   const [selected, setSelected] = useState(isModify ? user?.avatar : "");
-
   const [files, setFile] = useState(null);
   const [base64, setBase64] = useState("");
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {
@@ -175,6 +182,15 @@ export default function User({ usage, setUserExist = () => {} }) {
       setUserExist(true);
     }
     setUser(us);
+
+
+  };
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackBar(false);
   };
   useEffect(() => {
     if (user) return;
@@ -268,6 +284,11 @@ export default function User({ usage, setUserExist = () => {} }) {
           {isModify ? "Update" : "Create"}
         </Button>
       </Box>
+      <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          File too big max 80kb
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useState, useContext } from "react";
+import React,{ useState, useContext } from "react";
 import axios from "axios";
 // Layout
 import { Box, styled, IconButton, TextField, Modal } from "@mui/material";
@@ -11,6 +11,12 @@ import Picker from "emoji-picker-react";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import GifIcon from "@mui/icons-material/Gif";
 import GifPicker from "react-giphy-picker";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const useStyles = (theme) => ({
   form: {
@@ -92,6 +98,7 @@ export default function Form({
   const [gifPicker, setGifPicker] = useState(false);
   const [files, setFile] = useState(null);
   const [base64, setBase64] = useState("");
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   const getBase64 = (file) => {
     return new Promise((resolve) => {
@@ -112,8 +119,8 @@ export default function Form({
   const handleUpload = (e) => {
     let file = files;
     file = e.target.files[0];
-    if (file.size > 70 * 1024) return;
-    // TODO: Add a pop-up message that tells the image is too large
+    if (file.size > 70 * 1024) setOpenSnackBar(true);
+    
     getBase64(file)
       .then((result) => {
         file["base64"] = result;
@@ -218,6 +225,13 @@ export default function Form({
     }
     setGifPicker(false);
   };
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
 
   
   return (
@@ -290,6 +304,11 @@ export default function Form({
           </IconButton>
         </div>
       </form>
+      <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          File too big max 80kb
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
