@@ -125,7 +125,7 @@ app.put("/channels/:id", async (req, res) => {
     const invitation = req.body.invitation.split(",");
     invitation.forEach(invitee => {
       const index = existing.participants.indexOf(invitee)
-      if (index===(-1)) {
+      if (index === (-1)) {
         existing.participants.push(invitee)
       }
     })
@@ -211,27 +211,34 @@ app.put("/users/:id", async (req, res) => {
       console.log(me)
       me.sentInvites.push(newinvit.id)
       console.log(me)
-      user = await db.users.update(req.params.id, newinvit);
-      await db.users.update(me.id, me);
+      await db.users.update(req.params.id, newinvit);
+      user = await db.users.update(me.id, me);
     }
   } else if (req.body.request === 'reject') {
+    const senderID = req.params.id
+    const sender = await db.users.get(senderID)
     const me = req.body.user;
     const index = me.invitation.indexOf(req.params.id)
+    const indexSender = sender.sentInvites.indexOf(me.id)
     me.invitation.splice(index, 1)
+    sender.sentInvites.splice(indexSender, 1)
     user = await db.users.update(me.id, me);
 
   } else if (req.body.request === 'accept') {
     console.log(req.body)
-    const me = req.body.user;
-    const index = me.invitation.indexOf(req.params.id)
-    const sender = await db.users.get(req.params.id)
-    const indexInSent = sender.sentInvites.indexOf(me.id)
+    const me = req.body.user;//get the authenticated user
+    const index = me.invitation.indexOf(req.params.id)//get the index of the snder in the invitation list
+    const sender = await db.users.get(req.params.id)// and get the info in the db
+    const indexInSent = sender.sentInvites.indexOf(me.id)//get the auth user in the sent invites if the sender
     if (index !== (-1)) {
-      me.invitation.splice(index, 1)
-      sender.sentInvites.splice(index, 1)
+      me.invitation.splice(index, 1)//remove from the invitation list
+      sender.sentInvites.splice(indexInSent, 1)//remove from the sentInvites list
     }
+    me.friends.push(sender.id)//place in the friends list
+    sender.friends.push(me.id)
+    console.log(me)
     console.log(sender)
-    me.friends.push(req.params.id)
+
     user = await db.users.update(me.id, me);
     await db.users.update(sender.id, sender);
 
@@ -240,11 +247,14 @@ app.put("/users/:id", async (req, res) => {
     const index = me.friends.indexOf(req.params.id)
     me.friends.splice(index, 1)
     user = await db.users.update(me.id, me)
+
   } else if (req.body.request === "modify") {
     const me = await db.users.get(req.params.id)
     me.username = req.body.user.username
     me.avatar = req.body.user.avatar
     user = await db.users.update(req.params.id, me);
+  } else {
+    user = await db.users.update(req.params.id, req.body);
   }
 
   res.json(user);

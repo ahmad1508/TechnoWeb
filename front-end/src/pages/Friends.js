@@ -38,7 +38,7 @@ const useStyles = (theme) => ({
     marginTop: "10px",
     position: "relative",
     margin: 'auto',
-    width: '70%',
+    width: '80%',
   },
   accordion: {
     padding: "10px 20px 10px 20px"
@@ -99,12 +99,13 @@ export default function Main() {
       setHaveInvitations(user.Invitation !== [])
       setHaveInvites(user.sentInvites !== [])
       setHaveFriends(user.friends !== [])
-      if (i === 0) {
+      
+      if (i===0) {
         user.friends.forEach(friend => fetch(friend))
         SetI(1)
       }
     }
-  }, [user])
+  }, [user,setUser])
 
   const fetch = async (friendId) => {
     try {
@@ -156,7 +157,7 @@ export default function Main() {
         { headers: { Authorization: `Bearer ${oauth.access_token}` } })
       if (person !== "") {
 
-        await axios.put(
+        const { data: updatedUser } = await axios.put(
           `http://localhost:3001/users/${friend}`,
           {
             user: person,
@@ -164,6 +165,7 @@ export default function Main() {
             request: "invited"
           },
           { headers: { Authorization: `Bearer ${oauth.access_token}` } })
+        setUser(updatedUser)
 
 
       }
@@ -173,38 +175,39 @@ export default function Main() {
 
   const acceptInvitation = async (e, invite) => {
     e.preventDefault()
-    await axios.put(
+    const { data: updatedUser } = await axios.put(
       `http://localhost:3001/users/${invite}`,
       {
         user: user,
         request: 'accept'
       },
       { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-    const { data: person } = await axios.get(
+    /* const { data: person } = await axios.get(
       `http://localhost:3001/users/${invite}`,
       { headers: { Authorization: `Bearer ${oauth.access_token}` } })
     console.log(person)
 
-    await axios.put(
+    const { data: updatedUser } = await axios.put(
       `http://localhost:3001/users/${user.id}`,
       {
         user: person,
         request: 'accept'
       },
-      { headers: { Authorization: `Bearer ${oauth.access_token}` } })
-
-    navigate('/channels/friends')
+      { headers: { Authorization: `Bearer ${oauth.access_token}` } }) */
+      SetI(0)
+    setUser(updatedUser)
   }
 
   const rejectInvitation = async (e, invite) => {
     e.preventDefault()
-    const { data: person } = await axios.put(
+    const { data: updatedUser } = await axios.put(
       `http://localhost:3001/users/${invite}`,
       {
         user: user,
         request: 'reject'
       },
       { headers: { Authorization: `Bearer ${oauth.access_token}` } })
+    setUser(updatedUser)
 
   }
 
@@ -285,10 +288,10 @@ export default function Main() {
                 <Grid item xs={3} md={2} lg={1} >
                   <Gravatar email={friend.id} css={styles.avatar} />
                 </Grid>
-                <Grid item xs={7} md={8} lg={9} css={{ display: 'flex', alignItems: 'center' }}>
+                <Grid item xs={9} md={7} lg={9} css={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="h6">{friend.id}</Typography>
                 </Grid>
-                <Grid item xs={2} md={2} lg={2} css={{ display: 'flex', alignItems: 'center' }} >
+                <Grid item xs={4} md={3} lg={2} css={{ display: 'flex', alignItems: 'center' }} >
                   <Button onClick={(e) => reatePrivateChat(e, friend.id)}>
                     <Typography variant="h6">
                       <Tooltip title="Private chat">
@@ -324,10 +327,10 @@ export default function Main() {
                 <Grid item xs={3} md={2} lg={1} >
                   <Gravatar email={invite} css={styles.avatar} />
                 </Grid>
-                <Grid item xs={7} md={8} lg={9} css={{ display: 'flex', alignItems: 'center' }}>
+                <Grid item xs={9} md={8} lg={9} css={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="h6">{invite}</Typography>
                 </Grid>
-                <Grid item xs={2} md={2} lg={2} >
+                <Grid item xs={4} md={2} lg={2} >
                   <Box onClick={(e) => acceptInvitation(e, invite)} css={styles.accept}>
                     <Typography variant="body1">Accept</Typography>
                   </Box>
@@ -355,15 +358,13 @@ export default function Main() {
                 <Grid item xs={3} md={2} lg={1} >
                   <Gravatar email={invited} css={styles.avatar} />
                 </Grid>
-                <Grid item xs={7} md={8} lg={9} css={{ display: 'flex', alignItems: 'center' }}>
+                <Grid item xs={9} md={7} lg={8} css={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="h6">{invited}</Typography>
                 </Grid>
-                <Grid item xs={2} md={2} lg={2} >
+                <Grid item xs={12} md={3} lg={3} >
                   <Box css={styles.accept}>
                     <Typography variant="body1">Pending invite</Typography>
                   </Box>
-
-
                 </Grid>
               </Grid>
             </Accordion>
