@@ -168,8 +168,6 @@ export default function Main() {
         if (updatedUser) {
           setUser(updatedUser)
         }
-
-
       }
 
     })

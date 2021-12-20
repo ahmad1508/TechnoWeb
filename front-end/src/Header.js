@@ -79,7 +79,8 @@ export default function Header({ drawerToggleListener }) {
     setOauth(null);
     setUser(null);
     setOpen(false);
-    removeCookies("mode");
+    removeCookies(oauth);
+    removeCookies(mode);
   };
 
 

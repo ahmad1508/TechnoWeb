@@ -177,20 +177,8 @@ app.get("/users", async (req, res) => {
   const users = await db.users.list();
   res.json(users);
 });
-/*app.post("/friends", async (req, res) => {
-  const users = await db.users.list();
-  const friends = req.body.friends;
-  console.log(friends)
-  const friendsInfo = []
-  users.map((user) => {
-    for (let i = 0; i < friends.length; i++) {
-      if (friends[i] === user.id) { friendsInfo.push(user) }
-    }
-  })
-  res.send(friendsInfo);
-});*/
+
 app.post("/users", async (req, res) => {
-  console.log(req.body)
   const user = await db.users.create(req.body.user, req.body.id);
   res.status(201).json(user);
 });
@@ -209,9 +197,7 @@ app.put("/users/:id", async (req, res) => {
       if (index === (-1)) {
         newinvit.invitation.push(req.body.invitationFrom)
         const me = await db.users.get(req.body.invitationFrom)
-        console.log(me)
         me.sentInvites.push(newinvit.id)
-        console.log(me)
         await db.users.update(req.params.id, newinvit);
         user = await db.users.update(me.id, me);
       }
@@ -228,7 +214,6 @@ app.put("/users/:id", async (req, res) => {
     await db.users.update(sender.id, sender);
 
   } else if (req.body.request === 'accept') {
-    console.log(req.body)
     const me = req.body.user;//get the authenticated user
     const index = me.invitation.indexOf(req.params.id)//get the index of the snder in the invitation list
     const sender = await db.users.get(req.params.id)// and get the info in the db
@@ -239,8 +224,6 @@ app.put("/users/:id", async (req, res) => {
     }
     me.friends.push(sender.id)//place in the friends list
     sender.friends.push(me.id)
-    console.log(me)
-    console.log(sender)
 
     user = await db.users.update(me.id, me);
     await db.users.update(sender.id, sender);

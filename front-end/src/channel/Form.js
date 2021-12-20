@@ -23,6 +23,11 @@ const useStyles = (theme) => ({
     "&.MuiTextField-root": {
       marginRight: theme.spacing(1),
     },
+    '&:focus': {
+      outline: 'none',
+      width: '100%',
+      transition: 'width 200ms ease-out',
+    }
   },
   send: {
     height: "3rem",
@@ -42,6 +47,11 @@ const useStyles = (theme) => ({
   upload: {
     height: "3rem",
     width: "3rem",
+    '&:focus': {
+      outline: 'none',
+      display:'none',
+      transition: 'width 200ms ease-out',
+    }
   },
   label: {
     display: "flex",
@@ -209,52 +219,58 @@ export default function Form({
     setGifPicker(false);
   };
 
+  
   return (
     <div>
       <form css={styles.form} onSubmit={onSubmit} noValidate>
-        <label htmlFor="contained-button-file" style={styles.label}>
-          <Input
-            accept="image/*"
-            id="contained-button-file"
-            multiple={false}
-            type="file"
-            onChange={(e) => handleUpload(e)}
-          />
-          <IconButton variant="contained" css={styles.upload} component="span">
-            <AddPhotoAlternateIcon />
-          </IconButton>
-        </label>
-        <label htmlFor="contained-button-emoji" style={styles.label}>
-          <IconButton
-            variant="contained"
-            onClick={openEmojiPicker}
-            css={styles.upload}
-            component="span"
-          >
-            <InsertEmoticonIcon />
-          </IconButton>
-          <Modal open={emojiPicker} onClose={handleCloseEmoji}>
-            <Box css={styles.picker}>
-              <Picker css={{ boxShadow: 0 }} onEmojiClick={onEmojiClick} />
-            </Box>
-          </Modal>
-        </label>
-        <label htmlFor="contained-button-gif" style={styles.label}>
-          <IconButton
-            variant="contained"
-            onClick={openGifPicker}
-            css={styles.upload}
-            component="span"
-          >
-            <GifIcon />
-          </IconButton>
-          <Modal open={gifPicker} onClose={handleCloseGif}>
-            <Box css={styles.Gif}>
-              <GifPicker css={{ boxShadow: 0 }} onSelected={onGifSubmit} />
-            </Box>
-          </Modal>
-        </label>
-
+        
+          <label htmlFor="contained-button-file" style={styles.label}>
+            <Input
+              accept="image/*"
+              id="contained-button-file"
+              id='button'
+              multiple={false}
+              type="file"
+              css={styles.upload}
+              onChange={(e) => handleUpload(e)}
+            />
+            <IconButton variant="contained" css={styles.upload} component="span">
+              <AddPhotoAlternateIcon />
+            </IconButton>
+          </label>
+          <label htmlFor="contained-button-emoji" style={styles.label}>
+            <IconButton
+              variant="contained"
+              onClick={openEmojiPicker}
+              css={styles.upload}
+              component="span"
+              id='button'
+            >
+              <InsertEmoticonIcon />
+            </IconButton>
+            <Modal open={emojiPicker} onClose={handleCloseEmoji}>
+              <Box css={styles.picker}>
+                <Picker css={{ boxShadow: 0 }} onEmojiClick={onEmojiClick} />
+              </Box>
+            </Modal>
+          </label>
+          <label htmlFor="contained-button-gif" style={styles.label}>
+            <IconButton
+              variant="contained"
+              onClick={openGifPicker}
+              css={styles.upload}
+              component="span"
+              id='button'
+            >
+              <GifIcon />
+            </IconButton>
+            <Modal open={gifPicker} onClose={handleCloseGif}>
+              <Box css={styles.Gif}>
+                <GifPicker css={{ boxShadow: 0 }} onSelected={onGifSubmit} />
+              </Box>
+            </Modal>
+          </label>
+        
         <TextField
           id="outlined-multiline-flexible"
           label="Message"
@@ -270,7 +286,7 @@ export default function Form({
               ev.preventDefault();
             }
           }}
-        />
+        autoFocus/>
         <div>
           <IconButton type="submit" css={styles.send}>
             <SendIcon css={styles.sendIcon} />
