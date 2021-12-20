@@ -130,7 +130,7 @@ export default function User({ usage, setUserExist = () => {} }) {
     let file = files;
     file = e.target.files[0];
     if (file.size > 70 * 1024) {
-      alert("image too big");
+      setOpenSnackBar(true);
       return;
     }
     // TODO: Add a pop-up message that tells the image is too large
