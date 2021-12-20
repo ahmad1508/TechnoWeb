@@ -83,7 +83,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function Main() {
   const theme = useTheme();
   const styles = useStyles(theme);
-  const { oauth, user, setUser } = useContext(Context);
+  const { oauth, user, setUser, channels, setChannels } = useContext(Context);
   const [haveFriends, setHaveFriends] = useState();
   const [haveInvitation, setHaveInvitations] = useState();
   const [sentInvites, setHaveInvites] = useState();
@@ -154,7 +154,7 @@ export default function Main() {
         { headers: { Authorization: `Bearer ${oauth.access_token}` } }
       );
       if (person !== "") {
-        console.log(person)
+        console.log(person);
         const { data: updatedUser } = await axios.put(
           `http://localhost:3001/users/${friend}`,
           {
@@ -164,10 +164,10 @@ export default function Main() {
           },
           { headers: { Authorization: `Bearer ${oauth.access_token}` } }
         );
-        console.log(updatedUser)
+        console.log(updatedUser);
         if (updatedUser) {
           setUser(updatedUser);
-          setAddFriend("")
+          setAddFriend("");
         }
       }
     });
@@ -227,7 +227,22 @@ export default function Main() {
     );
   };
 
-  const reatePrivateChat = (e, friendID) => { };
+  const reatePrivateChat = async (e, friendID) => {
+    const private_channel = channels.filter((itm) => {
+      return user.id + friendID || itm.name === friendID + user.id;
+    });
+    if (private_channel.length === 1) return;
+    const { data: channel } = await axios.post(
+      `http://localhost:3001/channels`,
+      {
+        name: user.id + friendID,
+        participants: friendID,
+        email: oauth.email,
+      }
+    );
+
+    setChannels([...channels, channel]);
+  };
 
   return (
     <main css={styles.root}>
@@ -279,46 +294,58 @@ export default function Main() {
             )}
 
             {haveFriends &&
-              myFriends?.map((friend) => (
-                <Accordion css={styles.accordion} key={j++}>
-                  <Grid container>
-                    <Grid item xs={3} md={2} lg={1}>
-                      <Gravatar email={friend.id} css={styles.avatar} />
+              myFriends?.map((friend) => {
+                const haveAlreadyPrivateChannel =
+                  channels.filter((itm) => {
+                    return (
+                      itm.name === user.id + friend.id ||
+                      itm.name === friend.id + user.id
+                    );
+                  }).length === 1;
+                return (
+                  <Accordion css={styles.accordion} key={j++}>
+                    <Grid container>
+                      <Grid item xs={3} md={2} lg={1}>
+                        <Gravatar email={friend.id} css={styles.avatar} />
+                      </Grid>
+                      <Grid
+                        item
+                        xs={9}
+                        md={7}
+                        lg={9}
+                        css={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Typography variant="h6">{friend.id}</Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={4}
+                        md={3}
+                        lg={2}
+                        css={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Button
+                          disabled={haveAlreadyPrivateChannel}
+                          onClick={(e) => reatePrivateChat(e, friend.id)}
+                        >
+                          <Typography variant="h6">
+                            <Tooltip title="Private chat">
+                              <PhonelinkLockIcon />
+                            </Tooltip>
+                          </Typography>
+                        </Button>
+                        <Button onClick={(e) => removeFriend(e, friend.id)}>
+                          <Typography variant="h6">
+                            <Tooltip title="Delete">
+                              <DeleteIcon />
+                            </Tooltip>
+                          </Typography>
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid
-                      item
-                      xs={9}
-                      md={7}
-                      lg={9}
-                      css={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Typography variant="h6">{friend.id}</Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={4}
-                      md={3}
-                      lg={2}
-                      css={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Button onClick={(e) => reatePrivateChat(e, friend.id)}>
-                        <Typography variant="h6">
-                          <Tooltip title="Private chat">
-                            <PhonelinkLockIcon />
-                          </Tooltip>
-                        </Typography>
-                      </Button>
-                      <Button onClick={(e) => removeFriend(e, friend.id)}>
-                        <Typography variant="h6">
-                          <Tooltip title="Delete">
-                            <DeleteIcon />
-                          </Tooltip>
-                        </Typography>
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Accordion>
-              ))}
+                  </Accordion>
+                );
+              })}
           </Box>
 
           <Box css={styles.box}>

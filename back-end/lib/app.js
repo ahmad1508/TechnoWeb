@@ -16,94 +16,28 @@ app.get("/", (req, res) => {
   res.send(["<h1>ECE WebTech Chat</h1>"].join(""));
 });
 
-const http = require('http').createServer(app);
-// const io = require('socket.io')(http, {
-//   cors: {
-//     origin: "http://localhost:3000",
-//     methods: ["GET", "POST"]
-//   }
-// });
-
-// var STATIC_CHANNELS = [{
-//   name: 'Global chat',
-//   participants: 0,
-//   id: 1,
-//   sockets: []
-// }, {
-//   name: 'Funny',
-//   participants: 0,
-//   id: 2,
-//   sockets: []
-// }];
-
-// io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
-//   console.log('new client connected');
-//   socket.emit('connection', null);
-//   socket.on('channel-join', id => {
-//     console.log('channel join', id);
-//     STATIC_CHANNELS.forEach(c => {
-//         if (c.id === id) {
-//             if (c.sockets.indexOf(socket.id) == (-1)) {
-//                 c.sockets.push(socket.id);
-//                 c.participants++;
-//                 io.emit('channel', c);
-//             }
-//         } else {
-//             let index = c.sockets.indexOf(socket.id);
-//             if (index != (-1)) {
-//                 c.sockets.splice(index, 1);
-//                 c.participants--;
-//                 io.emit('channel', c);
-//             }
-//         }
-//     });
-
-//     return id;
-// });
-// socket.on('send-message', message => {
-//     io.emit('message', message);
-// });
-
-// socket.on('disconnect', () => {
-//     STATIC_CHANNELS.forEach(c => {
-//         let index = c.sockets.indexOf(socket.id);
-//         if (index != (-1)) {
-//             c.sockets.splice(index, 1);
-//             c.participants--;
-//             io.emit('channel', c);
-//         }
-//     });
-// });
-
-// });
+const http = require("http").createServer(app);
 
 // Channels
 app.get("/channels", authenticate, async (req, res) => {
   const allChannels = await db.channels.list();
   const channels = [];
   allChannels.map((channel) => {
-    for (let i = 0; i < channel.participants.length; i++) {
-      if (channel.participants[i] === req.user.email) {
-        channels.push(channel)
-        break;
-      } else if (channel.email === req.user.email) {
-        channels.push(channel)
-        break;
-      } else {
-      }
-    }
-  })
-
+    channel.participants.map((participant) => {
+      if (participant === req.user.email) channels.push(channel);
+    });
+    if (channel.email === req.user.email) channels.push(channel);
+  });
   res.json(channels);
 });
 
 app.post("/channels", async (req, res) => {
-  const createChannel = req.body
-  if (createChannel.participants !== "") {
-    createChannel.participants = createChannel.participants.split(",")
-  } else {
-    createChannel.participants = []
-  }
+  const createChannel = req.body;
+  createChannel.participants =
+    createChannel.participants !== ""
+      ? createChannel.participants.split(",")
+      : [];
+
   const channel = await db.channels.create(createChannel);
   res.status(201).json(channel);
 });
@@ -114,31 +48,28 @@ app.get("/channels/:id", async (req, res) => {
 });
 
 app.put("/channels/:id", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const existing = await db.channels.get(req.params.id);
   if (req.body.action === "Quit") {
-    console.log("quit")
-    const index = existing.participants.indexOf(req.body.user)
-    existing.participants.splice(index, 1)
+    const index = existing.participants.indexOf(req.body.user);
+    existing.participants.splice(index, 1);
   } else {
-    console.log("invitation")
-    const invitation = req.body.invitation.split(",");
-    invitation.forEach(invitee => {
-      const index = existing.participants.indexOf(invitee)
-      if (index === (-1)) {
-        existing.participants.push(invitee)
+    req.body.invitation.split(",").forEach((invitee) => {
+      const index = existing.participants.indexOf(invitee);
+      if (index === -1) {
+        existing.participants.push(invitee);
       }
-    })
+    });
   }
   const channel = await db.channels.update(req.params.id, existing);
   res.json(channel);
 });
 
 app.delete("/channels/:id", async (req, res) => {
-  const channel = await db.channels.delete(req.params.id)
+  const channel = await db.channels.delete(req.params.id);
 
   res.json(channel);
-})
+});
 
 // Messages
 
@@ -154,22 +85,23 @@ app.get("/channels/:id/messages", async (req, res) => {
 
 app.post("/channels/:id/messages", async (req, res) => {
   const message = await db.messages.create(req.params.id, req.body);
-  res.status(201).json(message);// send the message to the the axios request
+  res.status(201).json(message); // send the message to the the axios request
 });
 
 app.put("/channels/:id/message/:creation", async (req, res) => {
-  console.log(req.params.id, req.params.creation)
-  const message = await db.messages.update(req.params.id, req.params.creation, req.body);
-  res.status(201).json(message);// send the message to the the axios request
+  console.log(req.params.id, req.params.creation);
+  const message = await db.messages.update(
+    req.params.id,
+    req.params.creation,
+    req.body
+  );
+  res.status(201).json(message); // send the message to the the axios request
 });
 
 app.delete("/channels/:id/message/:creation", async (req, res) => {
   const message = await db.messages.delete(req.params.id, req.params.creation);
-  res.status(201).json(message);// send the message to the the axios request
+  res.status(201).json(message); // send the message to the the axios request
 });
-
-
-
 
 // Users
 
@@ -189,57 +121,62 @@ app.get("/users/:id", async (req, res) => {
 });
 
 app.put("/users/:id", async (req, res) => {
-  let user
-  if (req.body.request === 'invited') {
-    if (req.body.invitationFrom !== req.body.user.id) {
-      const newinvit = req.body.user;
-      const index = newinvit.invitation.indexOf(req.body.invitationFrom)
-      if (index === (-1)) {
-        newinvit.invitation.push(req.body.invitationFrom)
-        const me = await db.users.get(req.body.invitationFrom)
-        me.sentInvites.push(newinvit.id)
-        await db.users.update(req.params.id, newinvit);
-        user = await db.users.update(me.id, me);
+  let user;
+  let me;
+  let index;
+  let sender;
+  switch (req.body.request) {
+    case "invited":
+      if (req.body.invitationFrom !== req.body.user.id) {
+        const newinvit = req.body.user;
+        index = newinvit.invitation.indexOf(req.body.invitationFrom);
+        if (index === -1) {
+          newinvit.invitation.push(req.body.invitationFrom);
+          const me = await db.users.get(req.body.invitationFrom);
+          me.sentInvites.push(newinvit.id);
+          await db.users.update(req.params.id, newinvit);
+          user = await db.users.update(me.id, me);
+        }
       }
-    }
-  } else if (req.body.request === 'reject') {
-    const senderID = req.params.id
-    const sender = await db.users.get(senderID)
-    const me = req.body.user;
-    const index = me.invitation.indexOf(req.params.id)
-    const indexSender = sender.sentInvites.indexOf(me.id)
-    me.invitation.splice(index, 1)
-    sender.sentInvites.splice(indexSender, 1)
-    user = await db.users.update(me.id, me);
-    await db.users.update(sender.id, sender);
+      break;
+    case "reject":
+      const senderID = req.params.id;
+      sender = await db.users.get(senderID);
+      me = req.body.user;
+      index = me.invitation.indexOf(req.params.id);
+      const indexSender = sender.sentInvites.indexOf(me.id);
+      me.invitation.splice(index, 1);
+      sender.sentInvites.splice(indexSender, 1);
+      user = await db.users.update(me.id, me);
+      await db.users.update(sender.id, sender);
+      break;
+    case "accept":
+      me = req.body.user; //get the authenticated user
+      index = me.invitation.indexOf(req.params.id); //get the index of the snder in the invitation list
+      sender = await db.users.get(req.params.id); // and get the info in the db
+      const indexInSent = sender.sentInvites.indexOf(me.id); //get the auth user in the sent invites if the sender
+      if (index !== -1) {
+        me.invitation.splice(index, 1); //remove from the invitation list
+        sender.sentInvites.splice(indexInSent, 1); //remove from the sentInvites list
+      }
+      me.friends.push(sender.id); //place in the friends list
+      sender.friends.push(me.id);
 
-  } else if (req.body.request === 'accept') {
-    const me = req.body.user;//get the authenticated user
-    const index = me.invitation.indexOf(req.params.id)//get the index of the snder in the invitation list
-    const sender = await db.users.get(req.params.id)// and get the info in the db
-    const indexInSent = sender.sentInvites.indexOf(me.id)//get the auth user in the sent invites if the sender
-    if (index !== (-1)) {
-      me.invitation.splice(index, 1)//remove from the invitation list
-      sender.sentInvites.splice(indexInSent, 1)//remove from the sentInvites list
-    }
-    me.friends.push(sender.id)//place in the friends list
-    sender.friends.push(me.id)
-
-    user = await db.users.update(me.id, me);
-    await db.users.update(sender.id, sender);
-
-  } else if (req.body.request === 'delete') {
-    const me = req.body.user;
-    const index = me.friends.indexOf(req.params.id)
-    me.friends.splice(index, 1)
-    user = await db.users.update(me.id, me)
-
-  } else if (req.body.request === "modify") {
-    user = await db.users.update(req.params.id, req.body.user);
-  } else {
-    user = await db.users.update(req.params.id, req.body);
+      user = await db.users.update(me.id, me);
+      await db.users.update(sender.id, sender);
+      break;
+    case "delete":
+      me = req.body.user;
+      index = me.friends.indexOf(req.params.id);
+      me.friends.splice(index, 1);
+      user = await db.users.update(me.id, me);
+      break;
+    case "modify":
+      user = await db.users.update(req.params.id, req.body.user);
+      break;
+    default:
+      user = await db.users.update(req.params.id, req.body);
   }
-
   res.json(user);
 });
 

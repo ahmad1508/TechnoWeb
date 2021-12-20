@@ -254,7 +254,7 @@ export default forwardRef(
             const isMessagesConsecutive =
               i > 1 && messages[i - 1]?.author === message?.author;
             const isMenuVisible = message.creation === selected;
-            const hasAvatar = message?.user !== undefined;
+            const hasAvatar = message?.user?.avatar !== undefined;
             return (
               <Box
                 key={message.creation}
@@ -272,9 +272,9 @@ export default forwardRef(
                     }
                   >
                     {hasAvatar ? (
-                      <Gravatar email={message.author} />
+                      <img style={styles.avatar} src={message.user.avatar} alt="avatar" />
                     ) : (
-                      message?.author.split("")[0].toUpperCase()
+                      <Gravatar email={message.author} />
                     )}
                   </Box>
                 ) : (
