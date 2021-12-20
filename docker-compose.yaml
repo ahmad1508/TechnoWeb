@@ -1,9 +1,0 @@
-version: "3.9"
-services:
-  dex:
-    image: dexidp/dex
-    ports: 
-      - 5556:5556
-    volumes:
-      - ./dex:/etc/dex
-    command: dex serve /etc/dex/config.yaml
