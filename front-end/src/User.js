@@ -162,9 +162,9 @@ export default function User({ usage, setUserExist = () => {} }) {
         : {
             username,
             avatar: selected,
-            friends: user.friends || [],
-            invitation: user.invitation || [],
-            sentInvites: user.sentInvites || [],
+            friends: user?.friends || [],
+            invitation: user?.invitation || [],
+            sentInvites: user?.sentInvites || [],
           };
     const body = {
       user: us,

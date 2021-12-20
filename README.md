@@ -53,7 +53,7 @@ cd front-end && npm i && npm run start
 ```
 open a `new terminal` and run
 ```bash
-cd ../back-end && npm i && npm run start
+cd ../back-end && mkdir db && npm i && npm run start
 ```
 And voilà, your front-end is available on port `3000`.
 # Features

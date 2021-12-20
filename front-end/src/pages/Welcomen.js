@@ -6,24 +6,28 @@ import { ReactComponent as Prototype } from "../icons/prototype.svg";
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor: "#111",
+    backgroundColor: theme.palette.primary.dark,
     width: "100%",
     flex: "1 1 auto",
     position: "relative",
   },
 
   title: {
+    color: theme.palette.primary.contrastText,
     fontWeight: "600",
     fontSize: "20px",
     marginBottom: "14px",
   },
   Grid1: {
+    color: theme.palette.primary.contrastText,
     padding: "177px 3rem 0rem 0rem",
   },
   Grid2: {
+    color: theme.palette.primary.contrastText,
     padding: "61px 3rem 0rem 3rem",
   },
   Grid3: {
+    color: theme.palette.primary.contrastText,
     paddingTop: "71px",
     display: "flex",
     flexDirection: "column",
@@ -35,9 +39,16 @@ const useStyles = (theme) => ({
     marginBottom: "14px",
   },
   desc: {
+    color: theme.palette.primary.contrastText,
     width: "250px",
     fontWeight: "300",
-    textAlign: 'center'
+    textAlign: "center",
+  },
+  why: {
+    marginTop: "27px",
+    textAlign: "center",
+    color: theme.palette.primary.contrastText,
+    fontWeight: "600",
   },
 });
 
@@ -101,10 +112,7 @@ export default function Main({
           </Grid>
         </Grid>
 
-        <Typography
-          variant="h4"
-          css={{ marginTop: "27px", textAlign: "center", fontWeight: "600" }}
-        >
+        <Typography variant="h4" css={styles.why}>
           Why messecure ?
         </Typography>
 
@@ -124,8 +132,11 @@ export default function Main({
           </Grid>
 
           <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
-            <img src="/cats/Fast_cat.png"
-              alt="Fast cat" css={styles.imageDiv} />
+            <img
+              src="/cats/Fast_cat.png"
+              alt="Fast cat"
+              css={styles.imageDiv}
+            />
             <Typography variant="h6" css={styles.title}>
               Fast
             </Typography>
@@ -149,8 +160,11 @@ export default function Main({
           </Grid>
 
           <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
-            <img src="/cats/Free_cat.png"
-              alt="Free cat" css={styles.imageDiv} />
+            <img
+              src="/cats/Free_cat.png"
+              alt="Free cat"
+              css={styles.imageDiv}
+            />
             <Typography variant="h6" css={styles.title}>
               Free
             </Typography>

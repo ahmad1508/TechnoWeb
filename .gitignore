@@ -108,3 +108,4 @@ db/
 .DS_Store
 
 package-lock.json
+back-end/package-lock.json

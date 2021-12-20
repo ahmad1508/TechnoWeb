@@ -231,7 +231,7 @@ export default function Main() {
 
   const reatePrivateChat = async (e, friendID) => {
     const private_channel = channels.filter((itm) => {
-      return user.id + friendID || itm.name === friendID + user.id;
+      return itm.name === user.id + friendID || itm.name === friendID + user.id;
     });
     if (private_channel.length === 1) return;
     const { data: channel } = await axios.post(
