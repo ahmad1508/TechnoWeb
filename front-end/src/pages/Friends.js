@@ -147,7 +147,6 @@ export default function Main() {
 
   const handleChange = (e) => {
     setAddFriend(e.target.value);
-    console.log(addFriend);
   };
 
   const addFriendSubmit = async (e) => {
@@ -158,6 +157,7 @@ export default function Main() {
         { headers: { Authorization: `Bearer ${oauth.access_token}` } }
       );
       if (person !== "") {
+        console.log(person)
         const { data: updatedUser } = await axios.put(
           `http://localhost:3001/users/${friend}`,
           {
@@ -167,8 +167,10 @@ export default function Main() {
           },
           { headers: { Authorization: `Bearer ${oauth.access_token}` } }
         );
+        console.log(updatedUser)
         if (updatedUser) {
           setUser(updatedUser);
+          setAddFriend("")
         }
       }
     });
