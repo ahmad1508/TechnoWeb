@@ -67,7 +67,7 @@ const useStyles = (theme) => ({
 export default function Channel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { channels, oauth, setCurrentChannel, user, setUser } = useContext(Context);
+  const { channels, oauth, setCurrentChannel } = useContext(Context);
   const channel = channels.find((channel) => channel.id === id);
   setCurrentChannel(id);
   const [content, setContent] = useState("");

@@ -355,11 +355,3 @@ export default forwardRef(
     );
   }
 );
-
-{
-  /* <img
-                        src={message.user.avatar}
-                        alt={`${message.user.username} avatar's`}
-                        css={styles.avatar}
-                      /> */
-}

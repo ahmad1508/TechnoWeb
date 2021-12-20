@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useState, createContext, useMemo, useEffect } from "react";
-import socketClient from "socket.io-client";
+//import socketClient from "socket.io-client";
 // Local
 import Oups from "./Oups";
 //import Footer from './Footer'
@@ -9,13 +9,11 @@ import Main from "./Main";
 import Login from "./Login";
 import Context from "./Context";
 import Settings from "./Settings";
-import Friends from "./pages/Friends";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 // Rooter
 import {
   Route,
   Routes,
-  useNavigate,
   Navigate,
   useLocation,
 } from "react-router-dom";
@@ -58,7 +56,6 @@ const styles = {
 };
 
 export default function App() {
-  const navigate = useNavigate();
   const location = useLocation();
   const [cookies, ,] = useCookies(["mode"]);
   const { oauth, mode, setMode, primaryColor } = useContext(Context);

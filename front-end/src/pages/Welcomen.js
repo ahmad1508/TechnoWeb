@@ -37,7 +37,7 @@ const useStyles = (theme) => ({
   desc: {
     width: "250px",
     fontWeight: "300",
-    textAlign:'center'
+    textAlign: 'center'
   },
 });
 
@@ -50,8 +50,6 @@ export default function Main({
   const theme = useTheme();
   const styles = useStyles(theme);
 
-  console.log(config);
-  console.log(codeVerifier);
   const redirect = (e) => {
     e.stopPropagation();
     const code_challenge = base64URLEncode(sha256(codeVerifier));
@@ -71,7 +69,7 @@ export default function Main({
     <main css={styles.root}>
       <Container>
         <Grid container>
-          <Grid xs={12} md={6} lg={7} css={styles.Grid1}>
+          <Grid item xs={12} md={6} lg={7} css={styles.Grid1}>
             <Typography variant="h3" css={{ fontWeight: "600" }}>
               Messecure
             </Typography>
@@ -98,7 +96,7 @@ export default function Main({
             </Button>
           </Grid>
 
-          <Grid xs={12} md={6} lg={5} css={styles.Grid2}>
+          <Grid item xs={12} md={6} lg={5} css={styles.Grid2}>
             <Prototype />
           </Grid>
         </Grid>
@@ -111,7 +109,7 @@ export default function Main({
         </Typography>
 
         <Grid container css={{ marginBottom: "5rem" }}>
-          <Grid xs={12} md={6} lg={4} css={styles.Grid3}>
+          <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
             <img
               src="/cats/Simple_cat.png"
               alt="Simple cat"
@@ -125,9 +123,9 @@ export default function Main({
             </Typography>
           </Grid>
 
-          <Grid xs={12} md={6} lg={4} css={styles.Grid3}>
+          <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
             <img src="/cats/Fast_cat.png"
-              alt="Fast cat" css={styles.imageDiv}/>
+              alt="Fast cat" css={styles.imageDiv} />
             <Typography variant="h6" css={styles.title}>
               Fast
             </Typography>
@@ -136,7 +134,7 @@ export default function Main({
             </Typography>
           </Grid>
 
-          <Grid xs={12} md={6} lg={4} css={styles.Grid3}>
+          <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
             <img
               src="/cats/Synced_cat.png"
               alt="Secure cat"
@@ -150,9 +148,9 @@ export default function Main({
             </Typography>
           </Grid>
 
-          <Grid xs={12} md={6} lg={4} css={styles.Grid3}>
+          <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
             <img src="/cats/Free_cat.png"
-              alt="Free cat" css={styles.imageDiv}/>
+              alt="Free cat" css={styles.imageDiv} />
             <Typography variant="h6" css={styles.title}>
               Free
             </Typography>
@@ -161,7 +159,7 @@ export default function Main({
             </Typography>
           </Grid>
 
-          <Grid xs={12} md={6} lg={4} css={styles.Grid3}>
+          <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
             <img
               src="/cats/Gamer_cat.png"
               alt="secure cat"
@@ -175,7 +173,7 @@ export default function Main({
             </Typography>
           </Grid>
 
-          <Grid xs={12} md={6} lg={4} css={styles.Grid3}>
+          <Grid item xs={12} md={6} lg={4} css={styles.Grid3}>
             <img
               css={styles.imageDiv}
               src="/cats/Secure_Cat.png"

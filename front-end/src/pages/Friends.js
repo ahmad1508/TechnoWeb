@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 // Layout
 import { useTheme } from "@mui/styles";
@@ -83,7 +82,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function Main() {
   const theme = useTheme();
-  const navigate = useNavigate();
   const styles = useStyles(theme);
   const { oauth, user, setUser } = useContext(Context);
   const [haveFriends, setHaveFriends] = useState();
@@ -93,7 +91,6 @@ export default function Main() {
   const [open, setOpen] = useState(false);
   const [i, SetI] = useState(0);
   const [addFriend, setAddFriend] = useState();
-  const [person, setPerson] = useState();
   const [openD, setOpenD] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   let j = 0;
@@ -230,7 +227,7 @@ export default function Main() {
     );
   };
 
-  const reatePrivateChat = (e, friendID) => {};
+  const reatePrivateChat = (e, friendID) => { };
 
   return (
     <main css={styles.root}>

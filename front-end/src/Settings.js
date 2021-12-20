@@ -10,8 +10,6 @@ import Accordion from "@mui/material/Accordion";
 import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import GTranslateIcon from "@mui/icons-material/GTranslate";
 import User from "./User";
 import Context from "./Context";
 
@@ -71,16 +69,7 @@ export default function Main() {
         </Typography>
         <User usage="modify" />
         <Box css={styles.box}>
-          <Accordion css={styles.accordion}>
-            <Grid container>
-              <Grid item xs={8} md={10} lg={10}>
-                <Typography variant="h6">Account Information</Typography>
-              </Grid>
-              <Grid item xs={4} md={2} lg={2} css={{ paddingLeft: "30px" }}>
-                <AutoFixHighIcon />
-              </Grid>
-            </Grid>
-          </Accordion>
+
           <Accordion css={styles.accordion}>
             <Grid container>
               <Grid item xs={8} md={10} lg={10}>
@@ -102,20 +91,10 @@ export default function Main() {
           </Accordion>
           <Accordion css={styles.accordion}>
             <Grid container>
-              <Grid item xs={8} md={9} lg={10}>
-                <Typography variant="h6">Language</Typography>
-              </Grid>
-              <Grid item xs={4} md={3} lg={2} css={{ paddingLeft: "30px" }}>
-                <GTranslateIcon />
-              </Grid>
-            </Grid>
-          </Accordion>
-          <Accordion css={styles.accordion}>
-            <Grid container>
-              <Grid xs={8} md={9} lg={10}>
+              <Grid item xs={8} md={10} lg={10}>
                 <Typography variant="h6">Color</Typography>
               </Grid>
-              <Grid xs={4} md={3} lg={2} css={{ paddingLeft: "30px" }}>
+              <Grid item xs={4} md={2} lg={2} css={{ paddingLeft: "30px" }}>
                 <Box
                   style={styles.round}
                   onClick={() => {

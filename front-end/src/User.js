@@ -132,7 +132,7 @@ export default function User({ usage, setUserExist = () => {} }) {
       }
     };
     getUser();
-  }, []);
+  }, [oauth.email,setUser,user]);
   return (
     <Box sx={styles.root}>
       {!isModify && (
@@ -183,6 +183,7 @@ export default function User({ usage, setUserExist = () => {} }) {
           value={username}
           onChange={handleUsername}
           sx={styles.formField}
+          autoFocus
         />
         <Button
           type="submit"

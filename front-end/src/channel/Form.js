@@ -228,7 +228,6 @@ export default function Form({
             <Input
               accept="image/*"
               id="contained-button-file"
-              id='button'
               multiple={false}
               type="file"
               css={styles.upload}
@@ -244,7 +243,6 @@ export default function Form({
               onClick={openEmojiPicker}
               css={styles.upload}
               component="span"
-              id='button'
             >
               <InsertEmoticonIcon />
             </IconButton>
@@ -260,7 +258,6 @@ export default function Form({
               onClick={openGifPicker}
               css={styles.upload}
               component="span"
-              id='button'
             >
               <GifIcon />
             </IconButton>
