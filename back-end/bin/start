@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+const http = require('../lib/app')
+const config = {
+  port: 3001
+}
+// 1313 on Docker-compose
+// 3001 on dev
+http.listen(config.port, () => {
+  console.log(`listening on *:${config.port}`);
+});

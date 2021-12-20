@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  dex:
+    image: dexidp/dex
+    ports: 
+      - 5556:5556
+    volumes:
+      - ./dex:/etc/dex
+    command: dex serve /etc/dex/config.yaml
+    networks:
+      - dex
+      - front-end
+  front-end:
+    depends_on:
+      - dex
+    build: ./front-end
+    ports:
+      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+    networks:
+      - front-end
+  back-end:
+    build: ./back-end
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    networks:
+      - back-end
+      - front-end
+    volumes:
+      - ./back-end:/back-end
+    working_dir: /back-end
+    command: >
+      bash -c "rm -Rf ./node_modules &&
+      npm i &&
+      npm start"
+
+networks:
+  back-end:
+  front-end:
+  dex:
