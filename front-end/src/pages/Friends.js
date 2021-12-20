@@ -118,9 +118,11 @@ export default function Main() {
           },
         }
       );
-      setFriends((myFriends) => {
-        return [...myFriends, friend];
-      });
+      const f = myFriends.filter((myFriend) => myFriend.id === friend.id);
+      if (f.length === 0)
+        setFriends((myFriends) => {
+          return [...myFriends, friend];
+        });
     } catch (err) {
       console.log(err);
     }
